@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameApp.Gameplay;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace GameApp.Visual
 	interface IVisual
 	{
 
-		void DrawLevel();
+		void DrawLevel(LevelAttempt levelAttempt);
 
 	}
 }

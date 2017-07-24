@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,8 @@ namespace GameApp.Physics
 	{
 
 		// Param Level & current Forces (PlayerV, PlayerA) evtl?
+		Vector2 CalculateNewPlayerPosition();
+
 		// return new PlayerPos
 
 	}

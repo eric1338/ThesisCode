@@ -13,14 +13,26 @@ namespace GameApp
 	class MyGameWindow : GameWindow
 	{
 
-		private VisualManager visualManager = new VisualManager();
-
 		private Screen currentScreen;
 
-		public MyGameWindow() : base(1366, 768)
+		public MyGameWindow(int width, int height) : base(width, height)
 		{
+			Title = "Thesis";
+
+			float aspect = width / (float)height;
+
+			GL.Viewport(0, 0, width, height);
+			GL.MatrixMode(MatrixMode.Projection);
+			GL.Ortho(-aspect, aspect, -1, 1, -1, 1);
+
+			//GL.MatrixMode(MatrixMode.Modelview);
+			//GL.LoadIdentity();
+
+
 			RenderFrame += MyGameWindow_RenderFrame;
 			UpdateFrame += MyGameWindow_UpdateFrame;
+
+			currentScreen = new GameScreen();
 		}
 
 		private void MyGameWindow_UpdateFrame(object sender, FrameEventArgs e)
@@ -32,7 +44,7 @@ namespace GameApp
 		{
 			GL.Clear(ClearBufferMask.ColorBufferBit);
 
-			visualManager.DrawLevel();
+			currentScreen.Draw();
 
 			SwapBuffers();
 		}

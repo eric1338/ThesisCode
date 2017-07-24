@@ -9,7 +9,15 @@ namespace GameApp.Physics
 	class Hitbox
 	{
 
+		public Hitbox()
+		{
 
+		}
+
+		public bool CollidesWith(Hitbox otherHitbox)
+		{
+			return false;
+		}
 
 	}
 }

@@ -47,11 +47,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameManager.cs" />
+    <Compile Include="Gameplay\LevelAnalysis.cs" />
+    <Compile Include="Gameplay\LevelAttempt.cs" />
+    <Compile Include="Gameplay\LevelProgression.cs" />
     <Compile Include="Input\InputMapping.cs" />
-    <Compile Include="Level\Collectible.cs" />
-    <Compile Include="Level\Ground.cs" />
-    <Compile Include="Level\Level.cs" />
+    <Compile Include="Levels\Collectible.cs" />
+    <Compile Include="Levels\Ground.cs" />
+    <Compile Include="Levels\Level.cs" />
     <Compile Include="MyGameWindow.cs" />
+    <Compile Include="Physics\GamePhysics.cs" />
     <Compile Include="Physics\Hitbox.cs" />
     <Compile Include="Physics\IPhysics.cs" />
     <Compile Include="Program.cs" />
@@ -59,15 +63,15 @@
     <Compile Include="Screens\GameScreen.cs" />
     <Compile Include="Screens\Screen.cs" />
     <Compile Include="Screens\ScreenName.cs" />
+    <Compile Include="Utils\Constants.cs" />
     <Compile Include="Visual\IVisual.cs" />
+    <Compile Include="Visual\LevelDrawer.cs" />
     <Compile Include="Visual\VisualManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utils\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

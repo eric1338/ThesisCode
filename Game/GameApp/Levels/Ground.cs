@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameApp.Level
+namespace GameApp.Levels
 {
 	class Ground
 	{

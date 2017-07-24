@@ -11,7 +11,7 @@ namespace GameApp
 		static void Main(string[] args)
 		{
 
-			MyGameWindow gameWindow = new MyGameWindow();
+			MyGameWindow gameWindow = new MyGameWindow(1366, 768);
 
 			gameWindow.Run(60.0);
 

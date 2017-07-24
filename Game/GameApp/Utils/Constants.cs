@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameApp.Screens
+namespace GameApp.Utils
 {
-	abstract class Screen
+	class Constants
 	{
 
-		public abstract void DoLogic();
-		public abstract void Draw();
+		public static readonly float Epsilon = 0.0001f;
 
 	}
 }
