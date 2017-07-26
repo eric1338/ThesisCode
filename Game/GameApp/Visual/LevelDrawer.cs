@@ -15,6 +15,10 @@ namespace GameApp.Visual
 
 		private Level level;
 
+		private Vector2 visualCenter = Vector2.Zero;
+
+		private float zoomFactor = 2f;
+
 		public LevelDrawer(Level level)
 		{
 			this.level = level;
@@ -23,18 +27,23 @@ namespace GameApp.Visual
 
 		public void DrawLevel(LevelProgression levelProgression)
 		{
-			Vector2 visualCenter = GetVisualCenter(levelProgression) + new Vector2(0.5f);
+			CalculateVisualCenter(levelProgression);
 
-			DrawGrounds(visualCenter);
-			DrawCollectibles(visualCenter, levelProgression);
+			DrawGrounds();
+			DrawCollectibles(levelProgression);
 			DrawPlayer(levelProgression.CurrentPlayerPosition);
 
 			GL.Color3(1.0f, 0.0f, 0.3f);
 
-			DrawOpenGLLine(new Vector2(-1, 0), new Vector2(1, 0));
-			DrawOpenGLLine(new Vector2(0, -1), new Vector2(0, 1));
+			//DrawOpenGLLine(new Vector2(-1, 0), new Vector2(1, 0));
+			//DrawOpenGLLine(new Vector2(0, -1), new Vector2(0, 1));
 		}
 
+		private void CalculateVisualCenter(LevelProgression levelProgression)
+		{
+			// TODO: 0.5f -> stattdessen variabel (Spielergröße / Zoom)
+			visualCenter = GetVisualCenter(levelProgression) + new Vector2(0.5f, 0.5f);
+		}
 
 		private Vector2 GetVisualCenter(LevelProgression levelProgression)
 		{
@@ -59,44 +68,45 @@ namespace GameApp.Visual
 
 			float rightPercentage = (playerPosition.X - groundLeftFromPlayer.RightX) / chasmWidth;
 
-			float y = rightPercentage * groundLeftFromPlayer.TopY + (1 - rightPercentage) * groundRightFromPlayer.TopY;
+			float y = (1 - rightPercentage) * groundLeftFromPlayer.TopY + rightPercentage * groundRightFromPlayer.TopY;
 
 			return new Vector2(playerPosition.X, y);
 		}
 
-		private float GetScreenWidth()
+		// TODO: Auslagern + Berechnen
+		private float GetAspectRatio()
 		{
-			return 1.0f;
+			return 1.77777777f;
 		}
 
-		private bool IsCoordOnScreen(Vector2 screenCenter, float coordX)
+		private float GetScreenWidth()
+		{
+			return 2 * zoomFactor * GetAspectRatio();
+		}
+
+		private bool IsCoordOnScreen(float coordX)
 		{
 			float halfScreenWidth = GetScreenWidth() / 1.98f;
 
-			float leftestScreenX = screenCenter.X - halfScreenWidth;
-			float rightestScreenX = screenCenter.X + halfScreenWidth; 
+			float leftestScreenX = visualCenter.X - halfScreenWidth;
+			float rightestScreenX = visualCenter.X + halfScreenWidth;
 
 			return coordX > leftestScreenX && coordX < rightestScreenX;
 		}
 
-		private bool IsObjectOnScreen(Vector2 screenCenter, float leftestObjectX, float rightestObjectX)
+		private bool IsObjectOnScreen(float leftestObjectX, float rightestObjectX)
 		{
-			return IsCoordOnScreen(screenCenter, leftestObjectX) || IsCoordOnScreen(screenCenter, rightestObjectX);
-		}
-
-		private void DrawLevelFromCenter(Vector2 screenCenter)
-		{
-
+			return IsCoordOnScreen(leftestObjectX) || IsCoordOnScreen(rightestObjectX);
 		}
 
 
 		private void DrawPlayer(Vector2 playerPosition)
 		{
-			GL.Color3(1.0f, 0.8f, 0.0f);
+			GL.Color3(0.1f, 0.4f, 1.0f);
 
-			float x1 = playerPosition.X - 0.025f;
-			float x2 = playerPosition.X + 0.025f;
-			float y1 = playerPosition.Y + 0.3f;
+			float x1 = playerPosition.X - 0.2f;
+			float x2 = playerPosition.X + 0.2f;
+			float y1 = playerPosition.Y + 0.8f;
 
 			Vector2 v1 = new Vector2(x1, y1);
 			Vector2 v2 = new Vector2(x2, playerPosition.Y);
@@ -105,17 +115,17 @@ namespace GameApp.Visual
 		}
 
 
-		private void DrawGrounds(Vector2 screenCenter)
+		private void DrawGrounds()
 		{
 			foreach (Ground ground in level.Grounds)
 			{
-				if (IsObjectOnScreen(screenCenter, ground.LeftX, ground.RightX)) DrawGround(ground);
+				if (IsObjectOnScreen(ground.LeftX, ground.RightX)) DrawGround(ground);
 			}
 		}
 
 		private void DrawGround(Ground ground)
 		{
-			GL.Color3(0.4f, 0.3f, 0.12f);
+			GL.Color3(0.2f, 0.1f, 0.0f);
 
 			Vector2 v1 = new Vector2(ground.LeftX, ground.TopY);
 			Vector2 v2 = new Vector2(ground.RightX, -10.0f);
@@ -125,10 +135,10 @@ namespace GameApp.Visual
 
 		private float GetCollectibleWidth()
 		{
-			return 0.1f;
+			return 0.2f;
 		}
 
-		private void DrawCollectibles(Vector2 screenCenter, LevelProgression levelProgression)
+		private void DrawCollectibles(LevelProgression levelProgression)
 		{
 			foreach (Collectible collectible in levelProgression.RemainingCollectibles)
 			{
@@ -137,7 +147,7 @@ namespace GameApp.Visual
 				float leftX = collectible.Position.X - halfCollectibleWidth;
 				float rightX = collectible.Position.X + halfCollectibleWidth;
 
-				if (IsObjectOnScreen(screenCenter, leftX, rightX)) DrawCollectible(collectible);
+				if (IsObjectOnScreen(leftX, rightX)) DrawCollectible(collectible);
 			}
 		}
 
@@ -156,6 +166,16 @@ namespace GameApp.Visual
 		}
 
 
+		private Vector2 GetTransformedVector(Vector2 vector)
+		{
+			Vector2 newVector = vector - visualCenter;
+
+			newVector *= (1.0f / zoomFactor);
+
+			return newVector;
+		}
+
+
 		private void DrawOpenGLLine(Vector2 point1, Vector2 point2)
 		{
 			GL.Begin(PrimitiveType.Lines);
@@ -166,6 +186,28 @@ namespace GameApp.Visual
 
 		private void DrawSquare(Vector2 topLeft, Vector2 bottomRight)
 		{
+
+			topLeft = GetTransformedVector(topLeft);
+			bottomRight = GetTransformedVector(bottomRight);
+
+			GL.Begin(PrimitiveType.Quads);
+			GL.Vertex2(topLeft.X, bottomRight.Y);
+			GL.Vertex2(topLeft.X, topLeft.Y);
+			GL.Vertex2(bottomRight.X, topLeft.Y);
+			GL.Vertex2(bottomRight.X, bottomRight.Y);
+			GL.End();
+		}
+
+
+
+		public void Test(bool value)
+		{
+			if (value) GL.Color3(0.6f, 0.6f, 0.6f);
+			else GL.Color3(0.4f, 0.4f, 0.4f);
+
+			Vector2 topLeft = new Vector2(0.9f, 0.95f);
+			Vector2 bottomRight = new Vector2(0.95f, 0.9f);
+
 			GL.Begin(PrimitiveType.Quads);
 			GL.Vertex2(topLeft.X, bottomRight.Y);
 			GL.Vertex2(topLeft.X, topLeft.Y);

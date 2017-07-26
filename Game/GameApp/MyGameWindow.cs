@@ -2,6 +2,7 @@
 using GameApp.Visual;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,20 @@ namespace GameApp
 			RenderFrame += MyGameWindow_RenderFrame;
 			UpdateFrame += MyGameWindow_UpdateFrame;
 
+			KeyUp += MyGameWindow_KeyUp;
+			KeyDown += MyGameWindow_KeyDown;
+
 			currentScreen = new GameScreen();
+		}
+
+		private void MyGameWindow_KeyUp(object sender,  KeyboardKeyEventArgs e)
+		{
+			currentScreen.ProcessKeyUp(e.Key);
+		}
+
+		private void MyGameWindow_KeyDown(object sender, KeyboardKeyEventArgs e)
+		{
+			currentScreen.ProcessKeyDown(e.Key);
 		}
 
 		private void MyGameWindow_UpdateFrame(object sender, FrameEventArgs e)

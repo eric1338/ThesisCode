@@ -1,8 +1,10 @@
 ﻿using GameApp.Gameplay;
+using GameApp.Input;
 using GameApp.Levels;
 using GameApp.Physics;
 using GameApp.Visual;
 using OpenTK;
+using OpenTK.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,10 +24,17 @@ namespace GameApp.Screens
 		public GameScreen()
 		{
 			levelAttempt = new LevelAttempt(Level.CreateTestLevel());
-
 			levelDrawer = new LevelDrawer(levelAttempt.Level);
+			gamePhysics = new GamePhysics(levelAttempt.Level);
 
-			gamePhysics = new GamePhysics();
+
+			AddKeyToSingleUserActionMapping(Key.W, UserAction.Jump);
+			AddKeyToSingleUserActionMapping(Key.Space, UserAction.Jump);
+
+			AddKeyToProlongedUserActionMapping(Key.D, UserAction.Duck);
+
+			AddSingleUserActionToFunctionMapping(UserAction.Jump, Jump);
+			AddProlongedUserActionToFunctionMapping(UserAction.Duck, DuckTest);
 		}
 
 		private Level GetLevel()
@@ -38,8 +47,29 @@ namespace GameApp.Screens
 			return levelAttempt.LevelProgression;
 		}
 
+		private void Jump()
+		{
+			gamePhysics.PerformJump();
+		}
+
+		private bool testVar = false;
+
+		private void DuckTest(bool value)
+		{
+			testVar = value;
+		}
+
 		public override void DoLogic()
 		{
+			ProcessUserActions();
+
+			//GetLevelProgression().CurrentPlayerPosition += new Vector2(0.0166666f, 0.0f);
+
+			Vector2 oldPosition = GetLevelProgression().CurrentPlayerPosition;
+			Vector2 newPosition = gamePhysics.DoPlayerPhysics(oldPosition);
+
+			GetLevelProgression().CurrentPlayerPosition = newPosition;
+
 			// Input-Logic + Springen
 
 			//Vector2 newPlayerPosition = gamePhysics.DoPlayerPhysics();
@@ -49,6 +79,8 @@ namespace GameApp.Screens
 
 		public override void Draw()
 		{
+			levelDrawer.Test(testVar);
+
 			levelDrawer.DrawLevel(GetLevelProgression());
 		}
 

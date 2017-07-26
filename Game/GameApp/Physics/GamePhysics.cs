@@ -12,51 +12,65 @@ namespace GameApp.Physics
 	class GamePhysics
 	{
 
-		private float epsilon = 0.0001f;
-		private float smallEpsilon = 0.00005f;
-
 		private Level level;
 
-		private float currentPlayerV = 1.0f;
-		private float currentPlayerA = 0.0f;
+		private Vector2 velocity = Vector2.Zero;
+		private Vector2 acceleration = Vector2.Zero;
 
 		// TODO: horizontal Collision Detection (für Sprünge)
+
+		
+		public GamePhysics(Level level)
+		{
+			this.level = level;
+		}
+		
+		private bool IsPlayerOnGround(Vector2 playerPosition)
+		{
+			return LevelAnalysis.IsPlayerOnGround(level, playerPosition);
+		}
 
 		public void PerformJump()
 		{
 			if (LevelAnalysis.IsPlayerOnGround(level, Vector2.Zero))
 			{
-
+				acceleration += new Vector2(0, 0.01f);
 			}
 		}
 
+		
 
-
-
-		public Vector2 DoPlayerPhysics()
+		public Vector2 DoPlayerPhysics(Vector2 playerPosition)
 		{
-			return Vector2.Zero;
+			if (IsPlayerOnGround(playerPosition))
+			{
+				velocity = new Vector2(0.002f, 0);
+			}
+			else
+			{
+				ApplyGravity(playerPosition);
+			}
+
+
+			velocity += acceleration;
+
+			playerPosition += velocity;
+
+			// TODO: check if in Ground
+
+			acceleration = Vector2.Zero;
+
+			return playerPosition + velocity;
 		}
 
 
-		private void CalculateGravity()
+		private void ApplyGravity(Vector2 playerPosition)
 		{
+			Ground groundBelowNewPosition = LevelAnalysis.GetGroundBelowPlayer(level, playerPosition);
 
-
-			Vector2 newPosition = Vector2.Zero;
-			Vector2 calculatedNewPosition = Vector2.Zero;
-
-			Ground groundBelowNewPosition = LevelAnalysis.GetGroundBelowPlayer(level, calculatedNewPosition);
-
-			if (groundBelowNewPosition == null)
+			if (groundBelowNewPosition == null || !IsPlayerOnGround(playerPosition))
 			{
-				newPosition = calculatedNewPosition;
-				return;
-			}
-
-			if (LevelAnalysis.IsPlayerOnGround(groundBelowNewPosition, calculatedNewPosition))
-			{
-				newPosition = new Vector2(calculatedNewPosition.X, groundBelowNewPosition.TopY + smallEpsilon);
+				acceleration += new Vector2(0, -0.0002f);
 			}
 		}
 

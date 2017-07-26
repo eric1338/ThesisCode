@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace GameApp.Input
 {
-	class InputMapping
+	enum UserAction
 	{
+		Jump,
+		Duck,
 	}
 }

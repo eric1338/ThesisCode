@@ -50,7 +50,8 @@
     <Compile Include="Gameplay\LevelAnalysis.cs" />
     <Compile Include="Gameplay\LevelAttempt.cs" />
     <Compile Include="Gameplay\LevelProgression.cs" />
-    <Compile Include="Input\InputMapping.cs" />
+    <Compile Include="Input\InputManager.cs" />
+    <Compile Include="Input\UserAction.cs" />
     <Compile Include="Levels\Collectible.cs" />
     <Compile Include="Levels\Ground.cs" />
     <Compile Include="Levels\Level.cs" />
