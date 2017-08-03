@@ -72,7 +72,7 @@ namespace GameApp.Gameplay
 		{
 			Ground groundBelowPlayer = GetGroundBelowPlayer(level, playerPosition);
 
-			if (groundBelowPlayer == null) return true;
+			if (groundBelowPlayer == null) return false;
 
 			return IsPlayerOnGround(groundBelowPlayer, playerPosition);
 		}

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameApp.Utils
+namespace GameApp.Gameplay
 {
-	class Constants
+	class GameplayValues
 	{
 
-		public static readonly float Epsilon = 0.00001f;
+		public static readonly int PointsForCollectible = 100;
 
 	}
 }

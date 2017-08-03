@@ -25,6 +25,8 @@ namespace GameApp.Gameplay
 
 		public void CollectCollectible(Collectible collectible)
 		{
+			Console.WriteLine("points :)");
+
 			if (RemainingCollectibles.Contains(collectible))
 			{
 				RemainingCollectibles.Remove(collectible);

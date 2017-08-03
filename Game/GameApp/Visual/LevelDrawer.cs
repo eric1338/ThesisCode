@@ -35,6 +35,8 @@ namespace GameApp.Visual
 
 			GL.Color3(1.0f, 0.0f, 0.3f);
 
+			DrawPfuschs();
+
 			//DrawOpenGLLine(new Vector2(-1, 0), new Vector2(1, 0));
 			//DrawOpenGLLine(new Vector2(0, -1), new Vector2(0, 1));
 		}
@@ -66,7 +68,9 @@ namespace GameApp.Visual
 
 			float chasmWidth = groundRightFromPlayer.LeftX - groundLeftFromPlayer.RightX;
 
-			float rightPercentage = (playerPosition.X - groundLeftFromPlayer.RightX) / chasmWidth;
+			float rightPercentage = Utils.MyMath.Smoothstep(groundLeftFromPlayer.RightX, groundRightFromPlayer.LeftX, playerPosition.X);
+
+			//float rightPercentage = (playerPosition.X - groundLeftFromPlayer.RightX) / chasmWidth;
 
 			float y = (1 - rightPercentage) * groundLeftFromPlayer.TopY + rightPercentage * groundRightFromPlayer.TopY;
 
@@ -102,7 +106,7 @@ namespace GameApp.Visual
 
 		private void DrawPlayer(Vector2 playerPosition)
 		{
-			GL.Color3(0.1f, 0.4f, 1.0f);
+			GL.Color3(0.1f, 0.15f, 0.2f);
 
 			float x1 = playerPosition.X - 0.2f;
 			float x2 = playerPosition.X + 0.2f;
@@ -199,6 +203,61 @@ namespace GameApp.Visual
 		}
 
 
+
+		class Pfusch
+		{
+			public Vector2 V1 { get; set; }
+			public Vector2 V2 { get; set; }
+			public Vector3 CL { get; set; }
+
+			public Pfusch(Vector2 v1, Vector2 v2, Vector3 cl)
+			{
+				V1 = v1;
+				V2 = v2;
+				CL = cl;
+			}
+		}
+
+		static List<Pfusch> pfuschs = new List<Pfusch>();
+
+		public static void AddPfusch(Vector2 v1, Vector2 v2, Vector3 cl)
+		{
+			pfuschs.Add(new Pfusch(v1, v2, cl));
+		}
+
+		public static void AddPfusch1(List<Vector2> vs, Vector3 cl)
+		{
+			int l = vs.Count;
+
+			for (int i = 0; i < l - 1; i++)
+			{
+				pfuschs.Add(new Pfusch(vs[i], vs[i + 1], cl));
+			}
+
+			pfuschs.Add(new Pfusch(vs[l - 1], vs[0], cl));
+		}
+
+		public static void AddPfusch4(Vector2 v1, Vector2 v2, Vector2 v3, Vector2 v4, Vector3 cl)
+		{
+			pfuschs.Add(new Pfusch(v1, v2, cl));
+			pfuschs.Add(new Pfusch(v2, v3, cl));
+			pfuschs.Add(new Pfusch(v3, v4, cl));
+			pfuschs.Add(new Pfusch(v4, v1, cl));
+		}
+
+		public static void ClearPfuschs()
+		{
+			pfuschs.Clear();
+		}
+
+		public void DrawPfuschs()
+		{
+			foreach (Pfusch pfusch in pfuschs)
+			{
+				GL.Color3(pfusch.CL.X, pfusch.CL.Y, pfusch.CL.Z);
+				DrawOpenGLLine(GetTransformedVector(pfusch.V1), GetTransformedVector(pfusch.V2));
+			}
+		}
 
 		public void Test(bool value)
 		{

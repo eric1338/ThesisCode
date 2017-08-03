@@ -25,7 +25,7 @@ namespace GameApp.Physics
 			this.level = level;
 		}
 		
-		private bool IsPlayerOnGround(Vector2 playerPosition)
+		public bool IsPlayerOnGround(Vector2 playerPosition)
 		{
 			return LevelAnalysis.IsPlayerOnGround(level, playerPosition);
 		}
@@ -44,7 +44,7 @@ namespace GameApp.Physics
 		{
 			if (IsPlayerOnGround(playerPosition))
 			{
-				velocity = new Vector2(0.002f, 0);
+				velocity = new Vector2(0.004f, 0);
 			}
 			else
 			{
