@@ -1,5 +1,4 @@
-﻿using GameApp.Gameplay;
-using GameApp.Levels;
+﻿using GameApp.Levels;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
@@ -16,8 +15,6 @@ namespace GameApp.Visual
 		private Level level;
 
 		private Vector2 visualCenter = Vector2.Zero;
-
-		private float zoomFactor = 2f;
 
 		public LevelDrawer(Level level)
 		{
@@ -77,15 +74,9 @@ namespace GameApp.Visual
 			return new Vector2(playerPosition.X, y);
 		}
 
-		// TODO: Auslagern + Berechnen
-		private float GetAspectRatio()
-		{
-			return 1.77777777f;
-		}
-
 		private float GetScreenWidth()
 		{
-			return 2 * zoomFactor * GetAspectRatio();
+			return 2 * VisualValues.ZoomFactor * VisualValues.GetAspectRatio();
 		}
 
 		private bool IsCoordOnScreen(float coordX)
@@ -137,16 +128,11 @@ namespace GameApp.Visual
 			DrawSquare(v1, v2);
 		}
 
-		private float GetCollectibleWidth()
-		{
-			return 0.2f;
-		}
-
 		private void DrawCollectibles(LevelProgression levelProgression)
 		{
 			foreach (Collectible collectible in levelProgression.RemainingCollectibles)
 			{
-				float halfCollectibleWidth = GetCollectibleWidth() / 1.98f;
+				float halfCollectibleWidth = VisualValues.HalfCollectibleWidthHeight * 0.95f;
 
 				float leftX = collectible.Position.X - halfCollectibleWidth;
 				float rightX = collectible.Position.X + halfCollectibleWidth;
@@ -161,7 +147,7 @@ namespace GameApp.Visual
 
 			float x = collectible.Position.X;
 			float y = collectible.Position.Y;
-			float h = GetCollectibleWidth() / 2.0f;
+			float h = VisualValues.HalfCollectibleWidthHeight;
 
 			Vector2 v1 = new Vector2(x - h, y + h);
 			Vector2 v2 = new Vector2(x + h, y - h);
@@ -174,7 +160,7 @@ namespace GameApp.Visual
 		{
 			Vector2 newVector = vector - visualCenter;
 
-			newVector *= (1.0f / zoomFactor);
+			newVector *= (1.0f / VisualValues.ZoomFactor);
 
 			return newVector;
 		}

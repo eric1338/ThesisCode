@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameApp.Input
+namespace GameApp.Screens.Input
 {
 	class InputManager
 	{

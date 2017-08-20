@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameApp
+namespace GameApp.Visual
 {
-	class GameManager
+	class BasicGraphics
 	{
-
-
-
 	}
 }

@@ -29,7 +29,6 @@ namespace GameApp
 			//GL.MatrixMode(MatrixMode.Modelview);
 			//GL.LoadIdentity();
 
-
 			RenderFrame += MyGameWindow_RenderFrame;
 			UpdateFrame += MyGameWindow_UpdateFrame;
 

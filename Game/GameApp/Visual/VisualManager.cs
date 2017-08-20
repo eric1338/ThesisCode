@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using GameApp.Gameplay;
+using GameApp.Levels;
 
 namespace GameApp.Visual
 {

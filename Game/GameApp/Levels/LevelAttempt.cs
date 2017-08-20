@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameApp.Gameplay
+namespace GameApp.Levels
 {
 	class LevelAttempt
 	{

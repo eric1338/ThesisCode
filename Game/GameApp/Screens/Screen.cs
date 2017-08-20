@@ -1,4 +1,4 @@
-﻿using GameApp.Input;
+﻿using GameApp.Screens.Input;
 using OpenTK.Input;
 using System;
 using System.Collections.Generic;

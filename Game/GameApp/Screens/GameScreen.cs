@@ -1,7 +1,6 @@
 ﻿using GameApp.Gameplay;
-using GameApp.Input;
+using GameApp.Screens.Input;
 using GameApp.Levels;
-using GameApp.Physics;
 using GameApp.Visual;
 using OpenTK;
 using OpenTK.Input;

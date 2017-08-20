@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameApp.Physics
+namespace GameApp.Gameplay.Physics
 {
 	abstract class Hitbox
 	{

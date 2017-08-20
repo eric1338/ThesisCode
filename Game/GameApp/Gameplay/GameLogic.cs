@@ -1,5 +1,5 @@
 ﻿using GameApp.Levels;
-using GameApp.Physics;
+using GameApp.Gameplay.Physics;
 using OpenTK;
 using System;
 using System.Collections.Generic;
@@ -30,56 +30,84 @@ namespace GameApp.Gameplay
 			return levelAttempt.LevelProgression;
 		}
 
+		private Vector2 GetPlayerPosition()
+		{
+			return GetLevelProgression().CurrentPlayerPosition;
+		}
+
+
+
+		private Vector2 GetLeftFootPosition()
+		{
+			return PhysicsValues.GetLeftFootPosition(GetPlayerPosition());
+		}
+
+		private Vector2 GetRightFootPosition()
+		{
+			return PhysicsValues.GetRightFootPosition(GetPlayerPosition());
+		}
+
+
+
+
 		public void PerformPlayerJump()
 		{
-			gamePhysics.PerformJump();
+			gamePhysics.PerformJump(GetLevelProgression().CurrentPlayerPosition);
 		}
 
 		public void DoLogic()
+		{
+			SetNewPosition();
+
+			CheckPlayerCollectibleCollision();
+		}
+
+		private void SetNewPosition()
 		{
 			// TODO: temp
 			Visual.LevelDrawer.ClearPfuschs();
 
 			Vector2 oldPosition = GetLevelProgression().CurrentPlayerPosition;
 
-			// TODO: y-Adjustment (bzw. Gravity aufhören) nicht in Physics sondern Collision (oder doch nicht?)
-
 			Vector2 newPosition = gamePhysics.DoPlayerPhysics(oldPosition);
 
-			if (!gamePhysics.IsPlayerOnGround(newPosition))
+			if (!LevelAnalysis.IsPlayerOnGround(levelAttempt.Level, newPosition))
 			{
 				Ground groundCollidedWith = collisions.GetPlayerGroundCollision(newPosition);
 
 				if (groundCollidedWith != null)
 				{
-					Console.WriteLine("...");
+					Vector2 rightFoot = newPosition + new Vector2(0.0f, 0.0f);
 
-					// halfPlayerWidth
-					Vector2 rightFoot = newPosition + new Vector2(0.1f, 0.0f);
+					float deltaX = Math.Abs(rightFoot.X - groundCollidedWith.LeftX);
+					float deltaY = Math.Abs(groundCollidedWith.TopY - rightFoot.Y);
 
-					float xDif = rightFoot.X - groundCollidedWith.LeftX;
-					float yDif = groundCollidedWith.TopY - rightFoot.Y;
-
-					if (yDif > xDif)
+					if (deltaY > deltaX)
 					{
 						Console.WriteLine("failed :(");
-						newPosition = new Vector2(newPosition.X, groundCollidedWith.TopY);
+						Console.WriteLine("x " + groundCollidedWith.LeftX);
+						Console.WriteLine("~ " + deltaX + " | " + deltaY);
+						Console.WriteLine("rightFoot.Y: " + rightFoot.Y);
+						Console.WriteLine("ground.Y: " + groundCollidedWith.TopY);
+						Console.WriteLine(" ");
 					}
+
+					newPosition = new Vector2(newPosition.X, groundCollidedWith.TopY);
+
+					gamePhysics.ResetVerticalVelocity();
 				}
 			}
 
 			GetLevelProgression().CurrentPlayerPosition = newPosition;
-
-			CheckPlayerCollectibleCollision();
 		}
 
 		private void CheckPlayerCollectibleCollision()
 		{
-			Collectible collectedCollectible = collisions.GetPlayerCollectibleCollisions(GetLevelProgression());
+			List<Collectible> collectedCollectibles = collisions.GetPlayerCollectibleCollisions(GetLevelProgression());
 
-			if (collectedCollectible != null)
+			foreach (Collectible collectible in collectedCollectibles)
 			{
-				GetLevelProgression().CollectCollectible(collectedCollectible);
+				GetLevelProgression().CollectCollectible(collectible);
 			}
 		}
 	}

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameApp.Physics
+namespace GameApp.Gameplay.Physics
 {
 	class Collisions
 	{
@@ -25,8 +25,10 @@ namespace GameApp.Physics
 		}
 
 
-		public Collectible GetPlayerCollectibleCollisions(LevelProgression levelProgression)
+		public List<Collectible> GetPlayerCollectibleCollisions(LevelProgression levelProgression)
 		{
+			List<Collectible> collectedCollectibles = new List<Collectible>();
+
 			Hitbox playerHitbox = GetPlayerHitbox(levelProgression.CurrentPlayerPosition);
 
 			Visual.LevelDrawer.AddPfusch1(playerHitbox.Corners, new Vector3(1, 0, 0));
@@ -37,10 +39,10 @@ namespace GameApp.Physics
 
 				Visual.LevelDrawer.AddPfusch1(collectibleHitbox.Corners, new Vector3(1, 1, 0));
 
-				if (playerHitbox.CollidesWith(collectibleHitbox)) return collectible;
+				if (playerHitbox.CollidesWith(collectibleHitbox)) collectedCollectibles.Add(collectible);
 			}
 
-			return null;
+			return collectedCollectibles;
 		}
 
 		public Ground GetPlayerGroundCollision(Vector2 playerPosition)

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameApp.Gameplay
+namespace GameApp.Levels
 {
 	class LevelAnalysis
 	{
@@ -79,7 +79,8 @@ namespace GameApp.Gameplay
 
 		public static bool IsPlayerOnGround(Ground ground, Vector2 playerPosition)
 		{
-			return playerPosition.Y < (ground.TopY - Utils.Constants.Epsilon);
+			return playerPosition.Y == ground.TopY;
+			//return playerPosition.Y < (ground.TopY - Utils.Constants.Epsilon);
 		}
 
 	}

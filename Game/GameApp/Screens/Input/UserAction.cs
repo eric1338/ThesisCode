@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameApp.Utils
+namespace GameApp.Screens.Input
 {
-	class Constants
+	enum UserAction
 	{
-
-		public static readonly float Epsilon = 0.00001f;
-
+		Jump,
+		Duck,
 	}
 }
