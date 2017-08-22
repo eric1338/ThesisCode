@@ -21,8 +21,8 @@ namespace GameApp.Gameplay.Physics
 			return PlayerHitboxWidth / 2.0f;
 		}
 
-		public static readonly float RightFootOffset = 0.1f;
-		public static readonly float LeftFootOffset = 0.1f;
+		public static readonly float RightFootOffset = PlayerHitboxWidth / 2;
+		public static readonly float LeftFootOffset = PlayerHitboxWidth / 2;
 
 		public static Vector2 GetRightFootPosition(Vector2 playerPosition)
 		{
@@ -31,12 +31,12 @@ namespace GameApp.Gameplay.Physics
 
 		public static Vector2 GetLeftFootPosition(Vector2 playerPosition)
 		{
-			return playerPosition + new Vector2(LeftFootOffset, 0);
+			return playerPosition + new Vector2(-LeftFootOffset, 0);
 		}
 
-		public static readonly float HorizontalPlayerVelocity = 0.01f;
-		public static readonly float GravityAcceleration = 0.0005f;
-		public static readonly float JumpAcceleration = 0.02f;
+		public static readonly float HorizontalPlayerVelocity = 0.02f;
+		public static readonly float GravityAcceleration = 0.002f;
+		public static readonly float JumpAcceleration = 0.04f;
 
 	}
 }

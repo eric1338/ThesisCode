@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameApp.Screens.Input
+namespace GameApp
 {
-	enum UserAction
+	class GeneralValues
 	{
-		Jump,
-		Duck,
-		TogglePauseGame
+
+		public static readonly int FPS = 60;
+
 	}
 }

@@ -48,9 +48,11 @@
   <ItemGroup>
     <Compile Include="Gameplay\GameLogic.cs" />
     <Compile Include="Gameplay\GameplayValues.cs" />
+    <Compile Include="GeneralValues.cs" />
     <Compile Include="Levels\LevelAnalysis.cs" />
     <Compile Include="Levels\LevelAttempt.cs" />
     <Compile Include="Levels\LevelProgression.cs" />
+    <Compile Include="Levels\Obstacle.cs" />
     <Compile Include="Screens\Input\InputManager.cs" />
     <Compile Include="Screens\Input\UserAction.cs" />
     <Compile Include="Levels\Collectible.cs" />

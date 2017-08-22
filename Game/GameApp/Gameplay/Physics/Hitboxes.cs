@@ -29,6 +29,11 @@ namespace GameApp.Gameplay.Physics
 			return new BoxHitbox(ground.TopLeftCorner, bottomRightCorner);
 		}
 
+		public static Hitbox GetObstacleHitbox(Obstacle obstacle)
+		{
+			return new BoxHitbox(obstacle.TopLeftCorner, obstacle.BottomRightCorner);
+		}
+
 		public static Hitbox GetCollectibleHitbox(Collectible collectible)
 		{
 			float hitboxWidth = PhysicsValues.CollectibleHitboxWidth;

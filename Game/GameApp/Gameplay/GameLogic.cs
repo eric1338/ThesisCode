@@ -30,26 +30,6 @@ namespace GameApp.Gameplay
 			return levelAttempt.LevelProgression;
 		}
 
-		private Vector2 GetPlayerPosition()
-		{
-			return GetLevelProgression().CurrentPlayerPosition;
-		}
-
-
-
-		private Vector2 GetLeftFootPosition()
-		{
-			return PhysicsValues.GetLeftFootPosition(GetPlayerPosition());
-		}
-
-		private Vector2 GetRightFootPosition()
-		{
-			return PhysicsValues.GetRightFootPosition(GetPlayerPosition());
-		}
-
-
-
-
 		public void PerformPlayerJump()
 		{
 			gamePhysics.PerformJump(GetLevelProgression().CurrentPlayerPosition);
@@ -57,39 +37,36 @@ namespace GameApp.Gameplay
 
 		public void DoLogic()
 		{
+			GetLevelProgression().UpdateTime(1.0f / GeneralValues.FPS);
+
 			SetNewPosition();
 
+			if (GetLevelProgression().IsPlayerInGodmode()) return;
+
+			CheckPlayerObstacleCollision();
 			CheckPlayerCollectibleCollision();
 		}
 
 		private void SetNewPosition()
 		{
-			// TODO: temp
-			Visual.LevelDrawer.ClearPfuschs();
-
 			Vector2 oldPosition = GetLevelProgression().CurrentPlayerPosition;
 
 			Vector2 newPosition = gamePhysics.DoPlayerPhysics(oldPosition);
 
-			if (!LevelAnalysis.IsPlayerOnGround(levelAttempt.Level, newPosition))
+			if (!LevelAnalysis.IsVectorOnGround(levelAttempt.Level, newPosition))
 			{
 				Ground groundCollidedWith = collisions.GetPlayerGroundCollision(newPosition);
 
 				if (groundCollidedWith != null)
 				{
-					Vector2 rightFoot = newPosition + new Vector2(0.0f, 0.0f);
+					Vector2 rightFoot = PhysicsValues.GetRightFootPosition(newPosition);
 
 					float deltaX = Math.Abs(rightFoot.X - groundCollidedWith.LeftX);
 					float deltaY = Math.Abs(groundCollidedWith.TopY - rightFoot.Y);
 
 					if (deltaY > deltaX)
 					{
-						Console.WriteLine("failed :(");
-						Console.WriteLine("x " + groundCollidedWith.LeftX);
-						Console.WriteLine("~ " + deltaX + " | " + deltaY);
-						Console.WriteLine("rightFoot.Y: " + rightFoot.Y);
-						Console.WriteLine("ground.Y: " + groundCollidedWith.TopY);
-						Console.WriteLine(" ");
+						AddPlayerFail();
 					}
 
 					newPosition = new Vector2(newPosition.X, groundCollidedWith.TopY);
@@ -101,12 +78,29 @@ namespace GameApp.Gameplay
 			GetLevelProgression().CurrentPlayerPosition = newPosition;
 		}
 
+		private void AddPlayerFail()
+		{
+			GetLevelProgression().ActivateGodmode(GameplayValues.SecondsOfGodmodeAfterFail);
+
+			Console.WriteLine("failed :(");
+		}
+
+		private void CheckPlayerObstacleCollision()
+		{
+			if (collisions.DoesPlayerCollideWithAnObstacle(GetLevelProgression().CurrentPlayerPosition))
+			{
+				AddPlayerFail();
+			}
+		}
+
 		private void CheckPlayerCollectibleCollision()
 		{
 			List<Collectible> collectedCollectibles = collisions.GetPlayerCollectibleCollisions(GetLevelProgression());
 
 			foreach (Collectible collectible in collectedCollectibles)
 			{
+				// TODO: Punkte hier berechnen, nicht in LevelProgression
+
 				GetLevelProgression().CollectCollectible(collectible);
 			}
 		}

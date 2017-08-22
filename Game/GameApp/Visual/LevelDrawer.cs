@@ -26,9 +26,12 @@ namespace GameApp.Visual
 		{
 			CalculateVisualCenter(levelProgression);
 
+			DrawBackground();
+
 			DrawGrounds();
+			DrawObstacles();
 			DrawCollectibles(levelProgression);
-			DrawPlayer(levelProgression.CurrentPlayerPosition);
+			DrawPlayer(levelProgression);
 
 			GL.Color3(1.0f, 0.0f, 0.3f);
 
@@ -48,15 +51,15 @@ namespace GameApp.Visual
 		{
 			Vector2 playerPosition = levelProgression.CurrentPlayerPosition;
 
-			Ground groundBelowPlayer = LevelAnalysis.GetGroundBelowPlayer(level, playerPosition);
+			Ground groundBelowPlayer = LevelAnalysis.GetGroundBelowVector(level, playerPosition);
 
 			if (groundBelowPlayer != null)
 			{
 				return new Vector2(playerPosition.X, groundBelowPlayer.TopY);
 			}
 
-			Ground groundLeftFromPlayer = LevelAnalysis.GetGroundLeftFromPlayer(level, playerPosition);
-			Ground groundRightFromPlayer = LevelAnalysis.GetGroundRightFromPlayer(level, playerPosition);
+			Ground groundLeftFromPlayer = LevelAnalysis.GetGroundLeftFromVector(level, playerPosition);
+			Ground groundRightFromPlayer = LevelAnalysis.GetGroundRightFromVector(level, playerPosition);
 
 			if (groundLeftFromPlayer == null || groundRightFromPlayer == null)
 			{
@@ -94,10 +97,19 @@ namespace GameApp.Visual
 			return IsCoordOnScreen(leftestObjectX) || IsCoordOnScreen(rightestObjectX);
 		}
 
-
-		private void DrawPlayer(Vector2 playerPosition)
+		private void DrawBackground()
 		{
-			GL.Color3(0.1f, 0.15f, 0.2f);
+			GL.Color3(0.4f, 0.8f, 1.0f);
+
+			DrawSquare(new Vector2(-2.1f, 1.1f), new Vector2(2.1f, -1.1f), false);
+		}
+
+		private void DrawPlayer(LevelProgression levelProgression)
+		{
+			if (levelProgression.IsPlayerInGodmode()) GL.Color3(1.0f, 1.0f, 1.0f);
+			else GL.Color3(0.2f, 0.35f, 0.6f);
+
+			Vector2 playerPosition = levelProgression.CurrentPlayerPosition;
 
 			float x1 = playerPosition.X - 0.2f;
 			float x2 = playerPosition.X + 0.2f;
@@ -120,12 +132,24 @@ namespace GameApp.Visual
 
 		private void DrawGround(Ground ground)
 		{
-			GL.Color3(0.2f, 0.1f, 0.0f);
+			GL.Color3(0.7f, 0.2f, 0.3f);
 
 			Vector2 v1 = new Vector2(ground.LeftX, ground.TopY);
 			Vector2 v2 = new Vector2(ground.RightX, -10.0f);
 
 			DrawSquare(v1, v2);
+		}
+
+		private void DrawObstacles()
+		{
+			foreach (Obstacle obstacle in level.Obstacles) DrawObstacle(obstacle);
+		}
+
+		private void DrawObstacle(Obstacle obstacle)
+		{
+			GL.Color3(1.0f, 0.8f, 0.0f);
+
+			DrawSquare(obstacle.TopLeftCorner, obstacle.BottomRightCorner);
 		}
 
 		private void DrawCollectibles(LevelProgression levelProgression)
@@ -176,9 +200,16 @@ namespace GameApp.Visual
 
 		private void DrawSquare(Vector2 topLeft, Vector2 bottomRight)
 		{
+			DrawSquare(topLeft, bottomRight, true);
+		}
 
-			topLeft = GetTransformedVector(topLeft);
-			bottomRight = GetTransformedVector(bottomRight);
+		private void DrawSquare(Vector2 topLeft, Vector2 bottomRight, bool transformVectors)
+		{
+			if (transformVectors)
+			{
+				topLeft = GetTransformedVector(topLeft);
+				bottomRight = GetTransformedVector(bottomRight);
+			}
 
 			GL.Begin(PrimitiveType.Quads);
 			GL.Vertex2(topLeft.X, bottomRight.Y);

@@ -11,6 +11,7 @@ namespace GameApp.Levels
 	{
 
 		public List<Ground> Grounds { get; set; }
+		public List<Obstacle> Obstacles { get; set; }
 		public List<Collectible> Collectibles { get; set; }
 
 		public Vector2 PlayerStartingPosition { get; set; }
@@ -18,6 +19,7 @@ namespace GameApp.Levels
 		public Level()
 		{
 			Grounds = new List<Ground>();
+			Obstacles = new List<Obstacle>();
 			Collectibles = new List<Collectible>();
 		}
 
@@ -32,6 +34,10 @@ namespace GameApp.Levels
 			level.AddGround(g1);
 			level.AddGround(g2);
 			level.AddGround(g3);
+
+			Obstacle o1 = new Obstacle(new Vector2(3.05f, 1.05f), new Vector2(3.25f, 0.95f));
+
+			level.AddObstacle(o1);
 
 			Collectible c1 = new Collectible(0, new Vector2(4f, 1.5f));
 			Collectible c2 = new Collectible(1, new Vector2(6.5f, 1f));
@@ -49,6 +55,11 @@ namespace GameApp.Levels
 		public void AddGround(Ground ground)
 		{
 			Grounds.Add(ground);
+		}
+
+		public void AddObstacle(Obstacle obstacle)
+		{
+			Obstacles.Add(obstacle);
 		}
 
 		public void AddCollectible(Collectible collectible)

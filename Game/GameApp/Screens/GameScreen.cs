@@ -20,6 +20,8 @@ namespace GameApp.Screens
 		private GameLogic gameLogic;
 		private LevelDrawer levelDrawer;
 
+		private bool isGamePaused = false;
+
 		public GameScreen()
 		{
 			levelAttempt = new LevelAttempt(Level.CreateTestLevel());
@@ -31,10 +33,15 @@ namespace GameApp.Screens
 			AddKeyToSingleUserActionMapping(Key.W, UserAction.Jump);
 			AddKeyToSingleUserActionMapping(Key.Space, UserAction.Jump);
 
+			AddKeyToSingleUserActionMapping(Key.P, UserAction.TogglePauseGame);
+
 			AddKeyToProlongedUserActionMapping(Key.D, UserAction.Duck);
 
 			AddSingleUserActionToFunctionMapping(UserAction.Jump, Jump);
-			AddProlongedUserActionToFunctionMapping(UserAction.Duck, DuckTest);
+
+			AddSingleUserActionToFunctionMapping(UserAction.TogglePauseGame, TogglePauseGame);
+
+			AddProlongedUserActionToFunctionMapping(UserAction.Duck, Duck);
 		}
 
 		private LevelProgression GetLevelProgression()
@@ -44,27 +51,32 @@ namespace GameApp.Screens
 
 		private void Jump()
 		{
+			if (isGamePaused) return;
+
 			gameLogic.PerformPlayerJump();
 		}
 
-		private bool testVar = false;
-
-		private void DuckTest(bool value)
+		private void Duck(bool value)
 		{
-			testVar = value;
+			if (isGamePaused) return;
+		}
+
+		private void TogglePauseGame()
+		{
+			isGamePaused = !isGamePaused;
 		}
 
 		public override void DoLogic()
 		{
 			ProcessUserActions();
 
+			if (isGamePaused) return;
+
 			gameLogic.DoLogic();
 		}
 
 		public override void Draw()
 		{
-			levelDrawer.Test(testVar);
-
 			levelDrawer.DrawLevel(levelAttempt.LevelProgression);
 		}
 

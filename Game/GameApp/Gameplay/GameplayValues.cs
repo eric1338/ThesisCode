@@ -11,5 +11,7 @@ namespace GameApp.Gameplay
 
 		public static readonly int PointsForCollectible = 100;
 
+		public static readonly float SecondsOfGodmodeAfterFail = 3;
+
 	}
 }

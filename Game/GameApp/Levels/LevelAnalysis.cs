@@ -11,11 +11,11 @@ namespace GameApp.Levels
 	class LevelAnalysis
 	{
 
-		public static Ground GetGroundBelowPlayer(Level level, Vector2 playerPosition)
+		public static Ground GetGroundBelowVector(Level level, Vector2 vector)
 		{
 			foreach (Ground ground in level.Grounds)
 			{
-				if (playerPosition.X > ground.LeftX && playerPosition.X < ground.RightX)
+				if (vector.X > ground.LeftX && vector.X < ground.RightX)
 				{
 					return ground;
 				}
@@ -26,16 +26,16 @@ namespace GameApp.Levels
 
 		// TODO: Rumpf beider Methoden vereinigen
 
-		public static Ground GetGroundLeftFromPlayer(Level level, Vector2 playerPosition)
+		public static Ground GetGroundLeftFromVector(Level level, Vector2 vector)
 		{
 			Ground bestGround = null;
 			float bestDistance = 99999999.0f;
 
 			foreach (Ground ground in level.Grounds)
 			{
-				if (ground.RightX > playerPosition.X) continue;
+				if (ground.RightX > vector.X) continue;
 
-				float distance = playerPosition.X - ground.RightX;
+				float distance = vector.X - ground.RightX;
 
 				if (distance < bestDistance)
 				{
@@ -47,16 +47,16 @@ namespace GameApp.Levels
 			return bestGround;
 		}
 
-		public static Ground GetGroundRightFromPlayer(Level level, Vector2 playerPosition)
+		public static Ground GetGroundRightFromVector(Level level, Vector2 vector)
 		{
 			Ground bestGround = null;
 			float bestDistance = 99999999.0f;
 
 			foreach (Ground ground in level.Grounds)
 			{
-				if (ground.LeftX < playerPosition.X) continue;
+				if (ground.LeftX < vector.X) continue;
 
-				float distance = ground.LeftX - playerPosition.X;
+				float distance = ground.LeftX - vector.X;
 
 				if (distance < bestDistance)
 				{
@@ -68,19 +68,18 @@ namespace GameApp.Levels
 			return bestGround;
 		}
 
-		public static bool IsPlayerOnGround(Level level, Vector2 playerPosition)
+		public static bool IsVectorOnGround(Level level, Vector2 vector)
 		{
-			Ground groundBelowPlayer = GetGroundBelowPlayer(level, playerPosition);
+			Ground groundBelowVector = GetGroundBelowVector(level, vector);
 
-			if (groundBelowPlayer == null) return false;
+			if (groundBelowVector == null) return false;
 
-			return IsPlayerOnGround(groundBelowPlayer, playerPosition);
+			return IsVectorOnGround(groundBelowVector, vector);
 		}
 
-		public static bool IsPlayerOnGround(Ground ground, Vector2 playerPosition)
+		private static bool IsVectorOnGround(Ground ground, Vector2 vector)
 		{
-			return playerPosition.Y == ground.TopY;
-			//return playerPosition.Y < (ground.TopY - Utils.Constants.Epsilon);
+			return vector.Y == ground.TopY;
 		}
 
 	}

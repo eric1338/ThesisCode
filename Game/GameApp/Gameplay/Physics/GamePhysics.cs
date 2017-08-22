@@ -23,7 +23,10 @@ namespace GameApp.Gameplay.Physics
 		
 		private bool IsPlayerOnGround(Vector2 playerPosition)
 		{
-			return LevelAnalysis.IsPlayerOnGround(level, playerPosition);
+			Vector2 leftFoot = PhysicsValues.GetLeftFootPosition(playerPosition);
+			Vector2 rightFoot = PhysicsValues.GetRightFootPosition(playerPosition);
+
+			return LevelAnalysis.IsVectorOnGround(level, leftFoot) || LevelAnalysis.IsVectorOnGround(level, rightFoot);
 		}
 
 		public void PerformJump(Vector2 playerPosition)
@@ -41,7 +44,7 @@ namespace GameApp.Gameplay.Physics
 
 		public Vector2 DoPlayerPhysics(Vector2 playerPosition)
 		{
-			if (!IsPlayerOnGround(playerPosition + new Vector2(0.2f, 0.0f)))
+			if (!IsPlayerOnGround(playerPosition))
 			{
 				verticalVelocity -= PhysicsValues.GravityAcceleration;
 			}

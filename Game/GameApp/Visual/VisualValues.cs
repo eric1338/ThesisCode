@@ -9,8 +9,6 @@ namespace GameApp.Visual
 	class VisualValues
 	{
 
-		public static readonly int FPS = 60;
-
 		public static int ScreenWidth;
 		public static int ScreenHeight;
 

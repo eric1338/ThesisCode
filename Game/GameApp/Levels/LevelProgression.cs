@@ -16,11 +16,31 @@ namespace GameApp.Levels
 
 		public List<Collectible> RemainingCollectibles { get; set; }
 
+		private float secondsPlayed = 0;
+		private float secondsOfGodmodeLeft = 0;
+
 		public LevelProgression(Level level)
 		{
 			RemainingCollectibles = new List<Collectible>(level.Collectibles);
 
 			CurrentPlayerPosition = level.PlayerStartingPosition;
+		}
+
+		public void UpdateTime(float timeSinceLastUpdate)
+		{
+			secondsPlayed += timeSinceLastUpdate;
+
+			if (secondsOfGodmodeLeft > 0) secondsOfGodmodeLeft -= timeSinceLastUpdate;
+		}
+
+		public void ActivateGodmode(float secondsOfGodmode)
+		{
+			secondsOfGodmodeLeft = secondsOfGodmode;
+		}
+
+		public bool IsPlayerInGodmode()
+		{
+			return secondsOfGodmodeLeft > 0;
 		}
 
 		public void CollectCollectible(Collectible collectible)

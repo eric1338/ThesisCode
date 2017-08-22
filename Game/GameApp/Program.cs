@@ -19,7 +19,7 @@ namespace GameApp
 
 			MyGameWindow gameWindow = new MyGameWindow(width, height);
 
-			gameWindow.Run(VisualValues.FPS);
+			gameWindow.Run(GeneralValues.FPS);
 
 		}
 	}

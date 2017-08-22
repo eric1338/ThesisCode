@@ -25,26 +25,6 @@ namespace GameApp.Gameplay.Physics
 		}
 
 
-		public List<Collectible> GetPlayerCollectibleCollisions(LevelProgression levelProgression)
-		{
-			List<Collectible> collectedCollectibles = new List<Collectible>();
-
-			Hitbox playerHitbox = GetPlayerHitbox(levelProgression.CurrentPlayerPosition);
-
-			Visual.LevelDrawer.AddPfusch1(playerHitbox.Corners, new Vector3(1, 0, 0));
-
-			foreach (Collectible collectible in levelProgression.RemainingCollectibles)
-			{
-				Hitbox collectibleHitbox = Hitboxes.GetCollectibleHitbox(collectible);
-
-				Visual.LevelDrawer.AddPfusch1(collectibleHitbox.Corners, new Vector3(1, 1, 0));
-
-				if (playerHitbox.CollidesWith(collectibleHitbox)) collectedCollectibles.Add(collectible);
-			}
-
-			return collectedCollectibles;
-		}
-
 		public Ground GetPlayerGroundCollision(Vector2 playerPosition)
 		{
 			Hitbox playerHitbox = GetPlayerHitbox(playerPosition);
@@ -53,12 +33,40 @@ namespace GameApp.Gameplay.Physics
 			{
 				Hitbox groundHitbox = Hitboxes.GetGroundHitbox(ground);
 
-				Visual.LevelDrawer.AddPfusch1(groundHitbox.Corners, new Vector3(0, 1, 0));
-
 				if (playerHitbox.CollidesWith(groundHitbox)) return ground;
 			}
 
 			return null;
+		}
+
+		public bool DoesPlayerCollideWithAnObstacle(Vector2 playerPosition)
+		{
+			Hitbox playerHitbox = GetPlayerHitbox(playerPosition);
+
+			foreach (Obstacle obstacle in level.Obstacles)
+			{
+				Hitbox obstacleHitbox = Hitboxes.GetObstacleHitbox(obstacle);
+
+				if (playerHitbox.CollidesWith(obstacleHitbox)) return true;
+			}
+
+			return false;
+		}
+
+		public List<Collectible> GetPlayerCollectibleCollisions(LevelProgression levelProgression)
+		{
+			List<Collectible> collectedCollectibles = new List<Collectible>();
+
+			Hitbox playerHitbox = GetPlayerHitbox(levelProgression.CurrentPlayerPosition);
+
+			foreach (Collectible collectible in levelProgression.RemainingCollectibles)
+			{
+				Hitbox collectibleHitbox = Hitboxes.GetCollectibleHitbox(collectible);
+
+				if (playerHitbox.CollidesWith(collectibleHitbox)) collectedCollectibles.Add(collectible);
+			}
+
+			return collectedCollectibles;
 		}
 
 	}
