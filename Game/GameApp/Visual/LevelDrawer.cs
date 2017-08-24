@@ -115,6 +115,13 @@ namespace GameApp.Visual
 			float x2 = playerPosition.X + 0.2f;
 			float y1 = playerPosition.Y + 0.8f;
 
+			if (!levelProgression.IsPlayerStanding)
+			{
+				x1 = playerPosition.X - 0.4f;
+				x2 = playerPosition.X + 0.4f;
+				y1 = playerPosition.Y + 0.4f;
+			}
+
 			Vector2 v1 = new Vector2(x1, y1);
 			Vector2 v2 = new Vector2(x2, playerPosition.Y);
 
@@ -147,7 +154,7 @@ namespace GameApp.Visual
 
 		private void DrawObstacle(Obstacle obstacle)
 		{
-			GL.Color3(1.0f, 0.8f, 0.0f);
+			GL.Color3(1.0f, 0.6f, 0.4f);
 
 			DrawSquare(obstacle.TopLeftCorner, obstacle.BottomRightCorner);
 		}

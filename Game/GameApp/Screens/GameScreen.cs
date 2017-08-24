@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GameApp.Audio;
 
 namespace GameApp.Screens
 {
@@ -20,6 +21,8 @@ namespace GameApp.Screens
 		private GameLogic gameLogic;
 		private LevelDrawer levelDrawer;
 
+		private MusicPlayer musicPlayer;
+
 		private bool isGamePaused = false;
 
 		public GameScreen()
@@ -29,6 +32,7 @@ namespace GameApp.Screens
 			gameLogic = new GameLogic(levelAttempt);
 			levelDrawer = new LevelDrawer(levelAttempt.Level);
 
+			musicPlayer = new MusicPlayer(@"C:\ForVS\taylor.mp3");
 
 			AddKeyToSingleUserActionMapping(Key.W, UserAction.Jump);
 			AddKeyToSingleUserActionMapping(Key.Space, UserAction.Jump);
@@ -38,9 +42,7 @@ namespace GameApp.Screens
 			AddKeyToProlongedUserActionMapping(Key.D, UserAction.Duck);
 
 			AddSingleUserActionToFunctionMapping(UserAction.Jump, Jump);
-
 			AddSingleUserActionToFunctionMapping(UserAction.TogglePauseGame, TogglePauseGame);
-
 			AddProlongedUserActionToFunctionMapping(UserAction.Duck, Duck);
 		}
 
@@ -59,11 +61,16 @@ namespace GameApp.Screens
 		private void Duck(bool value)
 		{
 			if (isGamePaused) return;
+
+			gameLogic.SetPlayerIsStanding(!value);
 		}
 
 		private void TogglePauseGame()
 		{
 			isGamePaused = !isGamePaused;
+
+			if (isGamePaused) musicPlayer.PauseTrack();
+			else musicPlayer.PlayTrack();
 		}
 
 		public override void DoLogic()

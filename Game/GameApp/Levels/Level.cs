@@ -36,8 +36,10 @@ namespace GameApp.Levels
 			level.AddGround(g3);
 
 			Obstacle o1 = new Obstacle(new Vector2(3.05f, 1.05f), new Vector2(3.25f, 0.95f));
+			Obstacle o2 = new Obstacle(new Vector2(8.4f, 1.1f), new Vector2(8.6f, 1.0f));
 
 			level.AddObstacle(o1);
+			level.AddObstacle(o2);
 
 			Collectible c1 = new Collectible(0, new Vector2(4f, 1.5f));
 			Collectible c2 = new Collectible(1, new Vector2(6.5f, 1f));

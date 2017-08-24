@@ -19,15 +19,20 @@ namespace GameApp.Gameplay.Physics
 			this.level = level;
 		}
 		
-		private Hitbox GetPlayerHitbox(Vector2 playerPosition)
+		private Hitbox GetPlayerHitbox(Vector2 playerPosition, bool isPlayerStanding)
 		{
-			return Hitboxes.GetPlayerHitbox(playerPosition);
+			return Hitboxes.GetPlayerHitbox(playerPosition, isPlayerStanding);
 		}
 
-
-		public Ground GetPlayerGroundCollision(Vector2 playerPosition)
+		public Ground GetPlayerGroundCollision(LevelProgression levelProgression)
 		{
-			Hitbox playerHitbox = GetPlayerHitbox(playerPosition);
+			return GetPlayerGroundCollision(levelProgression.CurrentPlayerPosition,
+				levelProgression.IsPlayerStanding);
+		}
+
+		public Ground GetPlayerGroundCollision(Vector2 playerPosition, bool isPlayerStanding)
+		{
+			Hitbox playerHitbox = GetPlayerHitbox(playerPosition, isPlayerStanding);
 
 			foreach (Ground ground in level.Grounds)
 			{
@@ -39,9 +44,15 @@ namespace GameApp.Gameplay.Physics
 			return null;
 		}
 
-		public bool DoesPlayerCollideWithAnObstacle(Vector2 playerPosition)
+		public bool DoesPlayerCollideWithAnObstacle(LevelProgression levelProgression)
 		{
-			Hitbox playerHitbox = GetPlayerHitbox(playerPosition);
+			return DoesPlayerCollideWithAnObstacle(levelProgression.CurrentPlayerPosition,
+				levelProgression.IsPlayerStanding);
+		}
+
+		public bool DoesPlayerCollideWithAnObstacle(Vector2 playerPosition, bool isPlayerStanding)
+		{
+			Hitbox playerHitbox = GetPlayerHitbox(playerPosition, isPlayerStanding);
 
 			foreach (Obstacle obstacle in level.Obstacles)
 			{
@@ -57,7 +68,7 @@ namespace GameApp.Gameplay.Physics
 		{
 			List<Collectible> collectedCollectibles = new List<Collectible>();
 
-			Hitbox playerHitbox = GetPlayerHitbox(levelProgression.CurrentPlayerPosition);
+			Hitbox playerHitbox = GetPlayerHitbox(levelProgression.CurrentPlayerPosition, levelProgression.IsPlayerStanding);
 
 			foreach (Collectible collectible in levelProgression.RemainingCollectibles)
 			{

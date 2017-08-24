@@ -11,13 +11,24 @@ namespace GameApp.Gameplay.Physics
 	class Hitboxes
 	{
 
-		public static Hitbox GetPlayerHitbox(Vector2 playerPosition)
+		public static Hitbox GetPlayerHitbox(Vector2 playerPosition, bool isPlayerStanding)
 		{
-			float halfPlayerWidth = PhysicsValues.GetHalfPlayerHitboxWidth();
+			Vector2 topLeftCorner;
+			Vector2 bottomRightCorner;
+
+			float playerWidth = PhysicsValues.PlayerHitboxWidth;
 			float playerHeight = PhysicsValues.PlayerHitboxHeight;
 
-			Vector2 topLeftCorner = new Vector2(playerPosition.X - halfPlayerWidth, playerPosition.Y + playerHeight);
-			Vector2 bottomRightCorner = new Vector2(playerPosition.X + halfPlayerWidth, playerPosition.Y);
+			if (isPlayerStanding)
+			{
+				topLeftCorner = new Vector2(playerPosition.X - (playerWidth / 2), playerPosition.Y + playerHeight);
+				bottomRightCorner = new Vector2(playerPosition.X + (playerWidth / 2), playerPosition.Y);
+			}
+			else
+			{
+				topLeftCorner = new Vector2(playerPosition.X - (playerHeight / 2), playerPosition.Y + playerWidth);
+				bottomRightCorner = new Vector2(playerPosition.X + (playerHeight / 2), playerPosition.Y);
+			}
 
 			return new BoxHitbox(topLeftCorner, bottomRightCorner);
 		}

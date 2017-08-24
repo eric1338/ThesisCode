@@ -16,6 +16,8 @@ namespace GameApp.Levels
 
 		public List<Collectible> RemainingCollectibles { get; set; }
 
+		public bool IsPlayerStanding { get; set; }
+
 		private float secondsPlayed = 0;
 		private float secondsOfGodmodeLeft = 0;
 
@@ -24,6 +26,8 @@ namespace GameApp.Levels
 			RemainingCollectibles = new List<Collectible>(level.Collectibles);
 
 			CurrentPlayerPosition = level.PlayerStartingPosition;
+
+			IsPlayerStanding = true;
 		}
 
 		public void UpdateTime(float timeSinceLastUpdate)

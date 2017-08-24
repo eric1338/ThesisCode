@@ -35,6 +35,11 @@ namespace GameApp.Gameplay
 			gamePhysics.PerformJump(GetLevelProgression().CurrentPlayerPosition);
 		}
 
+		public void SetPlayerIsStanding(bool isPlayerStanding)
+		{
+			GetLevelProgression().IsPlayerStanding = isPlayerStanding;
+		}
+
 		public void DoLogic()
 		{
 			GetLevelProgression().UpdateTime(1.0f / GeneralValues.FPS);
@@ -55,7 +60,9 @@ namespace GameApp.Gameplay
 
 			if (!LevelAnalysis.IsVectorOnGround(levelAttempt.Level, newPosition))
 			{
-				Ground groundCollidedWith = collisions.GetPlayerGroundCollision(newPosition);
+				bool isPlayerStanding = GetLevelProgression().IsPlayerStanding;
+
+				Ground groundCollidedWith = collisions.GetPlayerGroundCollision(newPosition, isPlayerStanding);
 
 				if (groundCollidedWith != null)
 				{
@@ -87,7 +94,7 @@ namespace GameApp.Gameplay
 
 		private void CheckPlayerObstacleCollision()
 		{
-			if (collisions.DoesPlayerCollideWithAnObstacle(GetLevelProgression().CurrentPlayerPosition))
+			if (collisions.DoesPlayerCollideWithAnObstacle(GetLevelProgression()))
 			{
 				AddPlayerFail();
 			}
