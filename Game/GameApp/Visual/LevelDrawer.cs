@@ -44,7 +44,7 @@ namespace GameApp.Visual
 		private void CalculateVisualCenter(LevelProgression levelProgression)
 		{
 			// TODO: 0.5f -> stattdessen variabel (Spielergröße / Zoom)
-			visualCenter = GetVisualCenter(levelProgression) + new Vector2(0.5f, 0.5f);
+			visualCenter = GetVisualCenter(levelProgression) + VisualValues.ScreenCenterOffset;
 		}
 
 		private Vector2 GetVisualCenter(LevelProgression levelProgression)
@@ -94,7 +94,10 @@ namespace GameApp.Visual
 
 		private bool IsObjectOnScreen(float leftestObjectX, float rightestObjectX)
 		{
-			return IsCoordOnScreen(leftestObjectX) || IsCoordOnScreen(rightestObjectX);
+			return true;
+
+			// TODO: evtl wieder (richtig) implementieren
+			//return IsCoordOnScreen(leftestObjectX) || IsCoordOnScreen(rightestObjectX);
 		}
 
 		private void DrawBackground()
@@ -111,15 +114,18 @@ namespace GameApp.Visual
 
 			Vector2 playerPosition = levelProgression.CurrentPlayerPosition;
 
-			float x1 = playerPosition.X - 0.2f;
-			float x2 = playerPosition.X + 0.2f;
-			float y1 = playerPosition.Y + 0.8f;
+			float halfPlayerWidth = VisualValues.PlayerWidth / 2;
+			float halfPlayerHeight = VisualValues.PlayerHeight / 2;
+
+			float x1 = playerPosition.X - halfPlayerWidth;
+			float x2 = playerPosition.X + halfPlayerWidth;
+			float y1 = playerPosition.Y + VisualValues.PlayerHeight;
 
 			if (!levelProgression.IsPlayerStanding)
 			{
-				x1 = playerPosition.X - 0.4f;
-				x2 = playerPosition.X + 0.4f;
-				y1 = playerPosition.Y + 0.4f;
+				x1 = playerPosition.X - halfPlayerHeight;
+				x2 = playerPosition.X + halfPlayerHeight;
+				y1 = playerPosition.Y + VisualValues.PlayerWidth;
 			}
 
 			Vector2 v1 = new Vector2(x1, y1);

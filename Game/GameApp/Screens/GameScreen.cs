@@ -25,7 +25,7 @@ namespace GameApp.Screens
 
 		private bool isGamePaused = false;
 
-		public GameScreen()
+		public GameScreen(MyGameWindow gameWindow) : base(gameWindow)
 		{
 			levelAttempt = new LevelAttempt(Level.CreateTestLevel());
 

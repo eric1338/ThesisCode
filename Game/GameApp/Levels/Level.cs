@@ -27,7 +27,7 @@ namespace GameApp.Levels
 		{
 			Level level = new Level();
 
-			Ground g1 = new Ground(-1, 6, 1);
+			Ground g1 = new Ground(-0.15f, 6, 1);
 			Ground g2 = new Ground(7, 13, 0.5f);
 			Ground g3 = new Ground(13.5f, 20, 0.6f);
 
@@ -36,7 +36,7 @@ namespace GameApp.Levels
 			level.AddGround(g3);
 
 			Obstacle o1 = new Obstacle(new Vector2(3.05f, 1.05f), new Vector2(3.25f, 0.95f));
-			Obstacle o2 = new Obstacle(new Vector2(8.4f, 1.1f), new Vector2(8.6f, 1.0f));
+			Obstacle o2 = new Obstacle(new Vector2(8.4f, 0.8f), new Vector2(8.6f, 0.7f));
 
 			level.AddObstacle(o1);
 			level.AddObstacle(o2);
@@ -68,6 +68,84 @@ namespace GameApp.Levels
 		{
 			Collectibles.Add(collectible);
 		}
+
+
+
+		// ungenutzt + ungetestet + muss noch refactored werden
+
+		private Dictionary<int, List<Ground>> optimizedGrounds = new Dictionary<int, List<Ground>>();
+
+
+		// private -> public (falls es genutzt werden sollte)
+		private List<Ground> GetGrounds(float playerPositionX)
+		{
+			return optimizedGrounds[GetIndex(playerPositionX)];
+		}
+
+
+		private int GetIndex(float x)
+		{
+			return (int) Math.Floor(x / GeneralValues.OptimizationX);
+		}
+
+		private float GetLeftX(int index)
+		{
+			return Math.Max(0, index - 1) * GeneralValues.OptimizationX;
+		}
+
+		private float GetRightX(int index)
+		{
+			return (index + 2) * GeneralValues.OptimizationX;
+		}
+		
+		private bool IsVectorInRange(float vectorX, float leftX, float rightX)
+		{
+			return vectorX > leftX || vectorX < rightX;
+		}
+
+		private bool IsObjectInRange(float leftestObjectX, float rightestObjectX, float leftX, float rightX)
+		{
+			return IsVectorInRange(leftestObjectX, leftX, rightX) || IsVectorInRange(rightestObjectX, leftX, rightX);
+		}
+
+
+		private void OptimizeGrounds()
+		{
+			float rightestX = -1;
+
+			foreach (Ground ground in Grounds)
+			{
+				rightestX = Math.Max(rightestX, ground.RightX);
+			}
+
+			int lastIndex = GetIndex(rightestX) + 2;
+
+			for (int i = 0; i <= lastIndex; i++)
+			{
+				CreateGroundSchachtel(Grounds, i);
+			}
+		}
+
+
+		private void CreateGroundSchachtel(List<Ground> allGrounds, int index)
+		{
+			List<Ground> schachtel = new List<Ground>();
+
+			float leftX = GetLeftX(index);
+			float rightX = GetRightX(index);
+
+			foreach (Ground ground in allGrounds)
+			{
+				if (IsObjectInRange(ground.LeftX, ground.RightX, leftX, rightX))
+				{
+					schachtel.Add(ground);
+				}
+			}
+			
+			optimizedGrounds[index] = schachtel;
+		}
+
+
 
 	}
 }

@@ -11,6 +11,8 @@ namespace GameApp.Screens
 	abstract class Screen
 	{
 
+		protected MyGameWindow gameWindow;
+
 		private InputManager inputManager = new InputManager();
 
 		// TODO: evtl in Mapping umbenennen
@@ -18,14 +20,19 @@ namespace GameApp.Screens
 		private Dictionary<UserAction, Action<bool>> prolongedUserActionFunctionMapping = new Dictionary<UserAction, Action<bool>>();
 
 
-		public Screen()
+		public Screen(MyGameWindow gameWindow)
 		{
-
+			this.gameWindow = gameWindow;
 		}
 
 		public abstract void DoLogic();
 
 		public abstract void Draw();
+
+		protected void SwitchToScreen(Screen screen)
+		{
+			gameWindow.SetScreen(screen);
+		}
 
 		public void ProcessKeyUp(Key key)
 		{

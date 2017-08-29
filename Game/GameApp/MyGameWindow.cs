@@ -35,7 +35,12 @@ namespace GameApp
 			KeyUp += MyGameWindow_KeyUp;
 			KeyDown += MyGameWindow_KeyDown;
 
-			currentScreen = new GameScreen();
+			currentScreen = new MainMenuScreen(this);
+		}
+
+		public void SetScreen(Screen newScreen)
+		{
+			currentScreen = newScreen;
 		}
 
 		private void MyGameWindow_KeyUp(object sender,  KeyboardKeyEventArgs e)
