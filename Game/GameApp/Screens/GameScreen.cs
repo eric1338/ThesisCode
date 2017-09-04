@@ -37,13 +37,16 @@ namespace GameApp.Screens
 			AddKeyToSingleUserActionMapping(Key.W, UserAction.Jump);
 			AddKeyToSingleUserActionMapping(Key.Space, UserAction.Jump);
 
+			AddKeyToSingleUserActionMapping(Key.R, UserAction.ResetLevel);
 			AddKeyToSingleUserActionMapping(Key.P, UserAction.TogglePauseGame);
 
 			AddKeyToProlongedUserActionMapping(Key.D, UserAction.Duck);
 
 			AddSingleUserActionToFunctionMapping(UserAction.Jump, Jump);
-			AddSingleUserActionToFunctionMapping(UserAction.TogglePauseGame, TogglePauseGame);
 			AddProlongedUserActionToFunctionMapping(UserAction.Duck, Duck);
+
+			AddSingleUserActionToFunctionMapping(UserAction.ResetLevel, ResetLevel);
+			AddSingleUserActionToFunctionMapping(UserAction.TogglePauseGame, TogglePauseGame);
 		}
 
 		private LevelProgression GetLevelProgression()
@@ -63,6 +66,11 @@ namespace GameApp.Screens
 			if (isGamePaused) return;
 
 			gameLogic.SetPlayerIsStanding(!value);
+		}
+
+		private void ResetLevel()
+		{
+			GetLevelProgression().Reset();
 		}
 
 		private void TogglePauseGame()

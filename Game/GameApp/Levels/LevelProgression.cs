@@ -11,6 +11,8 @@ namespace GameApp.Levels
 	class LevelProgression
 	{
 
+		private Level level;
+
 		public Vector2 CurrentPlayerPosition { get; set; }
 		public List<int> CollectedCollectibleIDs { get; set; }
 
@@ -18,16 +20,27 @@ namespace GameApp.Levels
 
 		public bool IsPlayerStanding { get; set; }
 
-		private float secondsPlayed = 0;
-		private float secondsOfGodmodeLeft = 0;
+		private float secondsPlayed;
+		private float secondsOfGodmodeLeft;
+
 
 		public LevelProgression(Level level)
+		{
+			this.level = level;
+
+			Reset();
+		}
+
+		public void Reset()
 		{
 			RemainingCollectibles = new List<Collectible>(level.Collectibles);
 
 			CurrentPlayerPosition = level.PlayerStartingPosition;
 
 			IsPlayerStanding = true;
+
+			secondsPlayed = 0;
+			secondsOfGodmodeLeft = 0;
 		}
 
 		public void UpdateTime(float timeSinceLastUpdate)

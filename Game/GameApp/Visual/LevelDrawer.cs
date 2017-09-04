@@ -1,6 +1,5 @@
 ﻿using GameApp.Levels;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,9 +32,9 @@ namespace GameApp.Visual
 			DrawCollectibles(levelProgression);
 			DrawPlayer(levelProgression);
 
-			GL.Color3(1.0f, 0.0f, 0.3f);
+			DrawDebugLines();
 
-			DrawPfuschs();
+			BasicGraphics.SetColor(1.0f, 0.0f, 0.3f);
 
 			//DrawOpenGLLine(new Vector2(-1, 0), new Vector2(1, 0));
 			//DrawOpenGLLine(new Vector2(0, -1), new Vector2(0, 1));
@@ -43,7 +42,6 @@ namespace GameApp.Visual
 
 		private void CalculateVisualCenter(LevelProgression levelProgression)
 		{
-			// TODO: 0.5f -> stattdessen variabel (Spielergröße / Zoom)
 			visualCenter = GetVisualCenter(levelProgression) + VisualValues.ScreenCenterOffset;
 		}
 
@@ -102,15 +100,15 @@ namespace GameApp.Visual
 
 		private void DrawBackground()
 		{
-			GL.Color3(0.4f, 0.8f, 1.0f);
+			BasicGraphics.SetColor(0.4f, 0.8f, 1.0f);
 
 			DrawSquare(new Vector2(-2.1f, 1.1f), new Vector2(2.1f, -1.1f), false);
 		}
 
 		private void DrawPlayer(LevelProgression levelProgression)
 		{
-			if (levelProgression.IsPlayerInGodmode()) GL.Color3(1.0f, 1.0f, 1.0f);
-			else GL.Color3(0.2f, 0.35f, 0.6f);
+			if (levelProgression.IsPlayerInGodmode()) BasicGraphics.SetColor(1.0f, 1.0f, 1.0f);
+			else BasicGraphics.SetColor(0.2f, 0.35f, 0.6f);
 
 			Vector2 playerPosition = levelProgression.CurrentPlayerPosition;
 
@@ -145,7 +143,7 @@ namespace GameApp.Visual
 
 		private void DrawGround(Ground ground)
 		{
-			GL.Color3(0.7f, 0.2f, 0.3f);
+			BasicGraphics.SetColor(0.7f, 0.2f, 0.3f);
 
 			Vector2 v1 = new Vector2(ground.LeftX, ground.TopY);
 			Vector2 v2 = new Vector2(ground.RightX, -10.0f);
@@ -160,7 +158,7 @@ namespace GameApp.Visual
 
 		private void DrawObstacle(Obstacle obstacle)
 		{
-			GL.Color3(1.0f, 0.6f, 0.4f);
+			BasicGraphics.SetColor(1.0f, 0.6f, 0.4f);
 
 			DrawSquare(obstacle.TopLeftCorner, obstacle.BottomRightCorner);
 		}
@@ -180,7 +178,7 @@ namespace GameApp.Visual
 
 		private void DrawCollectible(Collectible collectible)
 		{
-			GL.Color3(1.0f, 0.0f, 0.4f);
+			BasicGraphics.SetColor(1.0f, 0.0f, 0.4f);
 
 			float x = collectible.Position.X;
 			float y = collectible.Position.Y;
@@ -193,6 +191,7 @@ namespace GameApp.Visual
 		}
 
 
+
 		private Vector2 GetTransformedVector(Vector2 vector)
 		{
 			Vector2 newVector = vector - visualCenter;
@@ -203,13 +202,6 @@ namespace GameApp.Visual
 		}
 
 
-		private void DrawOpenGLLine(Vector2 point1, Vector2 point2)
-		{
-			GL.Begin(PrimitiveType.Lines);
-			GL.Vertex2(point1);
-			GL.Vertex2(point2);
-			GL.End();
-		}
 
 		private void DrawSquare(Vector2 topLeft, Vector2 bottomRight)
 		{
@@ -224,85 +216,63 @@ namespace GameApp.Visual
 				bottomRight = GetTransformedVector(bottomRight);
 			}
 
-			GL.Begin(PrimitiveType.Quads);
-			GL.Vertex2(topLeft.X, bottomRight.Y);
-			GL.Vertex2(topLeft.X, topLeft.Y);
-			GL.Vertex2(bottomRight.X, topLeft.Y);
-			GL.Vertex2(bottomRight.X, bottomRight.Y);
-			GL.End();
+			BasicGraphics.DrawSquare(topLeft, bottomRight);
 		}
 
 
-
-		class Pfusch
+		
+		class DebugLine
 		{
-			public Vector2 V1 { get; set; }
-			public Vector2 V2 { get; set; }
-			public Vector3 CL { get; set; }
+			public Vector2 Vector1 { get; set; }
+			public Vector2 Vector2 { get; set; }
+			public Vector3 Color { get; set; }
 
-			public Pfusch(Vector2 v1, Vector2 v2, Vector3 cl)
+			public DebugLine(Vector2 vector1, Vector2 vector2, Vector3 color)
 			{
-				V1 = v1;
-				V2 = v2;
-				CL = cl;
+				Vector1 = vector1;
+				Vector2 = vector2;
+				Color = color;
 			}
 		}
 
-		static List<Pfusch> pfuschs = new List<Pfusch>();
 
-		public static void AddPfusch(Vector2 v1, Vector2 v2, Vector3 cl)
+		private static List<DebugLine> debugLines = new List<DebugLine>();
+
+		public static void AddDebugLine(Vector2 vector1, Vector2 vector2, Vector3 color)
 		{
-			pfuschs.Add(new Pfusch(v1, v2, cl));
+			debugLines.Add(new DebugLine(vector1, vector2, color));
 		}
 
-		public static void AddPfusch1(List<Vector2> vs, Vector3 cl)
+		public static void AddDebugLines(List<Vector2> vectors, Vector3 color)
 		{
-			int l = vs.Count;
+			int vectorCount = vectors.Count;
 
-			for (int i = 0; i < l - 1; i++)
+			for (int i = 0; i < vectorCount - 1; i++)
 			{
-				pfuschs.Add(new Pfusch(vs[i], vs[i + 1], cl));
+				AddDebugLine(vectors[i], vectors[i + 1], color);
 			}
 
-			pfuschs.Add(new Pfusch(vs[l - 1], vs[0], cl));
+			AddDebugLine(vectors[vectorCount - 1], vectors[0], color);
 		}
 
-		public static void AddPfusch4(Vector2 v1, Vector2 v2, Vector2 v3, Vector2 v4, Vector3 cl)
+		public static void AddDebugSquare(Vector2 vector1, Vector2 vector2, Vector2 vector3, Vector2 vector4, Vector3 color)
 		{
-			pfuschs.Add(new Pfusch(v1, v2, cl));
-			pfuschs.Add(new Pfusch(v2, v3, cl));
-			pfuschs.Add(new Pfusch(v3, v4, cl));
-			pfuschs.Add(new Pfusch(v4, v1, cl));
+			AddDebugLine(vector1, vector2, color);
+			AddDebugLine(vector2, vector3, color);
+			AddDebugLine(vector3, vector4, color);
+			AddDebugLine(vector4, vector1, color);
 		}
 
-		public static void ClearPfuschs()
+		public void DrawDebugLines()
 		{
-			pfuschs.Clear();
-		}
-
-		public void DrawPfuschs()
-		{
-			foreach (Pfusch pfusch in pfuschs)
+			foreach (DebugLine debugLine in debugLines)
 			{
-				GL.Color3(pfusch.CL.X, pfusch.CL.Y, pfusch.CL.Z);
-				DrawOpenGLLine(GetTransformedVector(pfusch.V1), GetTransformedVector(pfusch.V2));
+				BasicGraphics.SetColor(debugLine.Color);
+				
+				BasicGraphics.DrawOpenGLLine(GetTransformedVector(debugLine.Vector1), GetTransformedVector(debugLine.Vector2));
 			}
-		}
 
-		public void Test(bool value)
-		{
-			if (value) GL.Color3(0.6f, 0.6f, 0.6f);
-			else GL.Color3(0.4f, 0.4f, 0.4f);
-
-			Vector2 topLeft = new Vector2(0.9f, 0.95f);
-			Vector2 bottomRight = new Vector2(0.95f, 0.9f);
-
-			GL.Begin(PrimitiveType.Quads);
-			GL.Vertex2(topLeft.X, bottomRight.Y);
-			GL.Vertex2(topLeft.X, topLeft.Y);
-			GL.Vertex2(bottomRight.X, topLeft.Y);
-			GL.Vertex2(bottomRight.X, bottomRight.Y);
-			GL.End();
+			debugLines.Clear();
 		}
 
 	}

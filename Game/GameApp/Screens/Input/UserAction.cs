@@ -10,6 +10,8 @@ namespace GameApp.Screens.Input
 	{
 		Jump,
 		Duck,
+
+		ResetLevel,
 		TogglePauseGame,
 
 		ChooseCurrentMenuItem
