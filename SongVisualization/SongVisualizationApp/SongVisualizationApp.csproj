@@ -37,6 +37,10 @@
       <HintPath>..\packages\MathNet.Numerics.3.20.0\lib\net40\MathNet.Numerics.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NAudio, Version=1.8.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.8.3\lib\net35\NAudio.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
@@ -52,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileReader\MyAudioFileReader.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -64,7 +69,8 @@
     <Compile Include="SongAnalyzing\ISongAnalyzingFacade.cs" />
     <Compile Include="SongAnalyzing\SongAnalyzer.cs" />
     <Compile Include="SongAnalyzing\SongAnalyzingFacade.cs" />
-    <Compile Include="SongAnalyzing\SongFile.cs" />
+    <Compile Include="FileReader\SongFile.cs" />
+    <Compile Include="Util\MyPoint.cs" />
     <Compile Include="VisualFacade.cs" />
     <Compile Include="VisualValues.cs" />
     <EmbeddedResource Include="Form1.resx">

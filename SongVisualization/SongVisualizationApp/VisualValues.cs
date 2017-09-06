@@ -15,8 +15,8 @@ namespace SongVisualizationApp
 
 		public double TimeCenter { get; set; }
 
-		private double leftTimeMargin;
-		private double rightTimeMargin;
+		public double LeftTimeMargin { get; set; }
+		public double RightTimeMargin { get; set; }
 
 		public double SecondsDisplayed { get; set; }
 
@@ -27,8 +27,8 @@ namespace SongVisualizationApp
 			SongDuration = 10;
 			TimeCenter = 5;
 
-			leftTimeMargin = 0;
-			rightTimeMargin = 0;
+			LeftTimeMargin = 0;
+			RightTimeMargin = 0;
 
 			SecondsDisplayed = 10;
 		}
@@ -36,11 +36,11 @@ namespace SongVisualizationApp
 
 		public void UpdateTimeMargins()
 		{
-			leftTimeMargin = Clamp(TimeCenter - (SecondsDisplayed / 2), 0, SongDuration - SecondsDisplayed);
+			LeftTimeMargin = Clamp(TimeCenter - (SecondsDisplayed / 2), 0, SongDuration - SecondsDisplayed);
 
-			rightTimeMargin = Clamp(leftTimeMargin + SecondsDisplayed, leftTimeMargin + SecondsDisplayed, SongDuration);
+			RightTimeMargin = Clamp(LeftTimeMargin + SecondsDisplayed, LeftTimeMargin + SecondsDisplayed, SongDuration);
 
-			TimeCenter = leftTimeMargin + ((rightTimeMargin - leftTimeMargin) / 2);
+			TimeCenter = LeftTimeMargin + ((RightTimeMargin - LeftTimeMargin) / 2);
 		}
 
 		private double Clamp(double value, double min, double max)
@@ -55,12 +55,12 @@ namespace SongVisualizationApp
 
 		public string GetLeftTimeMarginString()
 		{
-			return GetTimeString(leftTimeMargin);
+			return GetTimeString(LeftTimeMargin);
 		}
 
 		public string GetRightTimeMarginString()
 		{
-			return GetTimeString(rightTimeMargin);
+			return GetTimeString(RightTimeMargin);
 		}
 
 		public void SetSecondsDisplayed(string secondsDisplayedComboBoxText)

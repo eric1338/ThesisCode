@@ -1,13 +1,16 @@
-﻿using SongVisualizationApp.SongAnalyzing;
+﻿using SongVisualizationApp.FileReader;
+using SongVisualizationApp.SongAnalyzing;
+using SongVisualizationApp.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace SongVisualizationApp
 {
@@ -44,6 +47,8 @@ namespace SongVisualizationApp
 
 			//songScrollBar.LargeChange = (int) Math.Floor(visualValues.GetZoomRatio() * songScrollBar.Maximum);
 
+			if (songFile != null) PlotSong(songFile.Samples);
+
 			Update();
 		}
 
@@ -56,7 +61,16 @@ namespace SongVisualizationApp
 
 		private void selectSongButton_Click(object sender, EventArgs e)
 		{
-			selectSongDialog.ShowDialog();
+			//selectSongDialog.ShowDialog();
+
+			OpenFileDialog openSongDialog = new OpenFileDialog();
+
+			//openSongDialog.Filter = "mp3 File (*.mp3)|*.mp3;";
+			openSongDialog.Filter = "Wave File (*.wav)|*.wav;";
+
+			if (openSongDialog.ShowDialog() != DialogResult.OK) return;
+
+			songAnalyzingFacade.AnalyzeSong(openSongDialog.FileName);
 		}
 
 		private void selectSongDialog_FileOk(object sender, CancelEventArgs e)
@@ -80,13 +94,59 @@ namespace SongVisualizationApp
 		{
 			double scrollBarValue = songScrollBar.Value;
 
-			scrollBarValue = Math.Max(0, scrollBarValue * 1.2 - 10);
+			scrollBarValue = Math.Max(0, scrollBarValue * 1.25 - 10);
 
-			double percentage = scrollBarValue / (double) songScrollBar.Maximum;
+			double percentage = scrollBarValue / songScrollBar.Maximum;
 
 			visualValues.SetTimeCenter(percentage);
 
 			UpdateEverything();
+		}
+
+		private List<MyPoint> songPoints;
+		private List<MyPoint> fftPoints;
+
+		private SongFile songFile;
+
+		public void SetSongFile(SongFile songFile)
+		{
+			this.songFile = songFile;
+
+			PlotSong(songFile.Samples);
+		}
+
+		public void PlotSong(List<MyPoint> points)
+		{
+			songPoints = new List<MyPoint>(points);
+
+			songPoints = songFile.GetSamples(visualValues.LeftTimeMargin, visualValues.RightTimeMargin);
+
+			if (songPoints.Count > 5000) songPoints = songPoints.GetRange(0, 5000);
+
+			songChart.Series["Waveform"].Points.Clear();
+
+			//songChart.Series["Waveform"].LegendText = "Waveform";
+			//songChart.Series["Waveform"].ChartType = SeriesChartType.Line;
+
+			foreach (MyPoint point in songPoints) {
+				songChart.Series["Waveform"].Points.AddXY(point.X, point.Y);
+			}
+
+			Update();
+		}
+
+		public void PlotFFT(List<MyPoint> points)
+		{
+			fftPoints = points;
+
+			fftChart.Series["Frequency"].Points.Clear();
+
+			foreach (MyPoint point in points)
+			{
+				fftChart.Series["Frequency"].Points.AddXY(point.X, point.Y);
+			}
+
+			Update();
 		}
 	}
 }

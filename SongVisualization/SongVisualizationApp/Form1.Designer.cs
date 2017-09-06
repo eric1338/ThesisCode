@@ -28,12 +28,12 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-			System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-			System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+			System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+			System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
 			this.selectSongButton = new System.Windows.Forms.Button();
 			this.selectSongDialog = new System.Windows.Forms.OpenFileDialog();
 			this.fftChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -50,7 +50,7 @@
 			// 
 			// selectSongButton
 			// 
-			this.selectSongButton.Location = new System.Drawing.Point(926, 135);
+			this.selectSongButton.Location = new System.Drawing.Point(926, 127);
 			this.selectSongButton.Name = "selectSongButton";
 			this.selectSongButton.Size = new System.Drawing.Size(75, 23);
 			this.selectSongButton.TabIndex = 1;
@@ -65,16 +65,16 @@
 			// 
 			// fftChart
 			// 
-			chartArea3.Name = "ChartArea1";
-			this.fftChart.ChartAreas.Add(chartArea3);
-			legend3.Name = "Legend1";
-			this.fftChart.Legends.Add(legend3);
+			chartArea1.Name = "ChartArea1";
+			this.fftChart.ChartAreas.Add(chartArea1);
+			legend1.Name = "Legend1";
+			this.fftChart.Legends.Add(legend1);
 			this.fftChart.Location = new System.Drawing.Point(140, 330);
 			this.fftChart.Name = "fftChart";
-			series3.ChartArea = "ChartArea1";
-			series3.Legend = "Legend1";
-			series3.Name = "Series1";
-			this.fftChart.Series.Add(series3);
+			series1.ChartArea = "ChartArea1";
+			series1.Legend = "Legend1";
+			series1.Name = "Frequency";
+			this.fftChart.Series.Add(series1);
 			this.fftChart.Size = new System.Drawing.Size(572, 215);
 			this.fftChart.TabIndex = 2;
 			this.fftChart.Text = "chart1";
@@ -97,9 +97,9 @@
 			// 
 			// songScrollBar
 			// 
-			this.songScrollBar.Location = new System.Drawing.Point(123, 246);
+			this.songScrollBar.Location = new System.Drawing.Point(140, 260);
 			this.songScrollBar.Name = "songScrollBar";
-			this.songScrollBar.Size = new System.Drawing.Size(600, 17);
+			this.songScrollBar.Size = new System.Drawing.Size(572, 17);
 			this.songScrollBar.TabIndex = 4;
 			this.songScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.songScrollBar_Scroll);
 			// 
@@ -115,7 +115,7 @@
 			// leftTimeMarginLabel
 			// 
 			this.leftTimeMarginLabel.AutoSize = true;
-			this.leftTimeMarginLabel.Location = new System.Drawing.Point(161, 211);
+			this.leftTimeMarginLabel.Location = new System.Drawing.Point(137, 233);
 			this.leftTimeMarginLabel.Name = "leftTimeMarginLabel";
 			this.leftTimeMarginLabel.Size = new System.Drawing.Size(28, 13);
 			this.leftTimeMarginLabel.TabIndex = 6;
@@ -124,7 +124,7 @@
 			// rightTimeMarginLabel
 			// 
 			this.rightTimeMarginLabel.AutoSize = true;
-			this.rightTimeMarginLabel.Location = new System.Drawing.Point(624, 211);
+			this.rightTimeMarginLabel.Location = new System.Drawing.Point(684, 233);
 			this.rightTimeMarginLabel.Name = "rightTimeMarginLabel";
 			this.rightTimeMarginLabel.Size = new System.Drawing.Size(28, 13);
 			this.rightTimeMarginLabel.TabIndex = 7;
@@ -132,17 +132,20 @@
 			// 
 			// songChart
 			// 
-			chartArea4.Name = "ChartArea1";
-			this.songChart.ChartAreas.Add(chartArea4);
-			legend4.Name = "Legend1";
-			this.songChart.Legends.Add(legend4);
-			this.songChart.Location = new System.Drawing.Point(178, 21);
+			chartArea2.BorderColor = System.Drawing.Color.Gray;
+			chartArea2.Name = "ChartArea1";
+			this.songChart.ChartAreas.Add(chartArea2);
+			legend2.Enabled = false;
+			legend2.Name = "Legend1";
+			this.songChart.Legends.Add(legend2);
+			this.songChart.Location = new System.Drawing.Point(140, 50);
 			this.songChart.Name = "songChart";
-			series4.ChartArea = "ChartArea1";
-			series4.Legend = "Legend1";
-			series4.Name = "Series1";
-			this.songChart.Series.Add(series4);
-			this.songChart.Size = new System.Drawing.Size(459, 178);
+			series2.ChartArea = "ChartArea1";
+			series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+			series2.Legend = "Legend1";
+			series2.Name = "Waveform";
+			this.songChart.Series.Add(series2);
+			this.songChart.Size = new System.Drawing.Size(572, 180);
 			this.songChart.TabIndex = 8;
 			this.songChart.Text = "chart1";
 			// 
