@@ -10,7 +10,8 @@ namespace SongVisualizationApp.FileReader
 	public class SongFile
 	{
 
-		private string fileDirectory;
+		public string FileDirectory { get; set; }
+		public FileType FileType { get; set; }
 
 		public string SongName { get; set; }
 		public double SongDuration { get; set; }
@@ -23,25 +24,14 @@ namespace SongVisualizationApp.FileReader
 
 		public SongFile(string fileDirectory)
 		{
-			this.fileDirectory = fileDirectory;
-
-			SongName = GetSongName();
-		}
-
-		private string GetSongName()
-		{
-			string[] pieces = fileDirectory.Split('\\');
-
-			if (pieces.Length < 2) return fileDirectory;
-
-			return pieces[pieces.Length - 1];
+			FileDirectory = fileDirectory;
 		}
 
 		public List<MyPoint> GetSamples(double startingTime, double endTime)
 		{
 			int startingIndex = (int) Math.Floor(startingTime * SampleRate);
 
-			int range = (int)Math.Floor((endTime - startingTime) * SampleRate);
+			int range = (int) Math.Floor((endTime - startingTime) * SampleRate);
 
 			startingIndex = Math.Min(startingIndex, Samples.Count - 1);
 			range = Math.Min(range, Samples.Count - startingIndex - 1);

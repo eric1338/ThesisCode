@@ -9,13 +9,19 @@ namespace SongVisualizationApp.Util
 	public class MyPoint
 	{
 
-		public double X { get; set; }
-		public double Y { get; set; }
+		public float X { get; set; }
+		public float Y { get; set; }
 
-		public MyPoint(double x, double y)
+		public MyPoint(float x, float y)
 		{
 			X = x;
 			Y = y;
+		}
+
+		public MyPoint(double x, double y)
+		{
+			X = (float) x;
+			Y = (float) y;
 		}
 
 	}

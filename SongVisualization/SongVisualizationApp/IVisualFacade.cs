@@ -11,8 +11,7 @@ namespace SongVisualizationApp
 {
 	public interface IVisualFacade
 	{
-
-		void SetSongInformation(string songName, double songDuration);
+		
 		void SetSongFile(SongFile songFile);
 		void SetFFTValues(List<MyPoint> points);
 

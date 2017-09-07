@@ -8,9 +8,7 @@ namespace SongVisualizationApp
 {
 	public class VisualValues
 	{
-
-		public string SongName { get; set; }
-
+		
 		public double SongDuration { get; set; }
 
 		public double TimeCenter { get; set; }
@@ -23,7 +21,6 @@ namespace SongVisualizationApp
 
 		public VisualValues()
 		{
-			SongName = "no song selected";
 			SongDuration = 10;
 			TimeCenter = 5;
 
@@ -32,7 +29,6 @@ namespace SongVisualizationApp
 
 			SecondsDisplayed = 10;
 		}
-
 
 		public void UpdateTimeMargins()
 		{

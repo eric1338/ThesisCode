@@ -1,4 +1,5 @@
-﻿using SongVisualizationApp.FileReader;
+﻿using SongVisualizationApp.Audio;
+using SongVisualizationApp.FileReader;
 using SongVisualizationApp.SongAnalyzing;
 using SongVisualizationApp.Util;
 using System;
@@ -20,9 +21,20 @@ namespace SongVisualizationApp
 		private VisualValues visualValues;
 		private ISongAnalyzingFacade songAnalyzingFacade;
 
+		private AudioPlayer audioPlayer;
+
+		private bool isSongPlaying = false;
+
+		private SongFile songFile;
+
+		private List<MyPoint> songPoints;
+		private List<MyPoint> fftPoints;
+
 		public Form1()
 		{
 			InitializeComponent();
+
+			audioPlayer = new AudioPlayer();
 		}
 
 		public void SetVisualValues(VisualValues visualValues)
@@ -39,13 +51,11 @@ namespace SongVisualizationApp
 		{
 			visualValues.UpdateTimeMargins();
 
-			songNameLabel.Text = visualValues.SongName;
+			songNameLabel.Text = songFile.SongName;
 			songDurationLabel.Text = visualValues.GetSongDurationString();
 
 			leftTimeMarginLabel.Text = visualValues.GetLeftTimeMarginString();
 			rightTimeMarginLabel.Text = visualValues.GetRightTimeMarginString();
-
-			//songScrollBar.LargeChange = (int) Math.Floor(visualValues.GetZoomRatio() * songScrollBar.Maximum);
 
 			if (songFile != null) PlotSong(songFile.Samples);
 
@@ -53,6 +63,22 @@ namespace SongVisualizationApp
 		}
 
 
+		public void SetSongFile(SongFile songFile)
+		{
+			this.songFile = songFile;
+
+			visualValues.SongDuration = songFile.SongDuration;
+
+			songNameLabel.Text = songFile.SongName;
+			songDurationLabel.Text = visualValues.GetSongDurationString();
+
+			audioPlayer.Dispose();
+			audioPlayer.InitAudio(songFile);
+
+			togglePlaybackButton.Enabled = true;
+
+			PlotSong(songFile.Samples);
+		}
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
@@ -61,26 +87,14 @@ namespace SongVisualizationApp
 
 		private void selectSongButton_Click(object sender, EventArgs e)
 		{
-			//selectSongDialog.ShowDialog();
-
 			OpenFileDialog openSongDialog = new OpenFileDialog();
 
 			//openSongDialog.Filter = "mp3 File (*.mp3)|*.mp3;";
-			openSongDialog.Filter = "Wave File (*.wav)|*.wav;";
+			//openSongDialog.Filter = "Wave File (*.wav)|*.wav;";
 
 			if (openSongDialog.ShowDialog() != DialogResult.OK) return;
 
 			songAnalyzingFacade.AnalyzeSong(openSongDialog.FileName);
-		}
-
-		private void selectSongDialog_FileOk(object sender, CancelEventArgs e)
-		{
-			songAnalyzingFacade.AnalyzeSong(selectSongDialog.FileName);
-		}
-
-		private void fftChart_Click(object sender, EventArgs e)
-		{
-
 		}
 
 		private void secondsDisplayedComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -103,17 +117,6 @@ namespace SongVisualizationApp
 			UpdateEverything();
 		}
 
-		private List<MyPoint> songPoints;
-		private List<MyPoint> fftPoints;
-
-		private SongFile songFile;
-
-		public void SetSongFile(SongFile songFile)
-		{
-			this.songFile = songFile;
-
-			PlotSong(songFile.Samples);
-		}
 
 		public void PlotSong(List<MyPoint> points)
 		{
@@ -124,9 +127,6 @@ namespace SongVisualizationApp
 			if (songPoints.Count > 5000) songPoints = songPoints.GetRange(0, 5000);
 
 			songChart.Series["Waveform"].Points.Clear();
-
-			//songChart.Series["Waveform"].LegendText = "Waveform";
-			//songChart.Series["Waveform"].ChartType = SeriesChartType.Line;
 
 			foreach (MyPoint point in songPoints) {
 				songChart.Series["Waveform"].Points.AddXY(point.X, point.Y);
@@ -147,6 +147,16 @@ namespace SongVisualizationApp
 			}
 
 			Update();
+		}
+
+		private void togglePlaybackButton_Click(object sender, EventArgs e)
+		{
+			isSongPlaying = !isSongPlaying;
+
+			togglePlaybackButton.Text = isSongPlaying ? "stop" : "play";
+
+			if (isSongPlaying) audioPlayer.PlayAudio();
+			else audioPlayer.StopAudio();
 		}
 	}
 }

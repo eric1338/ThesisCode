@@ -33,14 +33,6 @@ namespace SongVisualizationApp
 			form.SetSongAnalyzingFacade(songAnalyzingFacade);
 		}
 
-		public void SetSongInformation(string songName, double songDuration)
-		{
-			visualValues.SongName = songName;
-			visualValues.SongDuration = songDuration;
-
-			form.UpdateEverything();
-		}
-
 		public void SetSongFile(SongFile songFile)
 		{
 			form.SetSongFile(songFile);
