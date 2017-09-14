@@ -11,6 +11,8 @@ namespace SongVisualizationApp.Audio
 	class AudioPlayer
 	{
 
+		private SongFile songFile;
+
 		private WaveOutEvent waveOutEvent;
 		private WaveStream waveStream;
 
@@ -21,6 +23,8 @@ namespace SongVisualizationApp.Audio
 
 		public void InitAudio(SongFile songFile)
 		{
+			this.songFile = songFile;
+
 			string fileDirectory = songFile.FileDirectory;
 
 			if (songFile.FileType == FileType.Mp3) waveStream = new Mp3FileReader(fileDirectory);
@@ -32,6 +36,13 @@ namespace SongVisualizationApp.Audio
 		public void PlayAudio()
 		{
 			waveOutEvent.Play();
+		}
+
+		public void PlayAudioFromTime(double time)
+		{
+			waveStream.Position = (long) time * songFile.SampleRate * 4;
+
+			PlayAudio();
 		}
 
 		public void StopAudio()

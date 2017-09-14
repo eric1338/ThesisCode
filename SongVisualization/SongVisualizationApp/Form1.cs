@@ -47,27 +47,14 @@ namespace SongVisualizationApp
 			this.songAnalyzingFacade = songAnalyzingFacade;
 		}
 
-		public void UpdateEverything()
-		{
-			visualValues.UpdateTimeMargins();
-
-			songNameLabel.Text = songFile.SongName;
-			songDurationLabel.Text = visualValues.GetSongDurationString();
-
-			leftTimeMarginLabel.Text = visualValues.GetLeftTimeMarginString();
-			rightTimeMarginLabel.Text = visualValues.GetRightTimeMarginString();
-
-			if (songFile != null) PlotSong(songFile.Samples);
-
-			Update();
-		}
-
 
 		public void SetSongFile(SongFile songFile)
 		{
 			this.songFile = songFile;
 
-			visualValues.SongDuration = songFile.SongDuration;
+			songWaveViewer.SetSongFile(songFile);
+
+			visualValues.SetSongDuration(songFile.SongDuration);
 
 			songNameLabel.Text = songFile.SongName;
 			songDurationLabel.Text = visualValues.GetSongDurationString();
@@ -76,9 +63,20 @@ namespace SongVisualizationApp
 			audioPlayer.InitAudio(songFile);
 
 			togglePlaybackButton.Enabled = true;
-
-			PlotSong(songFile.Samples);
 		}
+
+		public void UpdateSongVisualization()
+		{
+			visualValues.UpdateTimeMargins();
+
+			songWaveViewer.SetTimeMargins(visualValues.LeftTimeMargin, visualValues.RightTimeMargin);
+
+			leftTimeMarginLabel.Text = visualValues.GetLeftTimeMarginString();
+			rightTimeMarginLabel.Text = visualValues.GetRightTimeMarginString();
+
+			Update();
+		}
+
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
@@ -97,11 +95,31 @@ namespace SongVisualizationApp
 			songAnalyzingFacade.AnalyzeSong(openSongDialog.FileName);
 		}
 
-		private void secondsDisplayedComboBox_SelectedIndexChanged(object sender, EventArgs e)
+		private void togglePlaybackButton_Click(object sender, EventArgs e)
 		{
-			visualValues.SetSecondsDisplayed(secondsDisplayedComboBox.Text);
+			isSongPlaying = !isSongPlaying;
 
-			UpdateEverything();
+			togglePlaybackButton.Text = isSongPlaying ? "Stop" : "Play";
+
+			if (isSongPlaying)
+			{
+				double time = Math.Max(songWaveViewer.MarkerTime, 0);
+
+				Console.WriteLine("time:" + time);
+
+				audioPlayer.PlayAudioFromTime(time);
+			}
+			else
+			{
+				audioPlayer.StopAudio();
+			}
+		}
+
+		private void songSecondsDisplayedTrackBar_Scroll(object sender, EventArgs e)
+		{
+			visualValues.SetSecondsDisplayed(songSecondsDisplayedTrackBar.Value);
+
+			UpdateSongVisualization();
 		}
 
 		private void songScrollBar_Scroll(object sender, ScrollEventArgs e)
@@ -114,26 +132,19 @@ namespace SongVisualizationApp
 
 			visualValues.SetTimeCenter(percentage);
 
-			UpdateEverything();
+			UpdateSongVisualization();
 		}
 
-
-		public void PlotSong(List<MyPoint> points)
+		private void debugButton1_Click(object sender, EventArgs e)
 		{
-			songPoints = new List<MyPoint>(points);
+			double startingTime = Convert.ToDouble(debugTextBox1.Text);
+			double endTime = Convert.ToDouble(debugTextBox2.Text);
 
-			songPoints = songFile.GetSamples(visualValues.LeftTimeMargin, visualValues.RightTimeMargin);
+			List<MyPoint> fftPoints = SongAnalyzer.DoFFT2(songFile, startingTime, endTime);
 
-			if (songPoints.Count > 5000) songPoints = songPoints.GetRange(0, 5000);
-
-			songChart.Series["Waveform"].Points.Clear();
-
-			foreach (MyPoint point in songPoints) {
-				songChart.Series["Waveform"].Points.AddXY(point.X, point.Y);
-			}
-
-			Update();
+			PlotFFT(fftPoints);
 		}
+
 
 		public void PlotFFT(List<MyPoint> points)
 		{
@@ -147,16 +158,6 @@ namespace SongVisualizationApp
 			}
 
 			Update();
-		}
-
-		private void togglePlaybackButton_Click(object sender, EventArgs e)
-		{
-			isSongPlaying = !isSongPlaying;
-
-			togglePlaybackButton.Text = isSongPlaying ? "stop" : "play";
-
-			if (isSongPlaying) audioPlayer.PlayAudio();
-			else audioPlayer.StopAudio();
 		}
 	}
 }

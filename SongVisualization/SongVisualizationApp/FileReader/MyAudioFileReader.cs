@@ -16,14 +16,16 @@ namespace SongVisualizationApp.FileReader
 			SongFile songFile = new SongFile(fileDirectory);
 
 			FileType fileType = GetFileType(fileDirectory);
+			songFile.FileType = fileType;
 
 			songFile.SongName = GetSongName(fileDirectory);
-			songFile.FileType = fileType;
 
 			WaveStream waveStream;
 
 			if (fileType == FileType.Mp3) waveStream = new Mp3FileReader(fileDirectory);
 			else waveStream = new WaveFileReader(fileDirectory);
+
+			songFile.WaveStream = waveStream;
 
 			WaveChannel32 waveChannel = new WaveChannel32(waveStream);
 
@@ -31,12 +33,14 @@ namespace SongVisualizationApp.FileReader
 
 			songFile.BitDepth = waveFormat.BitsPerSample;
 			songFile.SampleRate = waveFormat.SampleRate;
+			songFile.NumberOfChannels = waveFormat.Channels;
+
 			songFile.SongDuration = waveChannel.TotalTime.TotalSeconds;
 
 			songFile.Samples = GetSamples(waveChannel, waveFormat);
 
-			waveChannel.Dispose();
-			waveStream.Dispose();
+			//waveStream.Dispose();
+			//waveChannel.Dispose();
 
 			return songFile;
 		}
@@ -68,18 +72,18 @@ namespace SongVisualizationApp.FileReader
 			int byteDepth = waveFormat.BitsPerSample / 8;
 			float frequency = 1.0f / waveFormat.SampleRate;
 
-			byte[] buffer = new byte[16384];
+			int bufferSize = 8192;
+
+			byte[] buffer = new byte[bufferSize];
 			int read = 0;
 
 			int sampleNumber = 0;
-
-			Console.WriteLine("wave.Length: " + waveChannel.Length);
 
 			List<MyPoint> samples = new List<MyPoint>();
 
 			while (waveChannel.Position < waveChannel.Length)
 			{
-				read = waveChannel.Read(buffer, 0, 16384);
+				read = waveChannel.Read(buffer, 0, bufferSize);
 
 				for (int i = 0; i < read / byteDepth; i++)
 				{
@@ -88,15 +92,13 @@ namespace SongVisualizationApp.FileReader
 					if (byteDepth == 4) amplitude = BitConverter.ToSingle(buffer, i * 4);
 					else amplitude = (float) BitConverter.ToDouble(buffer, i * 8);
 
-					float time = sampleNumber * frequency;
+					float time = sampleNumber * frequency * (1 / waveFormat.Channels);
 					
 					samples.Add(new MyPoint(time, amplitude));
 
 					sampleNumber++;
 				}
 			}
-
-			Console.WriteLine("sampleNumber: " + sampleNumber);
 
 			return samples;
 		}

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SongVisualizationApp.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,34 +10,46 @@ namespace SongVisualizationApp
 	public class VisualValues
 	{
 		
-		public double SongDuration { get; set; }
+		public double SongDuration { get; private set; }
 
-		public double TimeCenter { get; set; }
+		private double timeCenter;
 
 		public double LeftTimeMargin { get; set; }
 		public double RightTimeMargin { get; set; }
 
-		public double SecondsDisplayed { get; set; }
+		public double SecondsDisplayed { get; private set; }
 
+		private double[] secondsDisplayedSteps;
 
 		public VisualValues()
 		{
 			SongDuration = 10;
-			TimeCenter = 5;
+			timeCenter = 5;
 
 			LeftTimeMargin = 0;
 			RightTimeMargin = 0;
 
 			SecondsDisplayed = 10;
+
+			secondsDisplayedSteps = new double[9];
+			secondsDisplayedSteps[0] = 0.25;
+			secondsDisplayedSteps[1] = 0.5;
+			secondsDisplayedSteps[2] = 2;
+			secondsDisplayedSteps[3] = 5;
+			secondsDisplayedSteps[4] = 10;
+			secondsDisplayedSteps[5] = 20;
+			secondsDisplayedSteps[6] = 40;
+			secondsDisplayedSteps[7] = 60;
+			secondsDisplayedSteps[8] = 240;
 		}
 
 		public void UpdateTimeMargins()
 		{
-			LeftTimeMargin = Clamp(TimeCenter - (SecondsDisplayed / 2), 0, SongDuration - SecondsDisplayed);
+			LeftTimeMargin = Clamp(timeCenter - (SecondsDisplayed / 2), 0, SongDuration - SecondsDisplayed);
 
 			RightTimeMargin = Clamp(LeftTimeMargin + SecondsDisplayed, LeftTimeMargin + SecondsDisplayed, SongDuration);
 
-			TimeCenter = LeftTimeMargin + ((RightTimeMargin - LeftTimeMargin) / 2);
+			timeCenter = LeftTimeMargin + ((RightTimeMargin - LeftTimeMargin) / 2);
 		}
 
 		private double Clamp(double value, double min, double max)
@@ -44,63 +57,41 @@ namespace SongVisualizationApp
 			return Math.Max(Math.Min(value, max), min);
 		}
 
+		public void SetSongDuration(double songDuration)
+		{
+			SongDuration = songDuration;
+			secondsDisplayedSteps[8] = songDuration;
+		}
+
 		public string GetSongDurationString()
 		{
-			return GetTimeString(SongDuration);
+			return Utils.GetTimeString(SongDuration);
 		}
 
 		public string GetLeftTimeMarginString()
 		{
-			return GetTimeString(LeftTimeMargin);
+			return Utils.GetTimeString(LeftTimeMargin);
 		}
 
 		public string GetRightTimeMarginString()
 		{
-			return GetTimeString(RightTimeMargin);
+			return Utils.GetTimeString(RightTimeMargin);
 		}
 
-		public void SetSecondsDisplayed(string secondsDisplayedComboBoxText)
+		public void SetSecondsDisplayed(int trackBarIndex)
 		{
-			SecondsDisplayed = GetSecondsDisplayed(secondsDisplayedComboBoxText);
+			if (trackBarIndex >= secondsDisplayedSteps.Length) return;
+
+			SecondsDisplayed = secondsDisplayedSteps[trackBarIndex];
 
 			UpdateTimeMargins();
-		}
-
-		private double GetSecondsDisplayed(string secondsDisplayedComboBoxText)
-		{
-			if (secondsDisplayedComboBoxText == "all") return SongDuration;
-			if (secondsDisplayedComboBoxText == "5 s") return 5;
-			if (secondsDisplayedComboBoxText == "10 s") return 10;
-			if (secondsDisplayedComboBoxText == "20 s") return 20;
-			if (secondsDisplayedComboBoxText == "60 s") return 60;
-
-			return 10;
 		}
 
 		public void SetTimeCenter(double percentage)
 		{
-			TimeCenter = percentage * SongDuration;
+			timeCenter = percentage * SongDuration;
 
 			UpdateTimeMargins();
-		}
-
-		public double GetZoomRatio()
-		{
-			if (SongDuration <= 0) return 1;
-
-			return SecondsDisplayed / SongDuration;
-		}
-
-		private string GetTimeString(double time)
-		{
-			int minutes = (int) Math.Floor(time / 60);
-			int seconds = (int) Math.Floor(time % 60);
-
-			string secondsString = seconds.ToString();
-
-			if (seconds < 10) secondsString = "0" + secondsString;
-
-			return minutes + ":" + secondsString;
 		}
 
 	}

@@ -1,4 +1,5 @@
-﻿using SongVisualizationApp.Util;
+﻿using NAudio.Wave;
+using SongVisualizationApp.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +19,11 @@ namespace SongVisualizationApp.FileReader
 
 		public int BitDepth { get; set; }
 		public int SampleRate { get; set; }
+		public int NumberOfChannels { get; set; }
 
 		public List<MyPoint> Samples { get; set; }
+
+		public WaveStream WaveStream { get; set; }
 
 
 		public SongFile(string fileDirectory)

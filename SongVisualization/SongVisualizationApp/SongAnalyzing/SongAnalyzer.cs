@@ -64,5 +64,35 @@ namespace SongVisualizationApp.SongAnalyzing
 			visualFacade.SetFFTValues(fftPoints);
 		}
 
+
+		public static List<MyPoint> DoFFT2(SongFile songFile, double startingTime, double endTime)
+		{
+			List<MyPoint> songSamples = songFile.GetSamples(startingTime, endTime);
+
+			int nSamples = songSamples.Count;
+
+			Complex[] samplesForFFT = new Complex[nSamples];
+
+			for (int i = 0; i < nSamples; i++)
+			{
+				samplesForFFT[i] = new Complex(songSamples[i].Y, 0);
+			}
+
+			Fourier.Forward(samplesForFFT, FourierOptions.NoScaling);
+
+			List<MyPoint> fftPoints = new List<MyPoint>();
+			
+			float hzPerSample = songFile.SampleRate / nSamples;
+
+			for (int i = 1; i < samplesForFFT.Length / 100; i++)
+			{
+				float mag = (2.0f / nSamples) * ((float)Math.Abs(Math.Sqrt(Math.Pow(samplesForFFT[i].Real, 2) + Math.Pow(samplesForFFT[i].Imaginary, 2))));
+
+				fftPoints.Add(new MyPoint(hzPerSample * i, mag));
+			}
+
+			return fftPoints;
+		}
+
 	}
 }
