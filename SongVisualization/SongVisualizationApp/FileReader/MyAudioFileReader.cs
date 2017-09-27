@@ -92,13 +92,15 @@ namespace SongVisualizationApp.FileReader
 					if (byteDepth == 4) amplitude = BitConverter.ToSingle(buffer, i * 4);
 					else amplitude = (float) BitConverter.ToDouble(buffer, i * 8);
 
-					float time = sampleNumber * frequency * (1 / waveFormat.Channels);
+					float time = sampleNumber * frequency * (1.0f / waveFormat.Channels);
 					
 					samples.Add(new MyPoint(time, amplitude));
 
 					sampleNumber++;
 				}
 			}
+
+			Console.WriteLine("TEEEST: " + sampleNumber * frequency * (1.0f / waveFormat.Channels));
 
 			return samples;
 		}

@@ -75,6 +75,10 @@
     <Compile Include="SongAnalyzing\SongAnalyzer.cs" />
     <Compile Include="SongAnalyzing\SongAnalyzingFacade.cs" />
     <Compile Include="FileReader\SongFile.cs" />
+    <Compile Include="SongAnalyzing\SongPropertyAnalyzers\AmplitudeAnalyzer.cs" />
+    <Compile Include="SongAnalyzing\SongPropertyAnalyzers\PitchAnalyzer.cs" />
+    <Compile Include="SongAnalyzing\SongPropertyAnalyzers\SongPropertyAnalyzer.cs" />
+    <Compile Include="SongAnalyzing\SongPropertyValues.cs" />
     <Compile Include="Util\MyPoint.cs" />
     <Compile Include="Util\Utils.cs" />
     <Compile Include="VisualFacade.cs" />

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -48,11 +49,18 @@ namespace SongVisualizationApp
 		}
 
 
+		public void SetProgress(string progressText, float relativeProgress)
+		{
+			progressLabel.Text = progressText;
+
+			progressLabel.ForeColor = relativeProgress < 1 ? Color.MediumVioletRed : Color.DodgerBlue;
+
+			Update();
+		}
+
 		public void SetSongFile(SongFile songFile)
 		{
 			this.songFile = songFile;
-
-			songWaveViewer.SetSongFile(songFile);
 
 			visualValues.SetSongDuration(songFile.SongDuration);
 
@@ -62,7 +70,32 @@ namespace SongVisualizationApp
 			audioPlayer.Dispose();
 			audioPlayer.InitAudio(songFile);
 
+			songWaveViewer.SetSongFile(songFile);
+
 			togglePlaybackButton.Enabled = true;
+		}
+
+		public void PlotSongPropertyValues(List<SongPropertyValues> songPropertyValuesList)
+		{
+			
+			foreach (SongPropertyValues songPropertyValues in songPropertyValuesList)
+			{
+				Series series = new Series();
+
+				series.Name = songPropertyValues.PropertyName;
+				
+				foreach (MyPoint point in songPropertyValues.Points)
+				{
+					series.Points.AddXY(point.X, point.Y);
+				}
+
+				series.ChartArea = "ChartArea1";
+
+				series.ChartType = SeriesChartType.FastLine;
+
+				songValueChart.Series.Add(series);
+			}
+
 		}
 
 		public void UpdateSongVisualization()
@@ -70,6 +103,9 @@ namespace SongVisualizationApp
 			visualValues.UpdateTimeMargins();
 
 			songWaveViewer.SetTimeMargins(visualValues.LeftTimeMargin, visualValues.RightTimeMargin);
+
+			songValueChart.ChartAreas["ChartArea1"].AxisX.Minimum = visualValues.LeftTimeMargin;
+			songValueChart.ChartAreas["ChartArea1"].AxisX.Maximum = visualValues.RightTimeMargin;
 
 			leftTimeMarginLabel.Text = visualValues.GetLeftTimeMarginString();
 			rightTimeMarginLabel.Text = visualValues.GetRightTimeMarginString();
@@ -87,8 +123,7 @@ namespace SongVisualizationApp
 		{
 			OpenFileDialog openSongDialog = new OpenFileDialog();
 
-			//openSongDialog.Filter = "mp3 File (*.mp3)|*.mp3;";
-			//openSongDialog.Filter = "Wave File (*.wav)|*.wav;";
+			//openSongDialog.Filter = "mp3 File (*.mp3)|*.mp3|Wave File (*.wav)|*.wav;";
 
 			if (openSongDialog.ShowDialog() != DialogResult.OK) return;
 
@@ -140,9 +175,49 @@ namespace SongVisualizationApp
 			double startingTime = Convert.ToDouble(debugTextBox1.Text);
 			double endTime = Convert.ToDouble(debugTextBox2.Text);
 
-			List<MyPoint> fftPoints = SongAnalyzer.DoFFT2(songFile, startingTime, endTime);
+			List<MyPoint> fftPoints;
 
-			PlotFFT(fftPoints);
+			if (debugCheckBox1.Checked)
+			{
+				Console.WriteLine("Calculus");
+				//fftPoints = SongAnalyzer.GetFFTValues(songFile, startingTime, endTime);
+			}
+			else
+			{
+				Console.WriteLine("NAudio");
+				//fftPoints = SongAnalyzer.DoFFT3(songFile, startingTime, endTime);
+			}
+
+			
+
+
+			//if (startingTime > 1) PlotFFT(SongAnalyzer.prob1.Points);
+			//if (startingTime < 1) PlotFFT(SongAnalyzer.prob2.Points);
+
+			//PlotFFT(fftPoints);
+		}
+
+		
+		public void PlotAmplitude()
+		{
+			/*
+			songValueChart.Series["Amplitude"].Points.Clear();
+			songValueChart.Series["AmplitudeNormalized"].Points.Clear();
+			songValueChart.Series["AmplitudeThreshold"].Points.Clear();
+
+			foreach (MyPoint point in SongAnalyzer.prob1.Points)
+			{
+				songValueChart.Series["Amplitude"].Points.AddXY(point.X, point.Y);
+			}
+			foreach (MyPoint point in SongAnalyzer.prob2.Points)
+			{
+				songValueChart.Series["AmplitudeNormalized"].Points.AddXY(point.X, point.Y);
+			}
+			foreach (MyPoint point in SongAnalyzer.prob3.Points)
+			{
+				songValueChart.Series["AmplitudeThreshold"].Points.AddXY(point.X, point.Y);
+			}
+			*/
 		}
 
 

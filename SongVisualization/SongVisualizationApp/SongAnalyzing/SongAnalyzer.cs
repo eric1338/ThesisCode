@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using System.Numerics;
-using MathNet.Numerics;
-using MathNet.Numerics.IntegralTransforms;
 using NAudio.Wave;
 
 using SongVisualizationApp.Util;
 using SongVisualizationApp.FileReader;
+using NAudio.Dsp;
+using SongVisualizationApp.SongAnalyzing.SongPropertyAnalyzers;
 
 namespace SongVisualizationApp.SongAnalyzing
 {
@@ -26,73 +25,89 @@ namespace SongVisualizationApp.SongAnalyzing
 
 		public void AnalyzeSong(string fileDirectory)
 		{
+			visualFacade.SetProgress("Loading Song...", 0.0f);
+
 			SongFile songFile = MyAudioFileReader.ReadAudioFile(fileDirectory);
 
 			visualFacade.SetSongFile(songFile);
 
-			//DoFFT(songFile);
+			List<SongPropertyValues> songPropertyValuesList = new List<SongPropertyValues>();
+
+			SongPropertyValues fft1 = AnalyzeSongProperty(songFile, new PitchAnalyzer(), 0.4f);
+			songPropertyValuesList.Add(fft1);
+
+			SongPropertyValues amplitudeValues = AnalyzeSongProperty(songFile, new AmplitudeAnalyzer(), 0.6f);
+			songPropertyValuesList.Add(amplitudeValues);
+
+			visualFacade.SetProgress("Plotting...", 0.95f);
+
+			visualFacade.PlotSongPropertyValues(songPropertyValuesList);
+
+			visualFacade.SetProgress("done :)", 1);
 		}
 
 
-		private void DoFFT(SongFile songFile)
+		private SongPropertyValues AnalyzeSongProperty(SongFile songFile, SongPropertyAnalyzer analyzer, float relativeProgressBefore)
 		{
-			int nSamples1 = 10000;
+			visualFacade.SetProgress(analyzer.ProgressText, relativeProgressBefore);
 
-			Complex[] samplesForFFT = new Complex[nSamples1];
-
-			for (int i = 0; i < nSamples1; i++)
-			{
-				samplesForFFT[i] = new Complex(songFile.Samples[i].Y, 0);
-			}
-
-			Fourier.Forward(samplesForFFT, FourierOptions.NoScaling);
-
-			int nSamples = samplesForFFT.Length;
-
-			List<MyPoint> fftPoints = new List<MyPoint>();
-
-			// TODO: Sample Rate bestimmen
-			float hzPerSample = 44100.0f / nSamples;
-
-			for (int i = 1; i < samplesForFFT.Length / 100; i++)
-			{
-				float mag = (2.0f / nSamples) * ((float) Math.Abs(Math.Sqrt(Math.Pow(samplesForFFT[i].Real, 2) + Math.Pow(samplesForFFT[i].Imaginary, 2))));
-
-				fftPoints.Add(new MyPoint(hzPerSample * i, mag));
-			}
-
-			visualFacade.SetFFTValues(fftPoints);
+			return analyzer.Analyze(songFile);
 		}
 
-
-		public static List<MyPoint> DoFFT2(SongFile songFile, double startingTime, double endTime)
+		/*
+		public static List<MyPoint> DoFFT3(SongFile songFile, double startingTime, double endTime)
 		{
 			List<MyPoint> songSamples = songFile.GetSamples(startingTime, endTime);
 
 			int nSamples = songSamples.Count;
 
-			Complex[] samplesForFFT = new Complex[nSamples];
+			NAudio.Dsp.Complex[] samplesForFFT = new NAudio.Dsp.Complex[nSamples];
 
 			for (int i = 0; i < nSamples; i++)
 			{
-				samplesForFFT[i] = new Complex(songSamples[i].Y, 0);
+				NAudio.Dsp.Complex cpl = new NAudio.Dsp.Complex();
+				cpl.X = songSamples[i].Y;
+				cpl.Y = 0;
+
+				samplesForFFT[i] = cpl;
 			}
 
-			Fourier.Forward(samplesForFFT, FourierOptions.NoScaling);
+			int m = 0;
+			int newNSamples = 0;
+
+			for (int i = 0; i < 100; i++)
+			{
+				if (Math.Pow(2, i) < nSamples)
+				{
+					m = i;
+					newNSamples = (int) Math.Pow(2, i);
+				}
+				else
+				{
+					break;
+				}
+			}
+			
+			NAudio.Dsp.FastFourierTransform.FFT(true, m, samplesForFFT);
 
 			List<MyPoint> fftPoints = new List<MyPoint>();
-			
-			float hzPerSample = songFile.SampleRate / nSamples;
 
-			for (int i = 1; i < samplesForFFT.Length / 100; i++)
+			float hzPerSample = songFile.SampleRate / (float) nSamples;
+
+			for (int i = 1; i < samplesForFFT.Length; i++)
 			{
-				float mag = (2.0f / nSamples) * ((float)Math.Abs(Math.Sqrt(Math.Pow(samplesForFFT[i].Real, 2) + Math.Pow(samplesForFFT[i].Imaginary, 2))));
+				float mag = (2.0f / nSamples) * Utils.GetRealValue(samplesForFFT[i].X, samplesForFFT[i].Y);
+				//float mag = Utils.GetRealValue(samplesForFFT[i].X, samplesForFFT[i].Y);
 
 				fftPoints.Add(new MyPoint(hzPerSample * i, mag));
 			}
 
 			return fftPoints;
 		}
+		*/
+
+
+
 
 	}
 }

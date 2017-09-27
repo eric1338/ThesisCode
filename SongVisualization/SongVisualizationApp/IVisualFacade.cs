@@ -1,4 +1,5 @@
 ﻿using SongVisualizationApp.FileReader;
+using SongVisualizationApp.SongAnalyzing;
 using SongVisualizationApp.Util;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,13 @@ namespace SongVisualizationApp
 {
 	public interface IVisualFacade
 	{
-		
+
+		void SetProgress(string progressText, float relativeProgress);
+
 		void SetSongFile(SongFile songFile);
 		void SetFFTValues(List<MyPoint> points);
+
+		void PlotSongPropertyValues(List<SongPropertyValues> songPropertyValuesList);
 
 	}
 }

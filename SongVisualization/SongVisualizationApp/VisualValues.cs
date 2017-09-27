@@ -31,16 +31,15 @@ namespace SongVisualizationApp
 
 			SecondsDisplayed = 10;
 
-			secondsDisplayedSteps = new double[9];
-			secondsDisplayedSteps[0] = 0.25;
-			secondsDisplayedSteps[1] = 0.5;
-			secondsDisplayedSteps[2] = 2;
-			secondsDisplayedSteps[3] = 5;
-			secondsDisplayedSteps[4] = 10;
-			secondsDisplayedSteps[5] = 20;
-			secondsDisplayedSteps[6] = 40;
-			secondsDisplayedSteps[7] = 60;
-			secondsDisplayedSteps[8] = 240;
+			secondsDisplayedSteps = new double[8];
+			secondsDisplayedSteps[0] = 1;
+			secondsDisplayedSteps[1] = 2;
+			secondsDisplayedSteps[2] = 5;
+			secondsDisplayedSteps[3] = 10;
+			secondsDisplayedSteps[4] = 20;
+			secondsDisplayedSteps[5] = 40;
+			secondsDisplayedSteps[6] = 80;
+			secondsDisplayedSteps[7] = 240;
 		}
 
 		public void UpdateTimeMargins()
@@ -60,7 +59,7 @@ namespace SongVisualizationApp
 		public void SetSongDuration(double songDuration)
 		{
 			SongDuration = songDuration;
-			secondsDisplayedSteps[8] = songDuration;
+			secondsDisplayedSteps[7] = songDuration;
 		}
 
 		public string GetSongDurationString()

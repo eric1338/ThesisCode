@@ -33,9 +33,19 @@ namespace SongVisualizationApp
 			form.SetSongAnalyzingFacade(songAnalyzingFacade);
 		}
 
+		public void SetProgress(string progressText, float relativeProgress)
+		{
+			form.SetProgress(progressText, relativeProgress);
+		}
+
 		public void SetSongFile(SongFile songFile)
 		{
 			form.SetSongFile(songFile);
+		}
+
+		public void PlotSongPropertyValues(List<SongPropertyValues> songPropertyValuesList)
+		{
+			form.PlotSongPropertyValues(songPropertyValuesList);
 		}
 
 		public void SetFFTValues(List<MyPoint> points)
