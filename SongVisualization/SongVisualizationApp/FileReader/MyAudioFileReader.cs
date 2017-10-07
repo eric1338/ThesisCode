@@ -100,8 +100,6 @@ namespace SongVisualizationApp.FileReader
 				}
 			}
 
-			Console.WriteLine("TEEEST: " + sampleNumber * frequency * (1.0f / waveFormat.Channels));
-
 			return samples;
 		}
 

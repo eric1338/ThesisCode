@@ -14,6 +14,8 @@ namespace SongVisualizationApp.SongAnalyzing.SongPropertyAnalyzers
 	class PitchAnalyzer : SongPropertyAnalyzer
 	{
 
+		private float sampleWidthTime = 5;
+
 		public PitchAnalyzer()
 		{
 			PropertyName = "Pitch";
@@ -22,17 +24,11 @@ namespace SongVisualizationApp.SongAnalyzing.SongPropertyAnalyzers
 
 		public override SongPropertyValues Analyze(SongFile songFile)
 		{
-			return DoMultipleFFTs(songFile, 0, 80, 1f);
-		}
-
-
-		public static SongPropertyValues DoMultipleFFTs(SongFile songFile, float startingTime, float endTime, float sampleWidthTime)
-		{
-			SongPropertyValues values = new SongPropertyValues("FFT-Ari " + sampleWidthTime);
+			SongPropertyValues values = new SongPropertyValues(PropertyName);
 
 			float sampleDeltaX = sampleWidthTime * 0.5f;
 
-			for (float i = startingTime; i < endTime; i += sampleDeltaX)
+			for (float i = 0; i < songFile.SongDuration; i += sampleDeltaX)
 			{
 
 				float time = i + (sampleDeltaX / 2.0f);
@@ -58,7 +54,7 @@ namespace SongVisualizationApp.SongAnalyzing.SongPropertyAnalyzers
 			return values;
 		}
 
-		public static float GetMax(List<MyPoint> points)
+		public float GetMax(List<MyPoint> points)
 		{
 			float max = -1;
 
@@ -70,7 +66,7 @@ namespace SongVisualizationApp.SongAnalyzing.SongPropertyAnalyzers
 			return max;
 		}
 
-		public static float GetAriMeanX(List<MyPoint> points)
+		public float GetAriMeanX(List<MyPoint> points)
 		{
 			float sum = 0;
 
@@ -84,7 +80,7 @@ namespace SongVisualizationApp.SongAnalyzing.SongPropertyAnalyzers
 			return sum / points.Count;
 		}
 
-		public static List<MyPoint> GetFFTValues(SongFile songFile, double startingTime, double endTime)
+		public List<MyPoint> GetFFTValues(SongFile songFile, double startingTime, double endTime)
 		{
 			List<MyPoint> songSamples = songFile.GetSamples(startingTime, endTime);
 

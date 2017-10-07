@@ -86,9 +86,14 @@ namespace SongVisualizationApp
 			UpdateTimeMargins();
 		}
 
-		public void SetTimeCenter(double percentage)
+		public void SetTimeCenterRelative(double percentage)
 		{
-			timeCenter = percentage * SongDuration;
+			SetTimeCenter(percentage * SongDuration);
+		}
+
+		public void SetTimeCenter(double timeCenter)
+		{
+			this.timeCenter = timeCenter;
 
 			UpdateTimeMargins();
 		}

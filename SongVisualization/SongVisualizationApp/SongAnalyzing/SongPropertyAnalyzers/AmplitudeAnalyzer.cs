@@ -11,6 +11,8 @@ namespace SongVisualizationApp.SongAnalyzing.SongPropertyAnalyzers
 	class AmplitudeAnalyzer : SongPropertyAnalyzer
 	{
 
+		private int pointsPerSecond = 10;
+
 		public AmplitudeAnalyzer()
 		{
 			PropertyName = "Amplitude";
@@ -22,7 +24,9 @@ namespace SongVisualizationApp.SongAnalyzing.SongPropertyAnalyzers
 			SongPropertyValues amplitudeValues = new SongPropertyValues("Amplitude");
 
 			int n = 0;
-			float tempMaxValue = -999;
+			float tempMaxValue = -1;
+
+			float threshold = songFile.SampleRate * (1.0f / pointsPerSecond);
 
 			foreach (MyPoint sample in songFile.Samples)
 			{
@@ -30,19 +34,14 @@ namespace SongVisualizationApp.SongAnalyzing.SongPropertyAnalyzers
 
 				tempMaxValue = Math.Max(tempMaxValue, Math.Abs(sample.Y));
 
-				if (n > 4000)
+				if (n > threshold)
 				{
 					amplitudeValues.AddPoint(sample.X, tempMaxValue);
 
 					n = 0;
-					tempMaxValue = -999;
+					tempMaxValue = -1;
 				}
 			}
-
-			//foreach (MyPoint sample in samples)
-			//{
-			//if (x++ % 100 == 0) amplitudeValues.AddPoint(sample.X, Math.Abs(sample.Y));
-			//}
 
 			return amplitudeValues;
 		}

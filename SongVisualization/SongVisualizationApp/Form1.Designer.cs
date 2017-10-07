@@ -28,21 +28,13 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-			System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
 			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
 			System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-			System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
 			this.selectSongButton = new System.Windows.Forms.Button();
-			this.fftChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
 			this.songScrollBar = new System.Windows.Forms.HScrollBar();
 			this.songNameLabel = new System.Windows.Forms.Label();
 			this.leftTimeMarginLabel = new System.Windows.Forms.Label();
 			this.rightTimeMarginLabel = new System.Windows.Forms.Label();
-			this.songChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
 			this.songDurationLabel = new System.Windows.Forms.Label();
 			this.togglePlaybackButton = new System.Windows.Forms.Button();
 			this.debugTextBox1 = new System.Windows.Forms.TextBox();
@@ -53,8 +45,6 @@
 			this.debugCheckBox1 = new System.Windows.Forms.CheckBox();
 			this.progressLabel = new System.Windows.Forms.Label();
 			this.songWaveViewer = new SongVisualizationApp.MyWaveViewer();
-			((System.ComponentModel.ISupportInitialize)(this.fftChart)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.songChart)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.songSecondsDisplayedTrackBar)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.songValueChart)).BeginInit();
 			this.SuspendLayout();
@@ -68,22 +58,6 @@
 			this.selectSongButton.Text = "Select Song";
 			this.selectSongButton.UseVisualStyleBackColor = true;
 			this.selectSongButton.Click += new System.EventHandler(this.selectSongButton_Click);
-			// 
-			// fftChart
-			// 
-			chartArea1.Name = "ChartArea1";
-			this.fftChart.ChartAreas.Add(chartArea1);
-			legend1.Name = "Legend1";
-			this.fftChart.Legends.Add(legend1);
-			this.fftChart.Location = new System.Drawing.Point(938, 293);
-			this.fftChart.Name = "fftChart";
-			series1.ChartArea = "ChartArea1";
-			series1.Legend = "Legend1";
-			series1.Name = "Frequency";
-			this.fftChart.Series.Add(series1);
-			this.fftChart.Size = new System.Drawing.Size(490, 243);
-			this.fftChart.TabIndex = 2;
-			this.fftChart.Text = "chart1";
 			// 
 			// songScrollBar
 			// 
@@ -119,25 +93,6 @@
 			this.rightTimeMarginLabel.Size = new System.Drawing.Size(28, 13);
 			this.rightTimeMarginLabel.TabIndex = 7;
 			this.rightTimeMarginLabel.Text = "0:00";
-			// 
-			// songChart
-			// 
-			chartArea2.BorderColor = System.Drawing.Color.Gray;
-			chartArea2.Name = "ChartArea1";
-			this.songChart.ChartAreas.Add(chartArea2);
-			legend2.Enabled = false;
-			legend2.Name = "Legend1";
-			this.songChart.Legends.Add(legend2);
-			this.songChart.Location = new System.Drawing.Point(1262, 107);
-			this.songChart.Name = "songChart";
-			series2.ChartArea = "ChartArea1";
-			series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-			series2.Legend = "Legend1";
-			series2.Name = "Waveform";
-			this.songChart.Series.Add(series2);
-			this.songChart.Size = new System.Drawing.Size(165, 115);
-			this.songChart.TabIndex = 8;
-			this.songChart.Text = "chart1";
 			// 
 			// songDurationLabel
 			// 
@@ -194,11 +149,11 @@
 			// 
 			// songValueChart
 			// 
-			chartArea3.Name = "ChartArea1";
-			this.songValueChart.ChartAreas.Add(chartArea3);
-			legend3.Name = "Legend1";
-			legend3.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.songValueChart.Legends.Add(legend3);
+			chartArea2.Name = "ChartArea1";
+			this.songValueChart.ChartAreas.Add(chartArea2);
+			legend2.Name = "Legend1";
+			legend2.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.songValueChart.Legends.Add(legend2);
 			this.songValueChart.Location = new System.Drawing.Point(78, 362);
 			this.songValueChart.Name = "songValueChart";
 			this.songValueChart.Size = new System.Drawing.Size(854, 277);
@@ -250,18 +205,14 @@
 			this.Controls.Add(this.songWaveViewer);
 			this.Controls.Add(this.togglePlaybackButton);
 			this.Controls.Add(this.songDurationLabel);
-			this.Controls.Add(this.songChart);
 			this.Controls.Add(this.rightTimeMarginLabel);
 			this.Controls.Add(this.leftTimeMarginLabel);
 			this.Controls.Add(this.songNameLabel);
 			this.Controls.Add(this.songScrollBar);
-			this.Controls.Add(this.fftChart);
 			this.Controls.Add(this.selectSongButton);
 			this.Name = "Form1";
 			this.Text = "SongVisualization";
 			this.Load += new System.EventHandler(this.Form1_Load);
-			((System.ComponentModel.ISupportInitialize)(this.fftChart)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.songChart)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.songSecondsDisplayedTrackBar)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.songValueChart)).EndInit();
 			this.ResumeLayout(false);
@@ -271,12 +222,10 @@
 
 		#endregion
 		private System.Windows.Forms.Button selectSongButton;
-		private System.Windows.Forms.DataVisualization.Charting.Chart fftChart;
 		private System.Windows.Forms.HScrollBar songScrollBar;
 		private System.Windows.Forms.Label songNameLabel;
 		private System.Windows.Forms.Label leftTimeMarginLabel;
 		private System.Windows.Forms.Label rightTimeMarginLabel;
-		private System.Windows.Forms.DataVisualization.Charting.Chart songChart;
 		private System.Windows.Forms.Label songDurationLabel;
 		private System.Windows.Forms.Button togglePlaybackButton;
 		private SongVisualizationApp.MyWaveViewer songWaveViewer;

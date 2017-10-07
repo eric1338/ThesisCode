@@ -33,8 +33,8 @@ namespace SongVisualizationApp.SongAnalyzing
 
 			List<SongPropertyValues> songPropertyValuesList = new List<SongPropertyValues>();
 
-			SongPropertyValues fft1 = AnalyzeSongProperty(songFile, new PitchAnalyzer(), 0.4f);
-			songPropertyValuesList.Add(fft1);
+			SongPropertyValues pitchValues = AnalyzeSongProperty(songFile, new PitchAnalyzer(), 0.4f);
+			songPropertyValuesList.Add(pitchValues);
 
 			SongPropertyValues amplitudeValues = AnalyzeSongProperty(songFile, new AmplitudeAnalyzer(), 0.6f);
 			songPropertyValuesList.Add(amplitudeValues);
@@ -46,68 +46,12 @@ namespace SongVisualizationApp.SongAnalyzing
 			visualFacade.SetProgress("done :)", 1);
 		}
 
-
 		private SongPropertyValues AnalyzeSongProperty(SongFile songFile, SongPropertyAnalyzer analyzer, float relativeProgressBefore)
 		{
 			visualFacade.SetProgress(analyzer.ProgressText, relativeProgressBefore);
 
 			return analyzer.Analyze(songFile);
 		}
-
-		/*
-		public static List<MyPoint> DoFFT3(SongFile songFile, double startingTime, double endTime)
-		{
-			List<MyPoint> songSamples = songFile.GetSamples(startingTime, endTime);
-
-			int nSamples = songSamples.Count;
-
-			NAudio.Dsp.Complex[] samplesForFFT = new NAudio.Dsp.Complex[nSamples];
-
-			for (int i = 0; i < nSamples; i++)
-			{
-				NAudio.Dsp.Complex cpl = new NAudio.Dsp.Complex();
-				cpl.X = songSamples[i].Y;
-				cpl.Y = 0;
-
-				samplesForFFT[i] = cpl;
-			}
-
-			int m = 0;
-			int newNSamples = 0;
-
-			for (int i = 0; i < 100; i++)
-			{
-				if (Math.Pow(2, i) < nSamples)
-				{
-					m = i;
-					newNSamples = (int) Math.Pow(2, i);
-				}
-				else
-				{
-					break;
-				}
-			}
-			
-			NAudio.Dsp.FastFourierTransform.FFT(true, m, samplesForFFT);
-
-			List<MyPoint> fftPoints = new List<MyPoint>();
-
-			float hzPerSample = songFile.SampleRate / (float) nSamples;
-
-			for (int i = 1; i < samplesForFFT.Length; i++)
-			{
-				float mag = (2.0f / nSamples) * Utils.GetRealValue(samplesForFFT[i].X, samplesForFFT[i].Y);
-				//float mag = Utils.GetRealValue(samplesForFFT[i].X, samplesForFFT[i].Y);
-
-				fftPoints.Add(new MyPoint(hzPerSample * i, mag));
-			}
-
-			return fftPoints;
-		}
-		*/
-
-
-
 
 	}
 }

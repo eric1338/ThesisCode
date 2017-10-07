@@ -47,10 +47,5 @@ namespace SongVisualizationApp
 		{
 			form.PlotSongPropertyValues(songPropertyValuesList);
 		}
-
-		public void SetFFTValues(List<MyPoint> points)
-		{
-			form.PlotFFT(points);
-		}
 	}
 }

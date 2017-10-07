@@ -28,9 +28,6 @@ namespace SongVisualizationApp
 
 		private SongFile songFile;
 
-		private List<MyPoint> songPoints;
-		private List<MyPoint> fftPoints;
-
 		public Form1()
 		{
 			InitializeComponent();
@@ -140,15 +137,35 @@ namespace SongVisualizationApp
 			{
 				double time = Math.Max(songWaveViewer.MarkerTime, 0);
 
-				Console.WriteLine("time:" + time);
+				timerSongStartTime = time;
+				playbackButtonHitTime = DateTime.Now;
+				updateTimer = new Timer();
+				updateTimer.Tick += new EventHandler(UpdateTimeCenter);
+				updateTimer.Interval = 100;
+				updateTimer.Start();
 
 				audioPlayer.PlayAudioFromTime(time);
 			}
 			else
 			{
+				updateTimer.Stop();
 				audioPlayer.StopAudio();
 			}
 		}
+
+		private Timer updateTimer;
+		private double timerSongStartTime;
+		private DateTime playbackButtonHitTime;
+
+		private void UpdateTimeCenter(object sender, EventArgs e)
+		{
+			double timePassed = (DateTime.Now - playbackButtonHitTime).TotalSeconds;
+
+			visualValues.SetTimeCenter(timerSongStartTime + timePassed);
+
+			UpdateSongVisualization();
+		}
+
 
 		private void songSecondsDisplayedTrackBar_Scroll(object sender, EventArgs e)
 		{
@@ -159,80 +176,30 @@ namespace SongVisualizationApp
 
 		private void songScrollBar_Scroll(object sender, ScrollEventArgs e)
 		{
-			double scrollBarValue = songScrollBar.Value;
-
-			scrollBarValue = Math.Max(0, scrollBarValue * 1.25 - 10);
+			double scrollBarValue = Math.Max(0, songScrollBar.Value * 1.25 - 10);
 
 			double percentage = scrollBarValue / songScrollBar.Maximum;
 
-			visualValues.SetTimeCenter(percentage);
+			visualValues.SetTimeCenterRelative(percentage);
 
 			UpdateSongVisualization();
 		}
 
 		private void debugButton1_Click(object sender, EventArgs e)
 		{
-			double startingTime = Convert.ToDouble(debugTextBox1.Text);
-			double endTime = Convert.ToDouble(debugTextBox2.Text);
-
-			List<MyPoint> fftPoints;
+			double val1 = Convert.ToDouble(debugTextBox1.Text);
+			double val2 = Convert.ToDouble(debugTextBox2.Text);
 
 			if (debugCheckBox1.Checked)
 			{
-				Console.WriteLine("Calculus");
-				//fftPoints = SongAnalyzer.GetFFTValues(songFile, startingTime, endTime);
+				Console.WriteLine("checked");
 			}
 			else
 			{
-				Console.WriteLine("NAudio");
-				//fftPoints = SongAnalyzer.DoFFT3(songFile, startingTime, endTime);
+				Console.WriteLine("not checked");
 			}
-
-			
-
-
-			//if (startingTime > 1) PlotFFT(SongAnalyzer.prob1.Points);
-			//if (startingTime < 1) PlotFFT(SongAnalyzer.prob2.Points);
-
-			//PlotFFT(fftPoints);
 		}
 
 		
-		public void PlotAmplitude()
-		{
-			/*
-			songValueChart.Series["Amplitude"].Points.Clear();
-			songValueChart.Series["AmplitudeNormalized"].Points.Clear();
-			songValueChart.Series["AmplitudeThreshold"].Points.Clear();
-
-			foreach (MyPoint point in SongAnalyzer.prob1.Points)
-			{
-				songValueChart.Series["Amplitude"].Points.AddXY(point.X, point.Y);
-			}
-			foreach (MyPoint point in SongAnalyzer.prob2.Points)
-			{
-				songValueChart.Series["AmplitudeNormalized"].Points.AddXY(point.X, point.Y);
-			}
-			foreach (MyPoint point in SongAnalyzer.prob3.Points)
-			{
-				songValueChart.Series["AmplitudeThreshold"].Points.AddXY(point.X, point.Y);
-			}
-			*/
-		}
-
-
-		public void PlotFFT(List<MyPoint> points)
-		{
-			fftPoints = points;
-
-			fftChart.Series["Frequency"].Points.Clear();
-
-			foreach (MyPoint point in points)
-			{
-				fftChart.Series["Frequency"].Points.AddXY(point.X, point.Y);
-			}
-
-			Update();
-		}
 	}
 }
