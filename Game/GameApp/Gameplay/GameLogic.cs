@@ -35,6 +35,11 @@ namespace GameApp.Gameplay
 			gamePhysics.PerformJump(GetLevelProgression().CurrentPlayerPosition);
 		}
 
+		public void PerformPlayerHit()
+		{
+			GetLevelProgression().GetIntoHittingMode(GameplayValues.SecondsOfHittingMode);
+		}
+
 		public void SetPlayerIsStanding(bool isPlayerStanding)
 		{
 			GetLevelProgression().IsPlayerStanding = isPlayerStanding;
@@ -87,28 +92,46 @@ namespace GameApp.Gameplay
 
 		private void AddPlayerFail()
 		{
-			GetLevelProgression().ActivateGodmode(GameplayValues.SecondsOfGodmodeAfterFail);
+			GetLevelProgression().ActivateGodMode(GameplayValues.SecondsOfGodModeAfterFail);
 
-			Console.WriteLine("failed :(");
+			GetLevelProgression().AddFailedAttempt();
 		}
 
 		private void CheckPlayerObstacleCollision()
 		{
-			if (collisions.DoesPlayerCollideWithAnObstacle(GetLevelProgression()))
+			LevelProgression levelProgression = GetLevelProgression();
+
+			if (collisions.DoesPlayerCollideWithASolidObstacle(levelProgression))
 			{
 				AddPlayerFail();
+			}
+
+			Obstacle obstacleCollidedWith = collisions.GetPlayerDestructibleObstacleCollision(levelProgression);
+
+			if (obstacleCollidedWith != null)
+			{
+				if (levelProgression.IsPlayerInHittingMode())
+				{
+					levelProgression.DestructObstacle(obstacleCollidedWith);
+				}
+				else
+				{
+					AddPlayerFail();
+				}
 			}
 		}
 
 		private void CheckPlayerCollectibleCollision()
 		{
-			List<Collectible> collectedCollectibles = collisions.GetPlayerCollectibleCollisions(GetLevelProgression());
+			LevelProgression levelProgression = GetLevelProgression();
+
+			List<Collectible> collectedCollectibles = collisions.GetPlayerCollectibleCollisions(levelProgression);
 
 			foreach (Collectible collectible in collectedCollectibles)
 			{
-				// TODO: Punkte hier berechnen, nicht in LevelProgression
+				levelProgression.CollectCollectible(collectible);
 
-				GetLevelProgression().CollectCollectible(collectible);
+				levelProgression.AddPoints(GameplayValues.PointsForCollectible);
 			}
 		}
 	}

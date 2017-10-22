@@ -44,17 +44,11 @@ namespace GameApp.Gameplay.Physics
 			return null;
 		}
 
-		public bool DoesPlayerCollideWithAnObstacle(LevelProgression levelProgression)
+		public bool DoesPlayerCollideWithASolidObstacle(LevelProgression levelProgression)
 		{
-			return DoesPlayerCollideWithAnObstacle(levelProgression.CurrentPlayerPosition,
-				levelProgression.IsPlayerStanding);
-		}
+			Hitbox playerHitbox = GetPlayerHitbox(levelProgression.CurrentPlayerPosition, levelProgression.IsPlayerStanding);
 
-		public bool DoesPlayerCollideWithAnObstacle(Vector2 playerPosition, bool isPlayerStanding)
-		{
-			Hitbox playerHitbox = GetPlayerHitbox(playerPosition, isPlayerStanding);
-
-			foreach (Obstacle obstacle in level.Obstacles)
+			foreach (Obstacle obstacle in level.SolidObstacles)
 			{
 				Hitbox obstacleHitbox = Hitboxes.GetObstacleHitbox(obstacle);
 
@@ -64,14 +58,55 @@ namespace GameApp.Gameplay.Physics
 			return false;
 		}
 
+		public Obstacle GetPlayerDestructibleObstacleCollision(LevelProgression levelProgression)
+		{
+			Hitbox playerHitbox = GetPlayerHitbox(levelProgression.CurrentPlayerPosition, levelProgression.IsPlayerStanding);
+
+			foreach (Obstacle obstacle in level.DestructibleObstacles)
+			{
+				if (levelProgression.IsObstacleAlreadyDestructed(obstacle)) continue;
+
+				Hitbox obstacleHitbox = Hitboxes.GetObstacleHitbox(obstacle);
+
+				if (playerHitbox.CollidesWith(obstacleHitbox)) return obstacle;
+			}
+
+			return null;
+		}
+
+
+		/*
+		public bool DoesPlayerCollideWithASolidObstacle(LevelProgression levelProgression)
+		{
+			return DoesPlayerCollideWithASolidObstacle(levelProgression.CurrentPlayerPosition,
+				levelProgression.IsPlayerStanding);
+		}
+
+		private bool DoesPlayerCollideWithASolidObstacle(Vector2 playerPosition, bool isPlayerStanding)
+		{
+			Hitbox playerHitbox = GetPlayerHitbox(playerPosition, isPlayerStanding);
+
+			foreach (Obstacle obstacle in level.SolidObstacles)
+			{
+				Hitbox obstacleHitbox = Hitboxes.GetObstacleHitbox(obstacle);
+
+				if (playerHitbox.CollidesWith(obstacleHitbox)) return true;
+			}
+
+			return false;
+		}
+		*/
+
 		public List<Collectible> GetPlayerCollectibleCollisions(LevelProgression levelProgression)
 		{
 			List<Collectible> collectedCollectibles = new List<Collectible>();
 
 			Hitbox playerHitbox = GetPlayerHitbox(levelProgression.CurrentPlayerPosition, levelProgression.IsPlayerStanding);
 
-			foreach (Collectible collectible in levelProgression.RemainingCollectibles)
+			foreach (Collectible collectible in level.Collectibles)
 			{
+				if (levelProgression.IsCollectibleAlreadyCollected(collectible)) continue;
+
 				Hitbox collectibleHitbox = Hitboxes.GetCollectibleHitbox(collectible);
 
 				if (playerHitbox.CollidesWith(collectibleHitbox)) collectedCollectibles.Add(collectible);

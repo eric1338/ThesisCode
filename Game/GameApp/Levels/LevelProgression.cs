@@ -14,14 +14,18 @@ namespace GameApp.Levels
 		private Level level;
 
 		public Vector2 CurrentPlayerPosition { get; set; }
-		public List<int> CollectedCollectibleIDs { get; set; }
 
-		public List<Collectible> RemainingCollectibles { get; set; }
+		public int Points { get; set; }
+		public int FailedAttempts { get; set; }
+
+		private List<int> destructedObstaclesIDs;
+		private List<int> collectedCollectibleIDs;
 
 		public bool IsPlayerStanding { get; set; }
 
 		private float secondsPlayed;
-		private float secondsOfGodmodeLeft;
+		private float secondsOfHittingModeLeft;
+		private float secondsOfGodModeLeft;
 
 
 		public LevelProgression(Level level)
@@ -33,41 +37,80 @@ namespace GameApp.Levels
 
 		public void Reset()
 		{
-			RemainingCollectibles = new List<Collectible>(level.Collectibles);
-
 			CurrentPlayerPosition = level.PlayerStartingPosition;
+
+			Points = 0;
+			FailedAttempts = 0;
+
+			destructedObstaclesIDs = new List<int>();
+			collectedCollectibleIDs = new List<int>();
 
 			IsPlayerStanding = true;
 
 			secondsPlayed = 0;
-			secondsOfGodmodeLeft = 0;
+			secondsOfHittingModeLeft = 0;
+			secondsOfGodModeLeft = 0;
 		}
 
 		public void UpdateTime(float timeSinceLastUpdate)
 		{
 			secondsPlayed += timeSinceLastUpdate;
 
-			if (secondsOfGodmodeLeft > 0) secondsOfGodmodeLeft -= timeSinceLastUpdate;
+			if (secondsOfHittingModeLeft > 0) secondsOfHittingModeLeft -= timeSinceLastUpdate;
+
+			if (secondsOfGodModeLeft > 0) secondsOfGodModeLeft -= timeSinceLastUpdate;
 		}
 
-		public void ActivateGodmode(float secondsOfGodmode)
+		public void AddPoints(int pointsAdded)
 		{
-			secondsOfGodmodeLeft = secondsOfGodmode;
+			Points += pointsAdded;
+		}
+
+		public void AddFailedAttempt()
+		{
+			FailedAttempts++;
+		}
+
+		public void GetIntoHittingMode(float secondsOfHitting)
+		{
+			if (IsPlayerInHittingMode()) return;
+
+			secondsOfHittingModeLeft = secondsOfHitting;
+		}
+
+		public void ActivateGodMode(float secondsOfGodMode)
+		{
+			secondsOfGodModeLeft = secondsOfGodMode;
+		}
+
+		public bool IsPlayerInHittingMode()
+		{
+			return secondsOfHittingModeLeft > 0;
 		}
 
 		public bool IsPlayerInGodmode()
 		{
-			return secondsOfGodmodeLeft > 0;
+			return secondsOfGodModeLeft > 0;
+		}
+
+		public void DestructObstacle(Obstacle obstacle)
+		{
+			destructedObstaclesIDs.Add(obstacle.ID);
 		}
 
 		public void CollectCollectible(Collectible collectible)
 		{
-			Console.WriteLine("points :)");
+			collectedCollectibleIDs.Add(collectible.ID);
+		}
 
-			if (RemainingCollectibles.Contains(collectible))
-			{
-				RemainingCollectibles.Remove(collectible);
-			}
+		public bool IsObstacleAlreadyDestructed(Obstacle obstacle)
+		{
+			return destructedObstaclesIDs.Contains(obstacle.ID);
+		}
+
+		public bool IsCollectibleAlreadyCollected(Collectible collectible)
+		{
+			return collectedCollectibleIDs.Contains(collectible.ID);
 		}
 
 	}

@@ -11,7 +11,8 @@ namespace GameApp.Levels
 	{
 
 		public List<Ground> Grounds { get; set; }
-		public List<Obstacle> Obstacles { get; set; }
+		public List<Obstacle> SolidObstacles { get; set; }
+		public List<Obstacle> DestructibleObstacles { get; set; }
 		public List<Collectible> Collectibles { get; set; }
 
 		public Vector2 PlayerStartingPosition { get; set; }
@@ -19,7 +20,8 @@ namespace GameApp.Levels
 		public Level()
 		{
 			Grounds = new List<Ground>();
-			Obstacles = new List<Obstacle>();
+			SolidObstacles = new List<Obstacle>();
+			DestructibleObstacles = new List<Obstacle>();
 			Collectibles = new List<Collectible>();
 		}
 
@@ -35,11 +37,14 @@ namespace GameApp.Levels
 			level.AddGround(g2);
 			level.AddGround(g3);
 
-			Obstacle o1 = new Obstacle(new Vector2(3.05f, 1.05f), new Vector2(3.25f, 0.95f));
-			Obstacle o2 = new Obstacle(new Vector2(8.4f, 0.8f), new Vector2(8.6f, 0.7f));
+			Obstacle destructibleObstacle1 = new Obstacle(new Vector2(3.05f, 1.45f), new Vector2(3.15f, 0.95f));
+			level.AddDestructibleObstacle(destructibleObstacle1);
 
-			level.AddObstacle(o1);
-			level.AddObstacle(o2);
+			Obstacle solidObstacle1 = new Obstacle(new Vector2(3.05f, 1.05f), new Vector2(3.25f, 0.95f));
+			Obstacle solidObstacle2 = new Obstacle(new Vector2(8.4f, 0.8f), new Vector2(8.6f, 0.7f));
+
+			//level.AddSolidObstacle(solidObstacle1);
+			level.AddSolidObstacle(solidObstacle2);
 
 			Collectible c1 = new Collectible(0, new Vector2(4f, 1.5f));
 			Collectible c2 = new Collectible(1, new Vector2(6.5f, 1f));
@@ -59,9 +64,14 @@ namespace GameApp.Levels
 			Grounds.Add(ground);
 		}
 
-		public void AddObstacle(Obstacle obstacle)
+		public void AddSolidObstacle(Obstacle solidObstacle)
 		{
-			Obstacles.Add(obstacle);
+			SolidObstacles.Add(solidObstacle);
+		}
+
+		public void AddDestructibleObstacle(Obstacle destructibleObstacle)
+		{
+			DestructibleObstacles.Add(destructibleObstacle);
 		}
 
 		public void AddCollectible(Collectible collectible)

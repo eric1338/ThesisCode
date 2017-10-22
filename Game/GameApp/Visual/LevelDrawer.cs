@@ -28,7 +28,7 @@ namespace GameApp.Visual
 			DrawBackground();
 
 			DrawGrounds();
-			DrawObstacles();
+			DrawObstacles(levelProgression);
 			DrawCollectibles(levelProgression);
 			DrawPlayer(levelProgression);
 
@@ -108,6 +108,7 @@ namespace GameApp.Visual
 		private void DrawPlayer(LevelProgression levelProgression)
 		{
 			if (levelProgression.IsPlayerInGodmode()) BasicGraphics.SetColor(1.0f, 1.0f, 1.0f);
+			else if (levelProgression.IsPlayerInHittingMode()) BasicGraphics.SetColor(0.2f, 0.6f, 0.35f);
 			else BasicGraphics.SetColor(0.2f, 0.35f, 0.6f);
 
 			Vector2 playerPosition = levelProgression.CurrentPlayerPosition;
@@ -151,22 +152,38 @@ namespace GameApp.Visual
 			DrawSquare(v1, v2);
 		}
 
-		private void DrawObstacles()
+		private void DrawObstacles(LevelProgression levelProgression)
 		{
-			foreach (Obstacle obstacle in level.Obstacles) DrawObstacle(obstacle);
+			foreach (Obstacle obstacle in level.SolidObstacles) DrawSolidObstacle(obstacle);
+
+			foreach (Obstacle obstacle in level.DestructibleObstacles)
+			{
+				if (levelProgression.IsObstacleAlreadyDestructed(obstacle)) continue;
+
+				DrawDestructibleObstacle(obstacle, levelProgression);
+			}
 		}
 
-		private void DrawObstacle(Obstacle obstacle)
+		private void DrawSolidObstacle(Obstacle solidObstacle)
 		{
 			BasicGraphics.SetColor(1.0f, 0.6f, 0.4f);
 
-			DrawSquare(obstacle.TopLeftCorner, obstacle.BottomRightCorner);
+			DrawSquare(solidObstacle.TopLeftCorner, solidObstacle.BottomRightCorner);
+		}
+
+		private void DrawDestructibleObstacle(Obstacle destructibleObstacle, LevelProgression levelProgression)
+		{
+			BasicGraphics.SetColor(1.0f, 0.9f, 0.4f);
+
+			DrawSquare(destructibleObstacle.TopLeftCorner, destructibleObstacle.BottomRightCorner);
 		}
 
 		private void DrawCollectibles(LevelProgression levelProgression)
 		{
-			foreach (Collectible collectible in levelProgression.RemainingCollectibles)
+			foreach (Collectible collectible in level.Collectibles)
 			{
+				if (levelProgression.IsCollectibleAlreadyCollected(collectible)) continue;
+
 				float halfCollectibleWidth = VisualValues.HalfCollectibleWidthHeight * 0.95f;
 
 				float leftX = collectible.Position.X - halfCollectibleWidth;

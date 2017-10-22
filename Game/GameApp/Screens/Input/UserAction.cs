@@ -9,6 +9,7 @@ namespace GameApp.Screens.Input
 	enum UserAction
 	{
 		Jump,
+		Hit,
 		Duck,
 
 		ResetLevel,
