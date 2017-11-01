@@ -28,8 +28,10 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
 			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+			System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
 			this.selectSongButton = new System.Windows.Forms.Button();
 			this.songScrollBar = new System.Windows.Forms.HScrollBar();
 			this.songNameLabel = new System.Windows.Forms.Label();
@@ -45,8 +47,10 @@
 			this.debugCheckBox1 = new System.Windows.Forms.CheckBox();
 			this.progressLabel = new System.Windows.Forms.Label();
 			this.songWaveViewer = new SongVisualizationApp.MyWaveViewer();
+			this.debugChart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
 			((System.ComponentModel.ISupportInitialize)(this.songSecondsDisplayedTrackBar)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.songValueChart)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.debugChart1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// selectSongButton
@@ -149,21 +153,21 @@
 			// 
 			// songValueChart
 			// 
-			chartArea2.Name = "ChartArea1";
-			this.songValueChart.ChartAreas.Add(chartArea2);
-			legend2.Name = "Legend1";
-			legend2.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.songValueChart.Legends.Add(legend2);
-			this.songValueChart.Location = new System.Drawing.Point(78, 362);
+			chartArea1.Name = "ChartArea1";
+			this.songValueChart.ChartAreas.Add(chartArea1);
+			legend1.Name = "Legend1";
+			legend1.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.songValueChart.Legends.Add(legend1);
+			this.songValueChart.Location = new System.Drawing.Point(26, 362);
 			this.songValueChart.Name = "songValueChart";
-			this.songValueChart.Size = new System.Drawing.Size(854, 277);
+			this.songValueChart.Size = new System.Drawing.Size(281, 277);
 			this.songValueChart.TabIndex = 16;
 			this.songValueChart.Text = "chart1";
 			// 
 			// debugCheckBox1
 			// 
 			this.debugCheckBox1.AutoSize = true;
-			this.debugCheckBox1.Location = new System.Drawing.Point(1180, 566);
+			this.debugCheckBox1.Location = new System.Drawing.Point(1287, 531);
 			this.debugCheckBox1.Name = "debugCheckBox1";
 			this.debugCheckBox1.Size = new System.Drawing.Size(56, 17);
 			this.debugCheckBox1.TabIndex = 17;
@@ -189,12 +193,27 @@
 			this.songWaveViewer.TabIndex = 11;
 			this.songWaveViewer.WaveStream = null;
 			// 
+			// debugChart1
+			// 
+			chartArea2.Name = "ChartArea1";
+			this.debugChart1.ChartAreas.Add(chartArea2);
+			this.debugChart1.Location = new System.Drawing.Point(343, 326);
+			this.debugChart1.Name = "debugChart1";
+			series1.ChartArea = "ChartArea1";
+			series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+			series1.Name = "Series1";
+			this.debugChart1.Series.Add(series1);
+			this.debugChart1.Size = new System.Drawing.Size(889, 336);
+			this.debugChart1.TabIndex = 19;
+			this.debugChart1.Text = "chart1";
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.Control;
 			this.ClientSize = new System.Drawing.Size(1440, 694);
+			this.Controls.Add(this.debugChart1);
 			this.Controls.Add(this.progressLabel);
 			this.Controls.Add(this.debugCheckBox1);
 			this.Controls.Add(this.songValueChart);
@@ -215,6 +234,7 @@
 			this.Load += new System.EventHandler(this.Form1_Load);
 			((System.ComponentModel.ISupportInitialize)(this.songSecondsDisplayedTrackBar)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.songValueChart)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.debugChart1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -236,6 +256,7 @@
 		private System.Windows.Forms.DataVisualization.Charting.Chart songValueChart;
 		private System.Windows.Forms.CheckBox debugCheckBox1;
 		private System.Windows.Forms.Label progressLabel;
+		private System.Windows.Forms.DataVisualization.Charting.Chart debugChart1;
 	}
 }
 

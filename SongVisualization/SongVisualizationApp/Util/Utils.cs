@@ -19,6 +19,52 @@ namespace SongVisualizationApp.Util
 			return (float) Math.Abs(Math.Sqrt(Math.Pow(real, 2) + Math.Pow(imaginary, 2)));
 		}
 
+
+		private static float GetHannWindowFactor(float relX)
+		{
+			return (float)Math.Pow(Math.Sin(Math.PI * relX), 2);
+		}
+
+		private static float GetHammingWindowFactor(float relX)
+		{
+			return 0.54f - 0.46f * (float)Math.Cos(2 * Math.PI * relX);
+		}
+
+		public static List<MyPoint> GetHannWindowPoints(List<MyPoint> points)
+		{
+			List<MyPoint> newPoints = new List<MyPoint>();
+
+			float firstX = points[0].X;
+			float xRange = points[points.Count - 1].X - firstX;
+
+			foreach (MyPoint point in points)
+			{
+				float relX = (point.X - firstX) / xRange;
+
+				newPoints.Add(new MyPoint(point.X, GetHannWindowFactor(relX) * point.Y));
+			}
+
+			return newPoints;
+		}
+
+		public static List<MyPoint> GetHammingWindowPoints(List<MyPoint> points)
+		{
+			List<MyPoint> newPoints = new List<MyPoint>();
+
+			float firstX = points[0].X;
+			float xRange = points[points.Count - 1].X - firstX;
+
+			foreach (MyPoint point in points)
+			{
+				float relX = (point.X - firstX) / xRange;
+
+				newPoints.Add(new MyPoint(point.X, GetHammingWindowFactor(relX) * point.Y));
+			}
+
+			return newPoints;
+		}
+
+
 		public static string GetTimeString(double secondsPassed)
 		{
 			int minutes = (int) Math.Floor(secondsPassed / 60);

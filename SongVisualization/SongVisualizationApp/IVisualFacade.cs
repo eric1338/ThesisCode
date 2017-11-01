@@ -17,6 +17,7 @@ namespace SongVisualizationApp
 
 		void SetSongFile(SongFile songFile);
 
+		void PlotFFTValues(List<FFTValues> fftValuesList);
 		void PlotSongPropertyValues(List<SongPropertyValues> songPropertyValuesList);
 
 	}

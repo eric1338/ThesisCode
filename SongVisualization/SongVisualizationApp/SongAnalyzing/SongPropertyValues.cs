@@ -14,12 +14,30 @@ namespace SongVisualizationApp.SongAnalyzing
 
 		public List<MyPoint> Points { get; set; }
 
+		public List<Tuple<float, List<MyPoint>>> TestLists { get; set; }
 
 		public SongPropertyValues(string propertyName)
 		{
 			PropertyName = propertyName;
 
 			Points = new List<MyPoint>();
+
+			TestLists = new List<Tuple<float, List<MyPoint>>>();
+		}
+
+		public void AddTestList(float time, List<MyPoint> points)
+		{
+			TestLists.Add(new Tuple<float, List<MyPoint>>(time, points));
+		}
+
+		public List<MyPoint> GetTestPoints(float time)
+		{
+			foreach (Tuple<float, List<MyPoint>> tupi in TestLists)
+			{
+				if (tupi.Item1 > time) return tupi.Item2;
+			}
+
+			return null;
 		}
 
 		public SongPropertyValues CreateNormalizedCopy(string copyName)

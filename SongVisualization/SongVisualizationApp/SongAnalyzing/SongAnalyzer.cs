@@ -33,8 +33,32 @@ namespace SongVisualizationApp.SongAnalyzing
 
 			List<SongPropertyValues> songPropertyValuesList = new List<SongPropertyValues>();
 
-			SongPropertyValues pitchValues = AnalyzeSongProperty(songFile, new PitchAnalyzer(), 0.4f);
-			songPropertyValuesList.Add(pitchValues);
+			//SongPropertyValues pitchValues = AnalyzeSongProperty(songFile, new PitchAnalyzer(), 0.4f);
+			//songPropertyValuesList.Add(pitchValues);
+
+			//SongPropertyValues pitchValues2 = AnalyzeSongProperty(songFile, new PitchAnalyzer2(), 0.5f);
+			//songPropertyValuesList.Add(pitchValues2);
+
+			List<FFTValues> fftValuesList = new List<FFTValues>();
+
+			visualFacade.SetProgress("MathNet Pitches...", 0.2f);
+			FFTValues f1 = new PitchAnalyzer2("MathNet", "Hann").GetFFTValues(songFile);
+			//FFTValues f2 = new PitchAnalyzer2("MathNet", "Hamming").GetFFTValues(songFile);
+			//FFTValues f3 = new PitchAnalyzer2("MathNet", "None").GetFFTValues(songFile);
+
+			visualFacade.SetProgress("Accord Pitches...", 0.4f);
+			FFTValues f4 = new PitchAnalyzer2("Accord", "Hann").GetFFTValues(songFile);
+			FFTValues f5 = new PitchAnalyzer2("Accord", "Hamming").GetFFTValues(songFile);
+			FFTValues f6 = new PitchAnalyzer2("Accord", "None").GetFFTValues(songFile);
+
+			fftValuesList.Add(f1);
+			//fftValuesList.Add(f2);
+			//fftValuesList.Add(f3);
+			fftValuesList.Add(f4);
+			fftValuesList.Add(f5);
+			fftValuesList.Add(f6);
+
+			visualFacade.PlotFFTValues(fftValuesList);
 
 			SongPropertyValues amplitudeValues = AnalyzeSongProperty(songFile, new AmplitudeAnalyzer(), 0.6f);
 			songPropertyValuesList.Add(amplitudeValues);

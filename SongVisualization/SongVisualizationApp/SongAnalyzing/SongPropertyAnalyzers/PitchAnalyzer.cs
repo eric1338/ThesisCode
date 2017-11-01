@@ -14,7 +14,7 @@ namespace SongVisualizationApp.SongAnalyzing.SongPropertyAnalyzers
 	class PitchAnalyzer : SongPropertyAnalyzer
 	{
 
-		private float sampleWidthTime = 5;
+		private float sampleWidthTime = 0.2f;
 
 		public PitchAnalyzer()
 		{
@@ -26,13 +26,10 @@ namespace SongVisualizationApp.SongAnalyzing.SongPropertyAnalyzers
 		{
 			SongPropertyValues values = new SongPropertyValues(PropertyName);
 
-			float sampleDeltaX = sampleWidthTime * 0.5f;
+			float sampleDeltaX = sampleWidthTime;
 
 			for (float i = 0; i < songFile.SongDuration; i += sampleDeltaX)
 			{
-
-				float time = i + (sampleDeltaX / 2.0f);
-
 				List<MyPoint> fftValues = GetFFTValues(songFile, i, i + sampleWidthTime);
 
 				float max = GetMax(fftValues);
@@ -45,6 +42,8 @@ namespace SongVisualizationApp.SongAnalyzing.SongPropertyAnalyzers
 				}
 
 				float y = GetAriMeanX(testPoints);
+
+				float time = i + (sampleDeltaX / 2.0f);
 
 				values.AddPoint(time * 0.5f, y);
 			}

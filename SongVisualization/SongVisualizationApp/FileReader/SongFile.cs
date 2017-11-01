@@ -31,11 +31,16 @@ namespace SongVisualizationApp.FileReader
 			FileDirectory = fileDirectory;
 		}
 
+		private int GetSamplesPerSecond()
+		{
+			return SampleRate * NumberOfChannels;
+		}
+
 		public List<MyPoint> GetSamples(double startingTime, double endTime)
 		{
-			int startingIndex = (int) Math.Floor(startingTime * SampleRate);
+			int startingIndex = (int) Math.Floor(startingTime * GetSamplesPerSecond());
 
-			int range = (int) Math.Floor((endTime - startingTime) * SampleRate);
+			int range = (int) Math.Floor((endTime - startingTime) * GetSamplesPerSecond());
 
 			startingIndex = Math.Min(startingIndex, Samples.Count - 1);
 			range = Math.Min(range, Samples.Count - startingIndex - 1);

@@ -163,6 +163,23 @@ namespace SongVisualizationApp
 
 			visualValues.SetTimeCenter(timerSongStartTime + timePassed);
 
+			if (currentFFTValues != null)
+			{
+				float time = (float) (timerSongStartTime + timePassed);
+
+				List<MyPoint> points = currentFFTValues.GetSpectrum(time);
+
+				debugChart1.Series["Series1"].Points.Clear();
+
+				if (points != null)
+				{
+					foreach (MyPoint p in points)
+					{
+						debugChart1.Series["Series1"].Points.AddXY(p.X, p.Y);
+					}
+				}
+			}
+
 			UpdateSongVisualization();
 		}
 
@@ -185,19 +202,30 @@ namespace SongVisualizationApp
 			UpdateSongVisualization();
 		}
 
+
+
+		List<FFTValues> fftValuesList;
+
+		FFTValues currentFFTValues;
+
+		public void SetFFTValuesList(List<FFTValues> fftValuesList)
+		{
+			this.fftValuesList = fftValuesList;
+		}
+
 		private void debugButton1_Click(object sender, EventArgs e)
 		{
-			double val1 = Convert.ToDouble(debugTextBox1.Text);
-			double val2 = Convert.ToDouble(debugTextBox2.Text);
+			int index = Convert.ToInt32(debugTextBox1.Text);
 
-			if (debugCheckBox1.Checked)
-			{
-				Console.WriteLine("checked");
-			}
-			else
-			{
-				Console.WriteLine("not checked");
-			}
+			currentFFTValues = fftValuesList[index];
+
+			debugChart1.ChartAreas["ChartArea1"].AxisX.Minimum = 150;
+			debugChart1.ChartAreas["ChartArea1"].AxisX.Maximum = 1000;
+			debugChart1.ChartAreas["ChartArea1"].AxisY.Maximum = 0.08;
+
+			Console.WriteLine(currentFFTValues.PropertyName);
+
+			Update();
 		}
 
 		

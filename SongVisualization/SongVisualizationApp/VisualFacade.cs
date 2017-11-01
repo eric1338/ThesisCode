@@ -43,6 +43,11 @@ namespace SongVisualizationApp
 			form.SetSongFile(songFile);
 		}
 
+		public void PlotFFTValues(List<FFTValues> fftValuesList)
+		{
+			form.SetFFTValuesList(fftValuesList);
+		}
+
 		public void PlotSongPropertyValues(List<SongPropertyValues> songPropertyValuesList)
 		{
 			form.PlotSongPropertyValues(songPropertyValuesList);
