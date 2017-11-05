@@ -34,9 +34,9 @@ namespace GameApp.Gameplay.Physics
 			return playerPosition + new Vector2(-LeftFootOffset, 0);
 		}
 
-		public static readonly float HorizontalPlayerVelocity = 0.01666666f;
-		public static readonly float GravityAcceleration = 0.0016f;
-		public static readonly float JumpAcceleration = 0.036f;
+		public static readonly float HorizontalPlayerVelocity = 0.024f;
+		public static readonly float GravityAcceleration = 0.001f;
+		public static readonly float JumpAcceleration = 0.03f;
 
 	}
 }

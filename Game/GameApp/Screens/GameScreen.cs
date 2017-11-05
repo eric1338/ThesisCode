@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GameApp.Audio;
+using GameApp.Levels.LevelGeneration;
 
 namespace GameApp.Screens
 {
@@ -27,7 +28,13 @@ namespace GameApp.Screens
 
 		public GameScreen(MyGameWindow gameWindow) : base(gameWindow)
 		{
-			levelAttempt = new LevelAttempt(Level.CreateTestLevel());
+			//Level level = Level.CreateTestLevel();
+
+			LevelGenerator levelGenerator = new LevelGenerator();
+
+			Level level = levelGenerator.GenerateTestLevel();
+
+			levelAttempt = new LevelAttempt(level);
 
 			gameLogic = new GameLogic(levelAttempt);
 			levelDrawer = new LevelDrawer(levelAttempt.Level);
