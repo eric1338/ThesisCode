@@ -17,6 +17,11 @@ namespace GameApp.Levels.LevelGeneration
 			LevelElementDestinations = new List<LevelElementDestination>();
 		}
 
+		public void AddLevelElementDestination(LevelElementType type, float startingTime)
+		{
+			LevelElementDestinations.Add(new LevelElementDestination(type, startingTime, 0));
+		}
+
 		public void AddLevelElementDestination(LevelElementType type, float startingTime, float duration)
 		{
 			LevelElementDestinations.Add(new LevelElementDestination(type, startingTime, duration));
@@ -30,6 +35,8 @@ namespace GameApp.Levels.LevelGeneration
 			levelPlan.AddLevelElementDestination(LevelElementType.DuckObstacle, 5, 3);
 
 			levelPlan.AddLevelElementDestination(LevelElementType.Chasm, 10, 1.3f);
+
+			levelPlan.AddLevelElementDestination(LevelElementType.LowObstacle, 13);
 
 			levelPlan.AddLevelElementDestination(LevelElementType.Chasm, 16, 1.6f);
 

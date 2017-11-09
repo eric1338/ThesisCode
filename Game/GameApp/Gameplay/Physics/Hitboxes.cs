@@ -53,5 +53,13 @@ namespace GameApp.Gameplay.Physics
 			return new BoxHitbox(collectible.Position, hitboxWidth, hitboxHeight);
 		}
 
+		public static Hitbox GetProjectileHitbox(Vector2 projectilePosition)
+		{
+			float hitboxWidth = PhysicsValues.ProjectileHitboxWidth;
+			float hitboxHeight = PhysicsValues.PlayerHitboxHeight;
+
+			return new BoxHitbox(projectilePosition, hitboxWidth, hitboxHeight);
+		}
+
 	}
 }

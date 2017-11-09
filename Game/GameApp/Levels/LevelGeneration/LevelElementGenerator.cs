@@ -65,6 +65,24 @@ namespace GameApp.Levels.LevelGeneration
 			return new Obstacle(new Vector2(leftX, topY), new Vector2(rightX, bottomY));
 		}
 
+		public Obstacle CreateLowObstacle(float time, float groundY)
+		{
+			float halfJumpLength = Gameplay.Physics.PhysicsValues.GetJumpLength() / 2.0f;
+			float jumpHeight = Gameplay.Physics.PhysicsValues.GetJumpHeight();
+
+			float jumpPosition = GetXPositionByTime(time);
+
+			float lengthFactor = 0.5f;
+			float heightFactor = 0.2f;
+
+			float leftX = jumpPosition + halfJumpLength - (halfJumpLength * lengthFactor);
+			float rightX = jumpPosition + halfJumpLength + (halfJumpLength * lengthFactor);
+
+			float topY = groundY + jumpHeight * heightFactor;
+
+			return new Obstacle(new Vector2(leftX, topY), new Vector2(rightX, groundY));
+		}
+
 
 	}
 }

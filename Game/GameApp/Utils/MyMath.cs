@@ -9,6 +9,13 @@ namespace GameApp.Utils
 	class MyMath
 	{
 
+		private static Random randomNumberGenerator = new Random();
+
+		public static float GetRandomNumber()
+		{
+			return (float) randomNumberGenerator.NextDouble();
+		}
+
 		public static float Smoothstep(float edge0, float edge1, float x)
 		{
 			x = Clamp((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);

@@ -21,6 +21,10 @@ namespace GameApp.Levels
 		private List<int> destructedObstaclesIDs;
 		private List<int> collectedCollectibleIDs;
 
+		private Dictionary<int, Vector2> projectilePositions;
+		private Dictionary<int, bool> projectileDeflectionState;
+		private Dictionary<int, Vector2> projectileDeflectionDirection;
+
 		public bool IsPlayerStanding { get; set; }
 
 		private float secondsPlayed;
@@ -44,6 +48,17 @@ namespace GameApp.Levels
 
 			destructedObstaclesIDs = new List<int>();
 			collectedCollectibleIDs = new List<int>();
+
+			projectilePositions = new Dictionary<int, Vector2>();
+			projectileDeflectionState = new Dictionary<int, bool>();
+			projectileDeflectionDirection = new Dictionary<int, Vector2>();
+
+			foreach (Projectile projectile in level.Projectiles)
+			{
+				projectilePositions[projectile.ID] = projectile.StartingPosition;
+				projectileDeflectionState[projectile.ID] = false;
+				projectileDeflectionDirection[projectile.ID] = Vector2.Zero;
+			}
 
 			IsPlayerStanding = true;
 
@@ -98,19 +113,45 @@ namespace GameApp.Levels
 			destructedObstaclesIDs.Add(obstacle.ID);
 		}
 
-		public void CollectCollectible(Collectible collectible)
-		{
-			collectedCollectibleIDs.Add(collectible.ID);
-		}
-
 		public bool IsObstacleAlreadyDestructed(Obstacle obstacle)
 		{
 			return destructedObstaclesIDs.Contains(obstacle.ID);
 		}
 
+		public void CollectCollectible(Collectible collectible)
+		{
+			collectedCollectibleIDs.Add(collectible.ID);
+		}
+
 		public bool IsCollectibleAlreadyCollected(Collectible collectible)
 		{
 			return collectedCollectibleIDs.Contains(collectible.ID);
+		}
+
+		public Vector2 GetProjectilePosition(Projectile projectile)
+		{
+			return projectilePositions[projectile.ID];
+		}
+
+		public bool IsProjectileDeflected(Projectile projectile)
+		{
+			return projectileDeflectionState[projectile.ID];
+		}
+
+		public Vector2 GetProjectileDeflectionDirection(Projectile projectile)
+		{
+			return projectileDeflectionDirection[projectile.ID];
+		}
+
+		public void MoveProjectile(Projectile projectile, Vector2 movementDelta)
+		{
+			projectilePositions[projectile.ID] += movementDelta;
+		}
+
+		public void DeflectProjectile(Projectile projectile, Vector2 deflectionDirection)
+		{
+			projectileDeflectionState[projectile.ID] = true;
+			projectileDeflectionDirection[projectile.ID] = deflectionDirection;
 		}
 
 	}

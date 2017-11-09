@@ -60,6 +60,7 @@
     <Compile Include="Levels\LevelGeneration\LevelElementDestination.cs" />
     <Compile Include="Levels\LevelProgression.cs" />
     <Compile Include="Levels\Obstacle.cs" />
+    <Compile Include="Levels\Projectile.cs" />
     <Compile Include="Screens\Input\InputManager.cs" />
     <Compile Include="Screens\Input\UserAction.cs" />
     <Compile Include="Levels\Collectible.cs" />

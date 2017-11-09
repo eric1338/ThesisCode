@@ -19,6 +19,14 @@ namespace GameApp.Levels.LevelGeneration
 		{
 			Level level = new Level();
 
+			// Test
+			level.AddProjectile(new Projectile(0, new Vector2(8, 0.1f)));
+			level.AddProjectile(new Projectile(1, new Vector2(9, 0.1f)));
+			level.AddProjectile(new Projectile(2, new Vector2(10, 0.1f)));
+
+
+
+
 			List<LevelElementDestination> chasms = new List<LevelElementDestination>();
 			List<LevelElementDestination> nonChasms = new List<LevelElementDestination>();
 
@@ -54,23 +62,35 @@ namespace GameApp.Levels.LevelGeneration
 			{
 				if (nonChasm.Type == LevelElementType.DuckObstacle)
 				{
-					float x = LevelGenerationValues.GetXPositionByTime(nonChasm.StartingTime);
-					float groundY = LevelAnalysis.GetGroundBelowVector(level, new Vector2(x, 999)).TopY;
-
-					Console.WriteLine("GROUND-Y: " + groundY);
+					float groundY = GetGroundY(level, nonChasm.StartingTime);
 
 					Obstacle obstacle = levelElementGenerator.CreateDuckObstacle(nonChasm.StartingTime, nonChasm.Duration, groundY);
 
-					Console.WriteLine("OBSTACLE-Y1: " + obstacle.TopLeftCorner.Y);
-					Console.WriteLine("OBSTACLE-Y2: " + obstacle.BottomRightCorner.Y);
+					level.AddSolidObstacle(obstacle);
+				}
+				if (nonChasm.Type == LevelElementType.LowObstacle)
+				{
+					float groundY = GetGroundY(level, nonChasm.StartingTime);
 
-					Console.WriteLine(" ");
+					Obstacle obstacle = levelElementGenerator.CreateLowObstacle(nonChasm.StartingTime, groundY);
 
 					level.AddSolidObstacle(obstacle);
 				}
 			}
 
 			return level;
+		}
+
+
+		private float GetGroundY(Level level, float time)
+		{
+			float x = LevelGenerationValues.GetXPositionByTime(time);
+
+			Ground ground = LevelAnalysis.GetGroundBelowVector(level, new Vector2(x, 999));
+
+			if (ground == null) ground = LevelAnalysis.GetGroundLeftFromVector(level, new Vector2(x, 999));
+
+			return ground.TopY;
 		}
 
 

@@ -46,10 +46,10 @@ namespace GameApp.Gameplay.Physics
 		{
 			if (!IsPlayerOnGround(playerPosition))
 			{
-				verticalVelocity -= PhysicsValues.GravityAcceleration;
+				verticalVelocity -= PhysicsValues.GetGravityAccelerationPerFrame();
 			}
 
-			return playerPosition + new Vector2(PhysicsValues.HorizontalPlayerVelocity, verticalVelocity);
+			return playerPosition + new Vector2(PhysicsValues.GetHorizontalPlayerVelocityPerFrame(), verticalVelocity);
 		}
 
 	}

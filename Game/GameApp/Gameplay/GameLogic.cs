@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GameApp.Utils;
 
 namespace GameApp.Gameplay
 {
@@ -49,15 +50,17 @@ namespace GameApp.Gameplay
 		{
 			GetLevelProgression().UpdateTime(1.0f / GeneralValues.FPS);
 
-			SetNewPosition();
+			SetNewPlayerPosition();
+			SetNewProjectilePositions();
 
 			if (GetLevelProgression().IsPlayerInGodmode()) return;
 
 			CheckPlayerObstacleCollision();
 			CheckPlayerCollectibleCollision();
+			CheckPlayerProjectileCollision();
 		}
 
-		private void SetNewPosition()
+		private void SetNewPlayerPosition()
 		{
 			Vector2 oldPosition = GetLevelProgression().CurrentPlayerPosition;
 
@@ -90,6 +93,27 @@ namespace GameApp.Gameplay
 			GetLevelProgression().CurrentPlayerPosition = newPosition;
 		}
 
+		private void SetNewProjectilePositions()
+		{
+			LevelProgression levelProgression = GetLevelProgression();
+			
+			foreach (Projectile projectile in levelAttempt.Level.Projectiles)
+			{
+				Vector2 movementDelta;
+
+				if (levelProgression.IsProjectileDeflected(projectile))
+				{
+					movementDelta = levelProgression.GetProjectileDeflectionDirection(projectile) / GeneralValues.FPS;
+				}
+				else
+				{
+					movementDelta = new Vector2(-PhysicsValues.GetProjectileVelocityPerFrame(), 0);
+				}
+
+				levelProgression.MoveProjectile(projectile, movementDelta);
+			}
+		}
+
 		private void AddPlayerFail()
 		{
 			GetLevelProgression().ActivateGodMode(GameplayValues.SecondsOfGodModeAfterFail);
@@ -110,7 +134,7 @@ namespace GameApp.Gameplay
 
 			if (obstacleCollidedWith != null)
 			{
-				if (levelProgression.IsPlayerInHittingMode())
+				if (!levelProgression.IsPlayerInHittingMode())
 				{
 					levelProgression.DestructObstacle(obstacleCollidedWith);
 				}
@@ -134,5 +158,40 @@ namespace GameApp.Gameplay
 				levelProgression.AddPoints(GameplayValues.PointsForCollectible);
 			}
 		}
+
+		private void CheckPlayerProjectileCollision()
+		{
+			LevelProgression levelProgression = GetLevelProgression();
+
+			List<Projectile> projectilesCollidedWith = collisions.GetPlayerProjectileCollisions(levelProgression);
+
+			foreach (Projectile projectile in projectilesCollidedWith)
+			{
+				if (!levelProgression.IsPlayerStanding)
+				{
+					DeflectProjectile(projectile);
+				}
+				else
+				{
+					AddPlayerFail();
+				}
+			}
+		}
+
+		private void DeflectProjectile(Projectile projectile)
+		{
+			float yVelocity = MyMath.GetRandomNumber() * PhysicsValues.ProjectileMaximumYVelocity;
+
+			if (MyMath.GetRandomNumber() > 0.5f) yVelocity *= -1;
+
+			float xVelocity = (float)Math.Sqrt(Math.Pow(PhysicsValues.ProjectileVelocity, 2) - Math.Pow(yVelocity, 2));
+
+			Vector2 deflectionDirection = new Vector2(xVelocity, yVelocity);
+
+			Console.WriteLine("defl(" + projectile.ID + "): " + deflectionDirection);
+
+			GetLevelProgression().DeflectProjectile(projectile, deflectionDirection);
+		}
+
 	}
 }

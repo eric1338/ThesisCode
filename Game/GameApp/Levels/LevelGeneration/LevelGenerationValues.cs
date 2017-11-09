@@ -22,7 +22,7 @@ namespace GameApp.Levels.LevelGeneration
 
 		public static float GetPlayerVelocity()
 		{
-			return PhysicsValues.HorizontalPlayerVelocity * GeneralValues.FPS;
+			return PhysicsValues.HorizontalPlayerVelocity;
 		}
 
 		public static float GetXPositionByTime(float time)
@@ -46,7 +46,7 @@ namespace GameApp.Levels.LevelGeneration
 			{
 				y += yAcceleration;
 
-				yAcceleration -= PhysicsValues.GravityAcceleration;
+				yAcceleration -= PhysicsValues.GetGravityAccelerationPerFrame();
 			}
 
 			return y;

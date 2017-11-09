@@ -24,6 +24,7 @@ namespace GameApp.Visual
 
 		// temp
 		public static readonly float HalfCollectibleWidthHeight = 0.05f;
+		public static readonly float HalfProjectileWidthHeight = 0.05f;
 
 		public static readonly float PlayerWidth = 0.16f;
 		public static readonly float PlayerHeight = 0.32f;

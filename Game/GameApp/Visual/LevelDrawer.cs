@@ -30,6 +30,7 @@ namespace GameApp.Visual
 			DrawGrounds();
 			DrawObstacles(levelProgression);
 			DrawCollectibles(levelProgression);
+			DrawProjectiles(levelProgression);
 			DrawPlayer(levelProgression);
 
 			DrawDebugLines();
@@ -200,6 +201,35 @@ namespace GameApp.Visual
 			float x = collectible.Position.X;
 			float y = collectible.Position.Y;
 			float h = VisualValues.HalfCollectibleWidthHeight;
+
+			Vector2 v1 = new Vector2(x - h, y + h);
+			Vector2 v2 = new Vector2(x + h, y - h);
+
+			DrawSquare(v1, v2);
+		}
+
+		private void DrawProjectiles(LevelProgression levelProgression)
+		{
+			foreach (Projectile projectile in level.Projectiles)
+			{
+				float halfProjectileWidth = VisualValues.HalfProjectileWidthHeight * 0.95f;
+
+				Vector2 projectilePosition = levelProgression.GetProjectilePosition(projectile);
+
+				float leftX = projectilePosition.X - halfProjectileWidth;
+				float rightX = projectilePosition.X + halfProjectileWidth;
+
+				if (IsObjectOnScreen(leftX, rightX)) DrawProjectile(projectilePosition);
+			}
+		}
+
+		private void DrawProjectile(Vector2 projectilePosition)
+		{
+			BasicGraphics.SetColor(1.0f, 0.3f, 0.4f);
+
+			float x = projectilePosition.X;
+			float y = projectilePosition.Y;
+			float h = VisualValues.HalfProjectileWidthHeight;
 
 			Vector2 v1 = new Vector2(x - h, y + h);
 			Vector2 v2 = new Vector2(x + h, y - h);

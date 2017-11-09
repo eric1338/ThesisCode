@@ -14,6 +14,7 @@ namespace GameApp.Levels
 		public List<Obstacle> SolidObstacles { get; set; }
 		public List<Obstacle> DestructibleObstacles { get; set; }
 		public List<Collectible> Collectibles { get; set; }
+		public List<Projectile> Projectiles { get; set; }
 
 		public Vector2 PlayerStartingPosition { get; set; }
 
@@ -23,6 +24,7 @@ namespace GameApp.Levels
 			SolidObstacles = new List<Obstacle>();
 			DestructibleObstacles = new List<Obstacle>();
 			Collectibles = new List<Collectible>();
+			Projectiles = new List<Projectile>();
 		}
 
 		public static Level CreateTestLevel()
@@ -77,6 +79,11 @@ namespace GameApp.Levels
 		public void AddCollectible(Collectible collectible)
 		{
 			Collectibles.Add(collectible);
+		}
+
+		public void AddProjectile(Projectile projectile)
+		{
+			Projectiles.Add(projectile);
 		}
 
 

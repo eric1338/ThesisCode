@@ -115,5 +115,23 @@ namespace GameApp.Gameplay.Physics
 			return collectedCollectibles;
 		}
 
+		public List<Projectile> GetPlayerProjectileCollisions(LevelProgression levelProgression)
+		{
+			List<Projectile> projectilesCollidedWith = new List<Projectile>();
+
+			Hitbox playerHitbox = GetPlayerHitbox(levelProgression.CurrentPlayerPosition, levelProgression.IsPlayerStanding);
+
+			foreach (Projectile projectile in level.Projectiles)
+			{
+				if (levelProgression.IsProjectileDeflected(projectile)) continue;
+
+				Hitbox projectileHitbox = Hitboxes.GetProjectileHitbox(levelProgression.GetProjectilePosition(projectile));
+
+				if (playerHitbox.CollidesWith(projectileHitbox)) projectilesCollidedWith.Add(projectile);
+			}
+
+			return projectilesCollidedWith;
+		}
+
 	}
 }
