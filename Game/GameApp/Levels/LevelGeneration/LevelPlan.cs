@@ -32,11 +32,20 @@ namespace GameApp.Levels.LevelGeneration
 		{
 			LevelPlan levelPlan = new LevelPlan();
 
-			levelPlan.AddLevelElementDestination(LevelElementType.DuckObstacle, 5, 3);
+			//levelPlan.AddLevelElementDestination(LevelElementType.DuckObstacle, 5, 3);
+
+			levelPlan.AddLevelElementDestination(LevelElementType.HighCollectible, 4);
+
+			levelPlan.AddLevelElementDestination(LevelElementType.Projectile, 6);
+			levelPlan.AddLevelElementDestination(LevelElementType.Projectile, 7);
 
 			levelPlan.AddLevelElementDestination(LevelElementType.Chasm, 10, 1.3f);
 
-			levelPlan.AddLevelElementDestination(LevelElementType.LowObstacle, 13);
+			levelPlan.AddLevelElementDestination(LevelElementType.HighCollectible, 13);
+
+			levelPlan.AddLevelElementDestination(LevelElementType.LowObstacle, 14);
+
+			levelPlan.AddLevelElementDestination(LevelElementType.Projectile, 19f);
 
 			levelPlan.AddLevelElementDestination(LevelElementType.Chasm, 16, 1.6f);
 

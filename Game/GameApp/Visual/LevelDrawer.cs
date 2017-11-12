@@ -15,8 +15,14 @@ namespace GameApp.Visual
 
 		private Vector2 visualCenter = Vector2.Zero;
 
+		private Texture playerStandardTexture;
+
 		public LevelDrawer(Level level)
 		{
+			Textures.Instance.LoadTextures();
+
+			playerStandardTexture = Textures.Instance.PlayerTexture;
+
 			this.level = level;
 		}
 
@@ -108,9 +114,12 @@ namespace GameApp.Visual
 
 		private void DrawPlayer(LevelProgression levelProgression)
 		{
+			bool useTextureTest = false;
+
 			if (levelProgression.IsPlayerInGodmode()) BasicGraphics.SetColor(1.0f, 1.0f, 1.0f);
+			else if (levelProgression.IsPlayerDefending) BasicGraphics.SetColor(0.2f, 0.2f, 0.2f);
 			else if (levelProgression.IsPlayerInHittingMode()) BasicGraphics.SetColor(0.2f, 0.6f, 0.35f);
-			else BasicGraphics.SetColor(0.2f, 0.35f, 0.6f);
+			else useTextureTest = true;
 
 			Vector2 playerPosition = levelProgression.CurrentPlayerPosition;
 
@@ -130,6 +139,12 @@ namespace GameApp.Visual
 
 			Vector2 v1 = new Vector2(x1, y1);
 			Vector2 v2 = new Vector2(x2, playerPosition.Y);
+
+			if (useTextureTest)
+			{
+				DrawRectangularTexture(playerStandardTexture, v1, v2);
+				return;
+			}
 
 			DrawSquare(v1, v2);
 		}
@@ -321,6 +336,25 @@ namespace GameApp.Visual
 
 			debugLines.Clear();
 		}
+
+		private void DrawRectangularTexture(Texture texture, Vector2 topLeft, Vector2 bottomRight)
+		{
+			Vector2 bottomLeft = new Vector2(topLeft.X, bottomRight.Y);
+			Vector2 topRight = new Vector2(bottomRight.X, topLeft.Y);
+
+			DrawTexture(texture, bottomLeft, bottomRight, topRight, topLeft);
+		}
+
+		private void DrawTexture(Texture texture, Vector2 bottomLeft, Vector2 bottomRight, Vector2 topRight, Vector2 topLeft)
+		{
+			Vector2 bL = GetTransformedVector(bottomLeft);
+			Vector2 bR = GetTransformedVector(bottomRight);
+			Vector2 tR = GetTransformedVector(topRight);
+			Vector2 tL = GetTransformedVector(topLeft);
+
+			BasicGraphics.DrawTexture(texture, bL, bR, tR, tL, 1);
+		}
+
 
 	}
 }

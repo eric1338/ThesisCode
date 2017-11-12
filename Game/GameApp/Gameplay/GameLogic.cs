@@ -46,6 +46,11 @@ namespace GameApp.Gameplay
 			GetLevelProgression().IsPlayerStanding = isPlayerStanding;
 		}
 
+		public void SetPlayerIsDefending(bool isPlayerDefending)
+		{
+			GetLevelProgression().IsPlayerDefending = isPlayerDefending;
+		}
+
 		public void DoLogic()
 		{
 			GetLevelProgression().UpdateTime(1.0f / GeneralValues.FPS);
@@ -167,7 +172,7 @@ namespace GameApp.Gameplay
 
 			foreach (Projectile projectile in projectilesCollidedWith)
 			{
-				if (!levelProgression.IsPlayerStanding)
+				if (levelProgression.IsPlayerDefending)
 				{
 					DeflectProjectile(projectile);
 				}
@@ -187,8 +192,6 @@ namespace GameApp.Gameplay
 			float xVelocity = (float)Math.Sqrt(Math.Pow(PhysicsValues.ProjectileVelocity, 2) - Math.Pow(yVelocity, 2));
 
 			Vector2 deflectionDirection = new Vector2(xVelocity, yVelocity);
-
-			Console.WriteLine("defl(" + projectile.ID + "): " + deflectionDirection);
 
 			GetLevelProgression().DeflectProjectile(projectile, deflectionDirection);
 		}

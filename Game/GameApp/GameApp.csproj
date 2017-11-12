@@ -38,6 +38,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -61,6 +62,11 @@
     <Compile Include="Levels\LevelProgression.cs" />
     <Compile Include="Levels\Obstacle.cs" />
     <Compile Include="Levels\Projectile.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Input\InputManager.cs" />
     <Compile Include="Screens\Input\UserAction.cs" />
     <Compile Include="Levels\Collectible.cs" />
@@ -83,6 +89,9 @@
     <Compile Include="Visual\BasicGraphics.cs" />
     <Compile Include="Visual\IVisual.cs" />
     <Compile Include="Visual\LevelDrawer.cs" />
+    <Compile Include="Visual\Texture.cs" />
+    <Compile Include="Visual\TextureLoader.cs" />
+    <Compile Include="Visual\Textures.cs" />
     <Compile Include="Visual\VisualManager.cs" />
     <Compile Include="Visual\VisualValues.cs" />
   </ItemGroup>
@@ -99,6 +108,15 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\playerTest.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

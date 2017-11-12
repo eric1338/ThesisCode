@@ -26,6 +26,7 @@ namespace GameApp.Levels
 		private Dictionary<int, Vector2> projectileDeflectionDirection;
 
 		public bool IsPlayerStanding { get; set; }
+		public bool IsPlayerDefending { get; set; }
 
 		private float secondsPlayed;
 		private float secondsOfHittingModeLeft;
@@ -61,6 +62,7 @@ namespace GameApp.Levels
 			}
 
 			IsPlayerStanding = true;
+			IsPlayerDefending = false;
 
 			secondsPlayed = 0;
 			secondsOfHittingModeLeft = 0;

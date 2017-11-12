@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿using GameApp.Gameplay.Physics;
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,15 +37,15 @@ namespace GameApp.Levels.LevelGeneration
 
 		private float GetDuckObstacleGapHeight()
 		{
-			float playerWidth = Gameplay.Physics.PhysicsValues.PlayerHitboxWidth;
-			float playerHeight = Gameplay.Physics.PhysicsValues.PlayerHitboxHeight;
+			float playerWidth = PhysicsValues.PlayerHitboxWidth;
+			float playerHeight = PhysicsValues.PlayerHitboxHeight;
 
 			return playerWidth + (playerHeight - playerWidth) * 0.5f;
 		}
 
 		private float GetDuckObstacleHeight()
 		{
-			return Gameplay.Physics.PhysicsValues.PlayerHitboxWidth;
+			return PhysicsValues.PlayerHitboxWidth;
 		}
 
 		public Obstacle CreateDuckObstacle(float time, float duration, float groundY)
@@ -67,8 +68,8 @@ namespace GameApp.Levels.LevelGeneration
 
 		public Obstacle CreateLowObstacle(float time, float groundY)
 		{
-			float halfJumpLength = Gameplay.Physics.PhysicsValues.GetJumpLength() / 2.0f;
-			float jumpHeight = Gameplay.Physics.PhysicsValues.GetJumpHeight();
+			float halfJumpLength = PhysicsValues.GetJumpLength() / 2.0f;
+			float jumpHeight = PhysicsValues.GetJumpHeight();
 
 			float jumpPosition = GetXPositionByTime(time);
 
@@ -81,6 +82,26 @@ namespace GameApp.Levels.LevelGeneration
 			float topY = groundY + jumpHeight * heightFactor;
 
 			return new Obstacle(new Vector2(leftX, topY), new Vector2(rightX, groundY));
+		}
+
+		public Projectile CreateProjectile(int id, float time, float groundY)
+		{
+			float hitXPosition = GetXPositionByTime(time);
+
+			float startingXPosition = hitXPosition + time * PhysicsValues.ProjectileVelocity;
+
+			float startingYPosition = groundY + PhysicsValues.PlayerHitboxHeight * 0.5f;
+
+			return new Projectile(id, new Vector2(startingXPosition, startingYPosition));
+		}
+
+		public Collectible CreateHighCollectible(int id, float time, float groundY)
+		{
+			float xPosition = GetXPositionByTime(time);
+
+			float yPosition = PhysicsValues.GetJumpHeight() + PhysicsValues.PlayerHitboxHeight * 0.8f;
+
+			return new Collectible(id, new Vector2(xPosition, yPosition));
 		}
 
 

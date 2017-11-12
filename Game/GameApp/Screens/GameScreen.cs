@@ -44,7 +44,8 @@ namespace GameApp.Screens
 			AddKeyToSingleUserActionMapping(Key.W, UserAction.Jump);
 			AddKeyToSingleUserActionMapping(Key.Space, UserAction.Jump);
 
-			AddKeyToSingleUserActionMapping(Key.D, UserAction.Hit);
+			AddKeyToSingleUserActionMapping(Key.A, UserAction.Hit);
+			AddKeyToProlongedUserActionMapping(Key.D, UserAction.Defend);
 			AddKeyToProlongedUserActionMapping(Key.S, UserAction.Duck);
 
 			AddKeyToSingleUserActionMapping(Key.R, UserAction.ResetLevel);
@@ -53,6 +54,7 @@ namespace GameApp.Screens
 			AddSingleUserActionToFunctionMapping(UserAction.Jump, Jump);
 			AddSingleUserActionToFunctionMapping(UserAction.Hit, Hit);
 			AddProlongedUserActionToFunctionMapping(UserAction.Duck, Duck);
+			AddProlongedUserActionToFunctionMapping(UserAction.Defend, Defend);
 
 			AddSingleUserActionToFunctionMapping(UserAction.ResetLevel, ResetLevel);
 			AddSingleUserActionToFunctionMapping(UserAction.TogglePauseGame, TogglePauseGame);
@@ -82,6 +84,13 @@ namespace GameApp.Screens
 			if (isGamePaused) return;
 
 			gameLogic.SetPlayerIsStanding(!value);
+		}
+
+		private void Defend(bool value)
+		{
+			if (isGamePaused) return;
+
+			gameLogic.SetPlayerIsDefending(value);
 		}
 
 		private void ResetLevel()

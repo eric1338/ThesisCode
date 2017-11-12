@@ -19,14 +19,6 @@ namespace GameApp.Levels.LevelGeneration
 		{
 			Level level = new Level();
 
-			// Test
-			level.AddProjectile(new Projectile(0, new Vector2(8, 0.1f)));
-			level.AddProjectile(new Projectile(1, new Vector2(9, 0.1f)));
-			level.AddProjectile(new Projectile(2, new Vector2(10, 0.1f)));
-
-
-
-
 			List<LevelElementDestination> chasms = new List<LevelElementDestination>();
 			List<LevelElementDestination> nonChasms = new List<LevelElementDestination>();
 
@@ -58,23 +50,40 @@ namespace GameApp.Levels.LevelGeneration
 
 			LevelElementGenerator levelElementGenerator = new LevelElementGenerator();
 
+			int projectileID = 0;
+			int collectibleID = 0;
+
 			foreach (LevelElementDestination nonChasm in nonChasms)
 			{
+				float groundY = GetGroundY(level, nonChasm.StartingTime);
+
 				if (nonChasm.Type == LevelElementType.DuckObstacle)
 				{
-					float groundY = GetGroundY(level, nonChasm.StartingTime);
-
 					Obstacle obstacle = levelElementGenerator.CreateDuckObstacle(nonChasm.StartingTime, nonChasm.Duration, groundY);
 
 					level.AddSolidObstacle(obstacle);
 				}
 				if (nonChasm.Type == LevelElementType.LowObstacle)
 				{
-					float groundY = GetGroundY(level, nonChasm.StartingTime);
-
 					Obstacle obstacle = levelElementGenerator.CreateLowObstacle(nonChasm.StartingTime, groundY);
 
 					level.AddSolidObstacle(obstacle);
+				}
+				if (nonChasm.Type == LevelElementType.Projectile)
+				{
+					Projectile projectile = levelElementGenerator.CreateProjectile(projectileID, nonChasm.StartingTime, groundY);
+
+					projectileID++;
+
+					level.AddProjectile(projectile);
+				}
+				if (nonChasm.Type == LevelElementType.HighCollectible)
+				{
+					Collectible collectible = levelElementGenerator.CreateHighCollectible(collectibleID, nonChasm.StartingTime, groundY);
+
+					collectibleID++;
+
+					level.AddCollectible(collectible);
 				}
 			}
 

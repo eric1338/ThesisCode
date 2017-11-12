@@ -40,6 +40,34 @@ namespace GameApp.Visual
 			GL.End();
 		}
 
+		public static void DrawRectangularTexture(Texture texture, Vector2 topLeft, Vector2 bottomRight, float alpha = 1.0f)
+		{
+			Vector2 bottomLeft = new Vector2(topLeft.X, bottomRight.Y);
+			Vector2 topRight = new Vector2(bottomRight.X, topLeft.Y);
+
+			DrawTexture(texture, bottomLeft, bottomRight, topRight, topLeft, alpha);
+		}
+
+		public static void DrawTexture(Texture texture, Vector2 bottomLeft, Vector2 bottomRight, Vector2 topRight, Vector2 topLeft, float alpha = 1.0f)
+		{
+			texture.BeginUse();
+
+			GL.Color3(alpha, alpha, alpha);
+
+			GL.Begin(PrimitiveType.Quads);
+			GL.TexCoord2(0.0f, 0.0f);
+			GL.Vertex2(bottomLeft);
+			GL.TexCoord2(1.0f, 0.0f);
+			GL.Vertex2(bottomRight);
+			GL.TexCoord2(1.0f, 1.0f);
+			GL.Vertex2(topRight);
+			GL.TexCoord2(0.0f, 1.0f);
+			GL.Vertex2(topLeft);
+			GL.End();
+
+			texture.EndUse();
+		}
+
 
 	}
 }

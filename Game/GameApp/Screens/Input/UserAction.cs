@@ -11,6 +11,7 @@ namespace GameApp.Screens.Input
 		Jump,
 		Hit,
 		Duck,
+		Defend,
 
 		ResetLevel,
 		TogglePauseGame,
