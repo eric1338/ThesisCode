@@ -160,7 +160,7 @@
 			this.songValueChart.Legends.Add(legend1);
 			this.songValueChart.Location = new System.Drawing.Point(26, 362);
 			this.songValueChart.Name = "songValueChart";
-			this.songValueChart.Size = new System.Drawing.Size(281, 277);
+			this.songValueChart.Size = new System.Drawing.Size(718, 277);
 			this.songValueChart.TabIndex = 16;
 			this.songValueChart.Text = "chart1";
 			// 
@@ -197,13 +197,13 @@
 			// 
 			chartArea2.Name = "ChartArea1";
 			this.debugChart1.ChartAreas.Add(chartArea2);
-			this.debugChart1.Location = new System.Drawing.Point(343, 326);
+			this.debugChart1.Location = new System.Drawing.Point(760, 326);
 			this.debugChart1.Name = "debugChart1";
 			series1.ChartArea = "ChartArea1";
 			series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
 			series1.Name = "Series1";
 			this.debugChart1.Series.Add(series1);
-			this.debugChart1.Size = new System.Drawing.Size(889, 336);
+			this.debugChart1.Size = new System.Drawing.Size(472, 336);
 			this.debugChart1.TabIndex = 19;
 			this.debugChart1.Text = "chart1";
 			// 

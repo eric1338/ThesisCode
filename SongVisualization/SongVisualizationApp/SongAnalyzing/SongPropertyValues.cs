@@ -92,12 +92,12 @@ namespace SongVisualizationApp.SongAnalyzing
 
 		public void AbsAndNormalize()
 		{
-			float lowestValue = -99999;
+			float lowestValue = 99999;
 			float highestValue = -99999;
 
 			foreach (MyPoint point in Points)
 			{
-				if (point.Y < highestValue) lowestValue = point.Y;
+				if (point.Y < lowestValue) lowestValue = point.Y;
 
 				if (point.Y > highestValue) highestValue = point.Y;
 			}
