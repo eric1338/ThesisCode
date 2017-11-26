@@ -53,12 +53,14 @@
     <Compile Include="GeneralValues.cs" />
     <Compile Include="Levels\LevelAnalysis.cs" />
     <Compile Include="Levels\LevelAttempt.cs" />
+    <Compile Include="Levels\LevelGeneration\DistributionManager.cs" />
     <Compile Include="Levels\LevelGeneration\LevelElementType.cs" />
     <Compile Include="Levels\LevelGeneration\LevelElementGenerator.cs" />
     <Compile Include="Levels\LevelGeneration\LevelGenerationValues.cs" />
     <Compile Include="Levels\LevelGeneration\LevelGenerator.cs" />
     <Compile Include="Levels\LevelGeneration\LevelPlan.cs" />
     <Compile Include="Levels\LevelGeneration\LevelElementDestination.cs" />
+    <Compile Include="Levels\LevelGeneration\LevelPlanCreator.cs" />
     <Compile Include="Levels\LevelProgression.cs" />
     <Compile Include="Levels\Obstacle.cs" />
     <Compile Include="Levels\Projectile.cs" />

@@ -15,6 +15,20 @@ namespace GameApp.Levels.LevelGeneration
 
 		public static readonly float FirstGroundLeftX = -10;
 
+		public static readonly float DuckingObstacleEnteringSafetyTime = 0.3f;
+		public static readonly float DuckingObstacleLeavingSafetyTime = 0.3f;
+
+		public static readonly float ProjectileSafetyTime = 1f;
+
+
+
+		public static float GetJumpDuration()
+		{
+			throw new NotImplementedException();
+		}
+
+
+
 		public static readonly float AverageTiming = 0.2f;
 
 		public static readonly float MaximumTimingTolerance = 0.4f;

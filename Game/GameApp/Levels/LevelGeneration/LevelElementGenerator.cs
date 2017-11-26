@@ -48,14 +48,10 @@ namespace GameApp.Levels.LevelGeneration
 			return PhysicsValues.PlayerHitboxWidth;
 		}
 
-		public Obstacle CreateDuckObstacle(float time, float duration, float groundY)
+		public Obstacle CreateDuckObstacle(LevelElementDestination duckObstacle, float groundY)
 		{
-			float pressBeforeObstacleTime = 0.3f;
-
-			float releaseAfterObstacleTime = 0.3f;
-
-			float obstacleStartTime = time + pressBeforeObstacleTime;
-			float obstacleEndtime = obstacleStartTime + duration - releaseAfterObstacleTime;
+			float obstacleStartTime = duckObstacle.SynchronistationStartingTime + LevelGenerationValues.DuckingObstacleEnteringSafetyTime;
+			float obstacleEndtime = duckObstacle.SynchronistationEndTime - LevelGenerationValues.DuckingObstacleLeavingSafetyTime;
 
 			float leftX = GetXPositionByTime(obstacleStartTime);
 			float rightX = GetXPositionByTime(obstacleEndtime);

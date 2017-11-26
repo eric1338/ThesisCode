@@ -17,14 +17,19 @@ namespace GameApp.Levels.LevelGeneration
 			LevelElementDestinations = new List<LevelElementDestination>();
 		}
 
+		public void AddLevelElementDestination(LevelElementDestination destination)
+		{
+			LevelElementDestinations.Add(destination);
+		}
+
 		public void AddLevelElementDestination(LevelElementType type, float startingTime)
 		{
-			LevelElementDestinations.Add(new LevelElementDestination(type, startingTime, 0));
+			//LevelElementDestinations.Add(new LevelElementDestination(type, startingTime, 0));
 		}
 
 		public void AddLevelElementDestination(LevelElementType type, float startingTime, float duration)
 		{
-			LevelElementDestinations.Add(new LevelElementDestination(type, startingTime, duration));
+			//LevelElementDestinations.Add(new LevelElementDestination(type, startingTime, duration));
 		}
 
 
@@ -43,7 +48,7 @@ namespace GameApp.Levels.LevelGeneration
 
 			levelPlan.AddLevelElementDestination(LevelElementType.HighCollectible, 13);
 
-			levelPlan.AddLevelElementDestination(LevelElementType.LowObstacle, 14);
+			levelPlan.AddLevelElementDestination(LevelElementType.JumpObstacle, 14);
 
 			levelPlan.AddLevelElementDestination(LevelElementType.Projectile, 19f);
 
