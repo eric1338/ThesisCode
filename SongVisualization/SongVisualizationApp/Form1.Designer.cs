@@ -46,8 +46,8 @@
 			this.songValueChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
 			this.debugCheckBox1 = new System.Windows.Forms.CheckBox();
 			this.progressLabel = new System.Windows.Forms.Label();
-			this.songWaveViewer = new SongVisualizationApp.MyWaveViewer();
 			this.debugChart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+			this.songWaveViewer = new SongVisualizationApp.MyWaveViewer();
 			((System.ComponentModel.ISupportInitialize)(this.songSecondsDisplayedTrackBar)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.songValueChart)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.debugChart1)).BeginInit();
@@ -153,14 +153,16 @@
 			// 
 			// songValueChart
 			// 
+			this.songValueChart.BorderlineWidth = 2;
 			chartArea1.Name = "ChartArea1";
 			this.songValueChart.ChartAreas.Add(chartArea1);
 			legend1.Name = "Legend1";
 			legend1.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.songValueChart.Legends.Add(legend1);
-			this.songValueChart.Location = new System.Drawing.Point(26, 362);
+			this.songValueChart.Location = new System.Drawing.Point(26, 326);
 			this.songValueChart.Name = "songValueChart";
-			this.songValueChart.Size = new System.Drawing.Size(718, 277);
+			this.songValueChart.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Berry;
+			this.songValueChart.Size = new System.Drawing.Size(971, 313);
 			this.songValueChart.TabIndex = 16;
 			this.songValueChart.Text = "chart1";
 			// 
@@ -183,6 +185,20 @@
 			this.progressLabel.TabIndex = 18;
 			this.progressLabel.Text = "no song selected";
 			// 
+			// debugChart1
+			// 
+			chartArea2.Name = "ChartArea1";
+			this.debugChart1.ChartAreas.Add(chartArea2);
+			this.debugChart1.Location = new System.Drawing.Point(1039, 326);
+			this.debugChart1.Name = "debugChart1";
+			series1.ChartArea = "ChartArea1";
+			series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+			series1.Name = "Series1";
+			this.debugChart1.Series.Add(series1);
+			this.debugChart1.Size = new System.Drawing.Size(193, 336);
+			this.debugChart1.TabIndex = 19;
+			this.debugChart1.Text = "chart1";
+			// 
 			// songWaveViewer
 			// 
 			this.songWaveViewer.Location = new System.Drawing.Point(140, 73);
@@ -192,20 +208,6 @@
 			this.songWaveViewer.StartPosition = ((long)(0));
 			this.songWaveViewer.TabIndex = 11;
 			this.songWaveViewer.WaveStream = null;
-			// 
-			// debugChart1
-			// 
-			chartArea2.Name = "ChartArea1";
-			this.debugChart1.ChartAreas.Add(chartArea2);
-			this.debugChart1.Location = new System.Drawing.Point(760, 326);
-			this.debugChart1.Name = "debugChart1";
-			series1.ChartArea = "ChartArea1";
-			series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-			series1.Name = "Series1";
-			this.debugChart1.Series.Add(series1);
-			this.debugChart1.Size = new System.Drawing.Size(472, 336);
-			this.debugChart1.TabIndex = 19;
-			this.debugChart1.Text = "chart1";
 			// 
 			// Form1
 			// 

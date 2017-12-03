@@ -161,6 +161,8 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 		}
 
+		private RectangleDetection rectangularDetection = new RectangleDetection();
+
 		public SongPropertyValues CreateSongPropertyValuesTest(int index)
 		{
 			FrequencyBand fb = heldNoteDetection.GetFrequencyBands()[index];
@@ -171,7 +173,16 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 			spv.Normalize();
 
+			rectangularDetection.RectangulateSongPropertyValues(spv);
+
 			return spv;
+		}
+
+		public SongPropertyValues CreateHeldNoteTest()
+		{
+			RectangleDetection recDetec = new RectangleDetection();
+
+			return recDetec.GetHeldNotes(heldNoteDetection.GetFrequencyBands());
 		}
 		
 

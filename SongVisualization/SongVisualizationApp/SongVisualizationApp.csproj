@@ -94,6 +94,7 @@
     <Compile Include="SongAnalyzing\OnSetDetection\HeldNoteDetection.cs" />
     <Compile Include="SongAnalyzing\OnSetDetection\LomontFFT.cs" />
     <Compile Include="SongAnalyzing\OnSetDetection\OnsetDetection.cs" />
+    <Compile Include="SongAnalyzing\OnSetDetection\RectangleDetection.cs" />
     <Compile Include="SongAnalyzing\SongAnalyzer.cs" />
     <Compile Include="SongAnalyzing\SongAnalyzingFacade.cs" />
     <Compile Include="FileReader\SongFile.cs" />

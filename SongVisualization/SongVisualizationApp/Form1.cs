@@ -90,6 +90,8 @@ namespace SongVisualizationApp
 
 				series.ChartType = SeriesChartType.FastLine;
 
+				series.BorderWidth = 2;
+
 				songValueChart.Series.Add(series);
 			}
 

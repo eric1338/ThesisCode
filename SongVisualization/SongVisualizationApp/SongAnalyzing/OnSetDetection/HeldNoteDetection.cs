@@ -21,7 +21,7 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 		int nSamples = 0;
 
 
-		List<FrequencyBand> frequencyBands = new List<FrequencyBand>();
+		private List<FrequencyBand> frequencyBands = new List<FrequencyBand>();
 
 		
 
@@ -40,8 +40,36 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 			return frequencyBands;
 		}
 
+
+		private int GetMargin(float val)
+		{
+			float exponent = 2;
+
+			float bandWidthFactor = 15;
+
+			int frequencyOffset = 15;
+
+			return frequencyOffset + (int) Math.Round(bandWidthFactor * Math.Pow(val, exponent));
+		}
+
+		private FrequencyBand CreateFrequencyBand(int index)
+		{
+			int leftFrequencyMargin = GetMargin(index * 0.5f);
+			int rightFrequencyMargin = GetMargin(index * 0.5f + 1);
+
+			Console.WriteLine(leftFrequencyMargin + " - " + rightFrequencyMargin);
+
+			return new FrequencyBand(leftFrequencyMargin, rightFrequencyMargin);
+		}
+
 		private void CreateFrequencyBands()
 		{
+			for (int i = 0; i < 6; i++)
+			{
+				frequencyBands.Add(CreateFrequencyBand(i));
+			}
+
+			/*
 			frequencyBands.Add(new FrequencyBand(0, 16));
 			frequencyBands.Add(new FrequencyBand(16, 32));
 			frequencyBands.Add(new FrequencyBand(32, 64));
@@ -49,9 +77,7 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 			frequencyBands.Add(new FrequencyBand(128, 256));
 			frequencyBands.Add(new FrequencyBand(256, 512));
 			frequencyBands.Add(new FrequencyBand(512, 1024));
-			frequencyBands.Add(new FrequencyBand(4000, 8000));
 
-			/*
 			frequencyBands.Add(new FrequencyBand(31, 62));
 			frequencyBands.Add(new FrequencyBand(63, 125));
 			frequencyBands.Add(new FrequencyBand(125, 250));

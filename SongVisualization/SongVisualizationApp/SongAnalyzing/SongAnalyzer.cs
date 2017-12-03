@@ -58,7 +58,7 @@ namespace SongVisualizationApp.SongAnalyzing
 				onsetValues.AddPoint(timePerSample * i, onset);
 			}
 
-			//songPropertyValuesList.Add(onsetValues);
+			songPropertyValuesList.Add(onsetValues);
 
 
 
@@ -70,10 +70,11 @@ namespace SongVisualizationApp.SongAnalyzing
 
 			au2.DetectOnsets();
 
+			songPropertyValuesList.Add(au2.CreateHeldNoteTest());
 
 			//songPropertyValuesList.Add(au2.CreateSongPropertyValuesTest(1));
-			songPropertyValuesList.Add(au2.CreateSongPropertyValuesTest(2));
-			songPropertyValuesList.Add(au2.CreateSongPropertyValuesTest(3));
+			//songPropertyValuesList.Add(au2.CreateSongPropertyValuesTest(2));
+			//songPropertyValuesList.Add(au2.CreateSongPropertyValuesTest(3));
 			//songPropertyValuesList.Add(au2.CreateSongPropertyValuesTest(4));
 			//songPropertyValuesList.Add(au2.CreateSongPropertyValuesTest(5));
 			//songPropertyValuesList.Add(au2.CreateSongPropertyValuesTest(6));
