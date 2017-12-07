@@ -61,6 +61,7 @@
     <Compile Include="Levels\LevelGeneration\LevelPlan.cs" />
     <Compile Include="Levels\LevelGeneration\LevelElementDestination.cs" />
     <Compile Include="Levels\LevelGeneration\LevelPlanCreator.cs" />
+    <Compile Include="Levels\LevelGeneration\SongElements.cs" />
     <Compile Include="Levels\LevelProgression.cs" />
     <Compile Include="Levels\Obstacle.cs" />
     <Compile Include="Levels\Projectile.cs" />

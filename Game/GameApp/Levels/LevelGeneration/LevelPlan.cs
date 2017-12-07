@@ -17,6 +17,50 @@ namespace GameApp.Levels.LevelGeneration
 			LevelElementDestinations = new List<LevelElementDestination>();
 		}
 
+
+
+
+		private void CreateSingleSynchronisation(LevelElementType type, float synchronisationTime)
+		{
+			LevelElementDestination destination;
+
+			if (type == LevelElementType.JumpObstacle)
+			{
+				destination = LevelElementDestination.CreateJumpObstacle(synchronisationTime);
+			}
+			else if (type == LevelElementType.HighCollectible)
+			{
+				destination = LevelElementDestination.CreateHighCollectible(synchronisationTime);
+			}
+			else
+			{
+				destination = LevelElementDestination.CreateSingleProjectile(synchronisationTime);
+			}
+
+			AddLevelElementDestination(destination);
+		}
+
+		private void CreateProlongedSynchronisation(LevelElementType type,
+			float synchronisationStartingTime, float synchronisationEndTime)
+		{
+			LevelElementDestination destination;
+
+			if (type == LevelElementType.Chasm)
+			{
+				destination = LevelElementDestination.CreateChasm(synchronisationStartingTime,
+					synchronisationEndTime);
+			}
+			else
+			{
+				destination = LevelElementDestination.CreateDuckingObstacle(synchronisationStartingTime,
+					synchronisationEndTime);
+			}
+
+			AddLevelElementDestination(destination);
+		}
+
+
+
 		public void AddLevelElementDestination(LevelElementDestination destination)
 		{
 			LevelElementDestinations.Add(destination);
@@ -24,11 +68,13 @@ namespace GameApp.Levels.LevelGeneration
 
 		public void AddLevelElementDestination(LevelElementType type, float startingTime)
 		{
+			CreateSingleSynchronisation(type, startingTime);
 			//LevelElementDestinations.Add(new LevelElementDestination(type, startingTime, 0));
 		}
 
 		public void AddLevelElementDestination(LevelElementType type, float startingTime, float duration)
 		{
+			CreateProlongedSynchronisation(type, startingTime, startingTime + duration);
 			//LevelElementDestinations.Add(new LevelElementDestination(type, startingTime, duration));
 		}
 

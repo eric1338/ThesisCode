@@ -16,11 +16,14 @@ namespace GameApp.Utils
 			return (float) randomNumberGenerator.NextDouble();
 		}
 
+		public static int GetRandomIntegerNumber(int maximumValue)
+		{
+			return randomNumberGenerator.Next(maximumValue);
+		}
+
 		public static float Smoothstep(float edge0, float edge1, float x)
 		{
 			x = Clamp((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);
-
-			//return x;
 			
 			return x * x * (3 - 2 * x);
 		}

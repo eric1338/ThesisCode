@@ -13,110 +13,119 @@ namespace GameApp.Levels.LevelGeneration
 		public float LevelElementStartTime { get; set; }
 		public float LevelElementEndTime { get; set; }
 
-		public float SynchronistationStartingTime { get; set; }
-		public float SynchronistationEndTime { get; set; }
-
-		public List<float> CollectibleTimes { get; set; }
-		public List<float> ProjectileTimes { get; set; }
+		public float SynchroStartTime { get; set; }
+		public float SynchroEndTime { get; set; }
 
 		public LevelElementDestination(LevelElementType type)
 		{
 			Type = type;
-
-			CollectibleTimes = new List<float>();
-			ProjectileTimes = new List<float>();
 		}
 
-		private static LevelElementDestination CreateSingleSynchronisation(LevelElementType type, float synchronisationTime)
+
+		public static LevelElementDestination CreateSingleSynchro(LevelElementType type, float synchroTime)
 		{
 			LevelElementDestination destination = new LevelElementDestination(type);
 
-			destination.SynchronistationStartingTime = synchronisationTime;
-			destination.SynchronistationEndTime = synchronisationTime;
+			destination.SynchroStartTime = synchroTime;
+			destination.SynchroEndTime = synchroTime;
 
 			return destination;
 		}
 
-		private static LevelElementDestination CreateProlongedSynchronisation(LevelElementType type,
-			float synchronisationStartingTime, float synchronisationEndTime)
+		public static LevelElementDestination CreateProlongedSynchro(LevelElementType type,
+			float synchroStartTime, float synchroEndTime)
+		{
+			if (type == LevelElementType.Chasm) return CreateChasm(synchroStartTime, synchroEndTime);
+
+			return CreateDuckingObstacle(synchroStartTime, synchroEndTime);
+		}
+
+		private static LevelElementDestination CreateSingleSynchroBase(LevelElementType type, float synchroTime)
 		{
 			LevelElementDestination destination = new LevelElementDestination(type);
 
-			destination.SynchronistationStartingTime = synchronisationStartingTime;
-			destination.SynchronistationEndTime = synchronisationEndTime;
+			destination.SynchroStartTime = synchroTime;
+			destination.SynchroEndTime = synchroTime;
 
 			return destination;
 		}
 
-		public static LevelElementDestination CreateChasm(float synchronisationStartingTime, float synchronisationEndTime)
+		private static LevelElementDestination CreateProlongedSynchroBase(LevelElementType type,
+			float synchroStartTime, float synchroEndTime)
 		{
-			LevelElementDestination destination = CreateProlongedSynchronisation(LevelElementType.Chasm,
-				synchronisationStartingTime, synchronisationEndTime);
+			LevelElementDestination destination = new LevelElementDestination(type);
 
-			destination.SetLevelElementTimesEqualToSynchronisationTimes();
+			destination.SynchroStartTime = synchroStartTime;
+			destination.SynchroEndTime = synchroEndTime;
 
 			return destination;
 		}
 
-		public static LevelElementDestination CreateJumpObstacle(float synchronisationTime)
+		public static LevelElementDestination CreateChasm(float synchroTime, float synchroEndTime)
 		{
-			LevelElementDestination destination = CreateSingleSynchronisation(LevelElementType.JumpObstacle, synchronisationTime);
+			LevelElementDestination destination = CreateProlongedSynchroBase(LevelElementType.Chasm,
+				synchroTime, synchroEndTime);
 
-			destination.LevelElementStartTime = synchronisationTime;
-			destination.LevelElementEndTime = synchronisationTime + LevelGenerationValues.GetJumpDuration();
+			destination.SetLevelElementTimesEqualToSynchroTimes();
 
 			return destination;
 		}
 
-		public static LevelElementDestination CreateDuckingObstacle(float synchronisationStartingTime, float synchronisationEndTime)
+		public static LevelElementDestination CreateJumpObstacle(float synchroTime)
 		{
-			LevelElementDestination destination = CreateProlongedSynchronisation(LevelElementType.DuckObstacle,
-				synchronisationStartingTime, synchronisationEndTime);
+			LevelElementDestination destination = CreateSingleSynchroBase(LevelElementType.JumpObstacle, synchroTime);
 
-			destination.SynchronistationStartingTime = synchronisationStartingTime;
-			destination.SynchronistationEndTime = synchronisationEndTime;
-
-			destination.SetLevelElementTimesEqualToSynchronisationTimes();
+			destination.LevelElementStartTime = synchroTime;
+			destination.LevelElementEndTime = synchroTime + LevelGenerationValues.GetJumpDuration();
 
 			return destination;
 		}
 
-		public static LevelElementDestination CreateSingleProjectile(float synchronisationTime)
+		public static LevelElementDestination CreateDuckingObstacle(float synchroStartTime, float synchroEndTime)
 		{
-			LevelElementDestination destination = CreateSingleSynchronisation(LevelElementType.Projectile, synchronisationTime);
+			LevelElementDestination destination = CreateProlongedSynchroBase(LevelElementType.DuckObstacle,
+				synchroStartTime, synchroEndTime);
 
-			destination.LevelElementStartTime = synchronisationTime - LevelGenerationValues.ProjectileSafetyTime;
-			destination.LevelElementEndTime = synchronisationTime;
+			destination.SynchroStartTime = synchroStartTime;
+			destination.SynchroEndTime = synchroEndTime;
+
+			destination.SetLevelElementTimesEqualToSynchroTimes();
 
 			return destination;
 		}
 
-		public static LevelElementDestination CreateHighCollectible(float synchronisationTime)
+		public static LevelElementDestination CreateSingleProjectile(float synchroTime)
 		{
-			LevelElementDestination destination = CreateSingleSynchronisation(LevelElementType.HighCollectible, synchronisationTime);
+			LevelElementDestination destination = CreateSingleSynchroBase(LevelElementType.Projectile, synchroTime);
+
+			destination.LevelElementStartTime = synchroTime - LevelGenerationValues.ProjectileSafetyTime;
+			destination.LevelElementEndTime = synchroTime;
+
+			return destination;
+		}
+
+		public static LevelElementDestination CreateHighCollectible(float synchroTime)
+		{
+			LevelElementDestination destination = CreateSingleSynchroBase(LevelElementType.HighCollectible, synchroTime);
 
 			float halfJumpDuration = LevelGenerationValues.GetJumpDuration() / 2.0f;
 
-			destination.LevelElementStartTime = synchronisationTime - halfJumpDuration;
-			destination.LevelElementEndTime = synchronisationTime + halfJumpDuration;
+			destination.LevelElementStartTime = synchroTime - halfJumpDuration;
+			destination.LevelElementEndTime = synchroTime + halfJumpDuration;
 
 			return destination;
 		}
 
 
-
-
-
-
-		public float GetSynchronisationDuration()
+		private void SetLevelElementTimesEqualToSynchroTimes()
 		{
-			return SynchronistationEndTime - SynchronistationStartingTime;
+			LevelElementStartTime = SynchroStartTime;
+			LevelElementEndTime = SynchroEndTime;
 		}
 
-		private void SetLevelElementTimesEqualToSynchronisationTimes()
+		public float GetSynchroDuration()
 		{
-			LevelElementStartTime = SynchronistationStartingTime;
-			LevelElementEndTime = SynchronistationEndTime;
+			return SynchroEndTime - SynchroStartTime;
 		}
 
 

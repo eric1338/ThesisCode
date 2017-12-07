@@ -8,13 +8,11 @@ namespace GameApp.Levels.LevelGeneration
 {
 	enum LevelElementType
 	{
-		None,
-
 		DuckObstacle,
 		JumpObstacle,
 		HighCollectible,
+		LowCollectible,
 		Chasm,
 		Projectile,
-
 	}
 }

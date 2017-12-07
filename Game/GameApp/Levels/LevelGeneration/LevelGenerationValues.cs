@@ -11,6 +11,22 @@ namespace GameApp.Levels.LevelGeneration
 	class LevelGenerationValues
 	{
 
+		// Difficulty
+
+		public static readonly float TimeBeforeLevelElement = 2;
+
+		public static readonly float TimeToJump = 1;
+
+
+		// Applicability Thresholds
+
+		public static readonly float HeldNoteApplicabilityThreshold = 0.2f;
+		public static readonly float MultipleBeatsApplicabilityThreshold = 0.1f;
+		public static readonly float SingleBeatsApplicabilityThreshold = 0.3f;
+		public static readonly float FillUpElementsApplicabilityThreshold = 0.4f;
+
+		// Rest
+
 		public static readonly Vector2 PlayerStartPosition = new Vector2(0, 0);
 
 		public static readonly float FirstGroundLeftX = -10;
@@ -20,11 +36,15 @@ namespace GameApp.Levels.LevelGeneration
 
 		public static readonly float ProjectileSafetyTime = 1f;
 
+		public static readonly float MaximumTimeMarginForMultipleBeats = 1f;
+
+
 
 
 		public static float GetJumpDuration()
 		{
-			throw new NotImplementedException();
+			return 2;
+			//throw new NotImplementedException();
 		}
 
 

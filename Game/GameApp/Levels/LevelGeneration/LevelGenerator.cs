@@ -34,13 +34,13 @@ namespace GameApp.Levels.LevelGeneration
 
 			foreach (LevelElementDestination chasm in chasms)
 			{
-				float currentRightX = LevelGenerationValues.GetXPositionByTime(chasm.SynchronistationStartingTime + LevelGenerationValues.AverageTiming);
+				float currentRightX = LevelGenerationValues.GetXPositionByTime(chasm.SynchroStartTime + LevelGenerationValues.AverageTiming);
 
 				level.AddGround(new Ground(currentLeftX, currentRightX, currentY));
 
-				currentLeftX = currentRightX + LevelGenerationValues.GetChasmXDifference(chasm.GetSynchronisationDuration());
+				currentLeftX = currentRightX + LevelGenerationValues.GetChasmXDifference(chasm.GetSynchroDuration());
 
-				currentY = currentY + LevelGenerationValues.GetChasmYDifference(chasm.GetSynchronisationDuration());
+				currentY = currentY + LevelGenerationValues.GetChasmYDifference(chasm.GetSynchroDuration());
 			}
 
 			float lastRightX = LevelGenerationValues.GetXPositionByTime(9999);
@@ -55,7 +55,7 @@ namespace GameApp.Levels.LevelGeneration
 
 			foreach (LevelElementDestination nonChasm in nonChasms)
 			{
-				float groundY = GetGroundY(level, nonChasm.SynchronistationStartingTime);
+				float groundY = GetGroundY(level, nonChasm.SynchroStartTime);
 
 				if (nonChasm.Type == LevelElementType.DuckObstacle)
 				{
@@ -65,13 +65,13 @@ namespace GameApp.Levels.LevelGeneration
 				}
 				if (nonChasm.Type == LevelElementType.JumpObstacle)
 				{
-					Obstacle obstacle = levelElementGenerator.CreateLowObstacle(nonChasm.SynchronistationStartingTime, groundY);
+					Obstacle obstacle = levelElementGenerator.CreateLowObstacle(nonChasm.SynchroStartTime, groundY);
 
 					level.AddSolidObstacle(obstacle);
 				}
 				if (nonChasm.Type == LevelElementType.Projectile)
 				{
-					Projectile projectile = levelElementGenerator.CreateProjectile(projectileID, nonChasm.SynchronistationStartingTime, groundY);
+					Projectile projectile = levelElementGenerator.CreateProjectile(projectileID, nonChasm.SynchroStartTime, groundY);
 
 					projectileID++;
 
@@ -79,7 +79,7 @@ namespace GameApp.Levels.LevelGeneration
 				}
 				if (nonChasm.Type == LevelElementType.HighCollectible)
 				{
-					Collectible collectible = levelElementGenerator.CreateHighCollectible(collectibleID, nonChasm.SynchronistationStartingTime, groundY);
+					Collectible collectible = levelElementGenerator.CreateHighCollectible(collectibleID, nonChasm.SynchroStartTime, groundY);
 
 					collectibleID++;
 

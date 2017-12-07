@@ -11,10 +11,6 @@ namespace GameApp.Levels.LevelGeneration
 
 		private Random rng;
 
-		private LevelElementType lastSingleBeatLevelElement;
-		private LevelElementType lastMultipleBeatsLevelElement;
-		private LevelElementType lastHeldNoteLevelElement;
-
 		private Dictionary<LevelElementType, int> singleBeatLevelElementDistributions;
 		private Dictionary<LevelElementType, int> multipleBeatsLevelElementDistributions;
 		private Dictionary<LevelElementType, int> heldNoteLevelElementDistributions;
@@ -22,11 +18,7 @@ namespace GameApp.Levels.LevelGeneration
 		public DistributionManager(int rngSeed)
 		{
 			rng = new Random(rngSeed);
-
-			lastSingleBeatLevelElement = LevelElementType.None;
-			lastMultipleBeatsLevelElement = LevelElementType.None;
-			lastHeldNoteLevelElement = LevelElementType.None;
-
+			
 			singleBeatLevelElementDistributions = new Dictionary<LevelElementType, int>();
 			multipleBeatsLevelElementDistributions = new Dictionary<LevelElementType, int>();
 			heldNoteLevelElementDistributions = new Dictionary<LevelElementType, int>();
@@ -36,39 +28,37 @@ namespace GameApp.Levels.LevelGeneration
 
 		private void Init()
 		{
-			singleBeatLevelElementDistributions.Add(LevelElementType.Chasm, 0);
 			singleBeatLevelElementDistributions.Add(LevelElementType.JumpObstacle, 0);
-			singleBeatLevelElementDistributions.Add(LevelElementType.DuckObstacle, 0);
+			singleBeatLevelElementDistributions.Add(LevelElementType.HighCollectible, 0);
+			singleBeatLevelElementDistributions.Add(LevelElementType.Projectile, 0);
+
+			multipleBeatsLevelElementDistributions.Add(LevelElementType.Projectile, 0);
+
+			heldNoteLevelElementDistributions.Add(LevelElementType.Chasm, 0);
+			heldNoteLevelElementDistributions.Add(LevelElementType.DuckObstacle, 0);
 		}
 
-		public LevelElementType GetNextSingleBeatLevelElementType()
+		public List<LevelElementType> GetPossibleSingleBeatLevelElementTypes()
 		{
-			LevelElementType levelElement = GetNextLevelElement(singleBeatLevelElementDistributions, lastSingleBeatLevelElement);
-
-			lastSingleBeatLevelElement = levelElement;
-
-			return levelElement;
+			return GetPossibleLevelElements(singleBeatLevelElementDistributions);
 		}
 
-		public LevelElementType GetNextMultipleBeatsLevelElementType()
+		public List<LevelElementType> GetPossibleMultipleBeatsLevelElementTypes()
 		{
-			LevelElementType levelElement = GetNextLevelElement(multipleBeatsLevelElementDistributions, lastMultipleBeatsLevelElement);
-
-			lastMultipleBeatsLevelElement = levelElement;
-
-			return levelElement;
+			return GetPossibleLevelElements(multipleBeatsLevelElementDistributions);
 		}
 
-		public LevelElementType GetNextHeldNoteLevelElementType()
+		public List<LevelElementType> GetPossibleHeldNoteLevelElementTypes()
 		{
-			LevelElementType levelElement = GetNextLevelElement(heldNoteLevelElementDistributions, lastHeldNoteLevelElement);
-
-			lastHeldNoteLevelElement = levelElement;
-
-			return levelElement;
+			return GetPossibleLevelElements(heldNoteLevelElementDistributions);
 		}
 
-		private LevelElementType GetNextLevelElement(Dictionary<LevelElementType, int> distributions, LevelElementType lastLevelElement)
+		public void AddHeldNoteLevelElementUse(LevelElementType levelElementType)
+		{
+			heldNoteLevelElementDistributions[levelElementType] = heldNoteLevelElementDistributions[levelElementType] + 1;
+		}
+
+		private List<LevelElementType> GetPossibleLevelElements(Dictionary<LevelElementType, int> distributions)
 		{
 			List<LevelElementType> possibleLevelElements = new List<LevelElementType>();
 
@@ -78,8 +68,6 @@ namespace GameApp.Levels.LevelGeneration
 			{
 				LevelElementType levelElement = distribution.Key;
 				int numberOfOccurences = distribution.Value;
-
-				if (levelElement == lastLevelElement) continue;
 
 				if (numberOfOccurences < lowestOccurenceValue)
 				{
@@ -94,16 +82,23 @@ namespace GameApp.Levels.LevelGeneration
 				}
 			}
 
-			int randomIndex = rng.Next(possibleLevelElements.Count);
+			if (possibleLevelElements.Count < 2) return possibleLevelElements;
 
-			LevelElementType chosenLevelElement = possibleLevelElements[randomIndex];
+			List<LevelElementType> shuffledPossibleLevelElements = new List<LevelElementType>();
 
-			distributions[chosenLevelElement] = distributions[chosenLevelElement] + 1;
+			for (int i = possibleLevelElements.Count; i >= 1; i--)
+			{
+				int randomIndex = rng.Next(i);
 
-			return chosenLevelElement;
+				LevelElementType levelElement = possibleLevelElements[randomIndex];
+
+				shuffledPossibleLevelElements.Add(levelElement);
+				possibleLevelElements.Remove(levelElement);
+			}
+
+			return shuffledPossibleLevelElements;
 		}
-
-
+		
 
 	}
 }

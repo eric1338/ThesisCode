@@ -50,8 +50,8 @@ namespace GameApp.Levels.LevelGeneration
 
 		public Obstacle CreateDuckObstacle(LevelElementDestination duckObstacle, float groundY)
 		{
-			float obstacleStartTime = duckObstacle.SynchronistationStartingTime + LevelGenerationValues.DuckingObstacleEnteringSafetyTime;
-			float obstacleEndtime = duckObstacle.SynchronistationEndTime - LevelGenerationValues.DuckingObstacleLeavingSafetyTime;
+			float obstacleStartTime = duckObstacle.SynchroStartTime + LevelGenerationValues.DuckingObstacleEnteringSafetyTime;
+			float obstacleEndtime = duckObstacle.SynchroEndTime - LevelGenerationValues.DuckingObstacleLeavingSafetyTime;
 
 			float leftX = GetXPositionByTime(obstacleStartTime);
 			float rightX = GetXPositionByTime(obstacleEndtime);
