@@ -26,6 +26,7 @@ namespace GameApp.Levels.LevelGeneration
 		private float songTimeRange = -1;
 
 		private float timeUsedForHeldNoteLevelElements = 0;
+		private float timeUsedForMultipleBeatsLevelElements = 0;
 
 		public LevelPlan LevelPlan { get; set; }
 
@@ -66,13 +67,13 @@ namespace GameApp.Levels.LevelGeneration
 			float earliestTime = 9999;
 			float latestTime = -1;
 
-			foreach (SongElements.SingleBeat singleBeat in songElements.SingleBeats)
+			foreach (SingleBeat singleBeat in songElements.SingleBeats)
 			{
 				earliestTime = Math.Min(earliestTime, singleBeat.Time);
 				latestTime = Math.Max(latestTime, singleBeat.Time);
 			}
 
-			foreach (SongElements.HeldNote heldNote in songElements.HeldNotes)
+			foreach (HeldNote heldNote in songElements.HeldNotes)
 			{
 				earliestTime = Math.Min(earliestTime, heldNote.StartTime);
 				latestTime = Math.Max(latestTime, heldNote.EndTime);
@@ -83,7 +84,7 @@ namespace GameApp.Levels.LevelGeneration
 
 		private void AddHeldNotes()
 		{
-			foreach (SongElements.HeldNote heldNote in songElements.HeldNotes)
+			foreach (HeldNote heldNote in songElements.HeldNotes)
 			{
 				if (heldNote.Applicability < LevelGenerationValues.HeldNoteApplicabilityThreshold) continue;
 
@@ -98,19 +99,101 @@ namespace GameApp.Levels.LevelGeneration
 			}
 		}
 
+		
+
+		private List<MultipleBeats> CreateMultipleBeatsList()
+		{
+			List<MultipleBeats> multipleBeatsList = new List<MultipleBeats>();
+
+			List<SingleBeat> tempList = new List<SingleBeat>();
+
+			SingleBeat lastElement = null;
+
+			foreach (SingleBeat singleBeat in songElements.SingleBeats)
+			{
+				if (lastElement != null)
+				{
+					float timeDifference = singleBeat.Time - lastElement.Time;
+
+					if (timeDifference < LevelGenerationValues.MaximumTimeMarginForMultipleBeats)
+					{
+						if (tempList.Count <= 0) tempList.Add(lastElement);
+
+						tempList.Add(singleBeat);
+					}
+					else if (tempList.Count > 1)
+					{
+						MultipleBeats multipleBeats = new MultipleBeats();
+						multipleBeats.Beats = new List<SingleBeat>(tempList);
+
+						multipleBeatsList.Add(multipleBeats);
+						tempList.Clear();
+					}
+				}
+
+				lastElement = singleBeat;
+			}
+
+			multipleBeatsList.Sort(delegate (MultipleBeats c1, MultipleBeats c2)
+			{
+				return c1.GetAverageApplicabilityValue().CompareTo(c2.GetAverageApplicabilityValue());
+			});
+
+			multipleBeatsList.Reverse();
+
+			return multipleBeatsList;
+		}
+
 		private void AddMultipleBeats()
 		{
+			List<MultipleBeats> multipleBeatsList = CreateMultipleBeatsList();
 
+			Console.WriteLine("MultipleBeats");
+
+			foreach (MultipleBeats multipleBeats in multipleBeatsList)
+			{
+				Console.WriteLine("Applicability: " + multipleBeats.GetAverageApplicabilityValue());
+
+				if (multipleBeats.GetAverageApplicabilityValue() < LevelGenerationValues.HeldNoteApplicabilityThreshold)
+				{
+					continue;
+				}
+
+				if (timeUsedForMultipleBeatsLevelElements > songTimeRange * 0.25f) continue;
+
+				List<LevelElementType> types = distributionManager.GetPossibleMultipleBeatsLevelElementTypes();
+
+				foreach (LevelElementType type in types)
+				{
+					if (TryToAddMultipleBeatsLevelElement(multipleBeats, type)) break;
+				}
+			}
+
+			Console.WriteLine(" ");
 		}
 
 		private void AddSingleBeats()
 		{
+			foreach (SingleBeat singleBeat in songElements.SingleBeats)
+			{
+				if (singleBeat.Applicability < LevelGenerationValues.SingleBeatsApplicabilityThreshold)
+				{
+					continue;
+				}
 
+				List<LevelElementType> types = distributionManager.GetPossibleSingleBeatLevelElementTypes();
+
+				foreach (LevelElementType type in types)
+				{
+					if (TryToAddSingleBeatLevelElement(singleBeat, type)) break;
+				}
+
+			}
 		}
 
 		private void FillWithLowCollectibles()
 		{
-			foreach (SongElements.SingleBeat singleBeat in songElements.SingleBeats)
+			foreach (SingleBeat singleBeat in songElements.SingleBeats)
 			{
 				if (singleBeat.Applicability < LevelGenerationValues.FillUpElementsApplicabilityThreshold)
 				{
@@ -121,17 +204,17 @@ namespace GameApp.Levels.LevelGeneration
 			}
 		}
 
-		private bool TryToAddHeldNoteLevelElement(SongElements.HeldNote heldNote, LevelElementType type)
+		private bool TryToAddHeldNoteLevelElement(HeldNote heldNote, LevelElementType type)
 		{
-			LevelElementDestination destination = LevelElementDestination.CreateProlongedSynchro(type,
+			LevelElementPlacement placement = LevelElementPlacement.CreateProlongedSynchro(type,
 				heldNote.StartTime, heldNote.EndTime);
 
-			float leftTimeMargin = GetLeftTimeMarginOfLevelElement(destination);
-			float rightTimeMargin = GetRightTimeMarginOfLevelElement(destination);
+			float leftTimeMargin = GetLeftTimeMarginOfLevelElement(placement);
+			float rightTimeMargin = GetRightTimeMarginOfLevelElement(placement);
 
 			if (IsTimeRangeFree(leftTimeMargin, rightTimeMargin))
 			{
-				AddLevelElementDestination(destination);
+				AddLevelElementPlacement(placement);
 
 				timeUsedForHeldNoteLevelElements += (rightTimeMargin - leftTimeMargin);
 
@@ -141,17 +224,19 @@ namespace GameApp.Levels.LevelGeneration
 			return false;
 		}
 
-		private bool TryToAddSingleBeatLevelElement(SongElements.SingleBeat singleBeat, LevelElementType type)
+		private bool TryToAddMultipleBeatsLevelElement(MultipleBeats multipleBeats, LevelElementType type)
 		{
-			LevelElementDestination destination = LevelElementDestination.CreateSingleSynchro(type,
-				singleBeat.Time);
+			LevelElementPlacement placement = LevelElementPlacement.CreateMultipleSynchro(type,
+				multipleBeats.GetBeatTimes());
 
-			float leftTimeMargin = GetLeftTimeMarginOfLevelElement(destination);
-			float rightTimeMargin = GetRightTimeMarginOfLevelElement(destination);
+			float leftTimeMargin = GetLeftTimeMarginOfLevelElement(placement);
+			float rightTimeMargin = GetRightTimeMarginOfLevelElement(placement);
 
 			if (IsTimeRangeFree(leftTimeMargin, rightTimeMargin))
 			{
-				AddLevelElementDestination(destination);
+				AddLevelElementPlacement(placement);
+
+				timeUsedForMultipleBeatsLevelElements += (rightTimeMargin - leftTimeMargin);
 
 				return true;
 			}
@@ -159,14 +244,32 @@ namespace GameApp.Levels.LevelGeneration
 			return false;
 		}
 
-		private float GetLeftTimeMarginOfLevelElement(LevelElementDestination destination)
+		private bool TryToAddSingleBeatLevelElement(SingleBeat singleBeat, LevelElementType type)
 		{
-			return destination.LevelElementStartTime - LevelGenerationValues.TimeBeforeLevelElement;
+			LevelElementPlacement placement = LevelElementPlacement.CreateSingleSynchro(type,
+				singleBeat.Time);
+
+			float leftTimeMargin = GetLeftTimeMarginOfLevelElement(placement);
+			float rightTimeMargin = GetRightTimeMarginOfLevelElement(placement);
+
+			if (IsTimeRangeFree(leftTimeMargin, rightTimeMargin))
+			{
+				AddLevelElementPlacement(placement);
+
+				return true;
+			}
+
+			return false;
 		}
 
-		private float GetRightTimeMarginOfLevelElement(LevelElementDestination destination)
+		private float GetLeftTimeMarginOfLevelElement(LevelElementPlacement placement)
 		{
-			return destination.LevelElementEndTime;
+			return placement.LevelElementStartTime - LevelGenerationValues.TimeBeforeLevelElement;
+		}
+
+		private float GetRightTimeMarginOfLevelElement(LevelElementPlacement placement)
+		{
+			return placement.LevelElementEndTime;
 		}
 
 		private bool IsTimeRangeFree(float startTime, float endTime)
@@ -181,14 +284,14 @@ namespace GameApp.Levels.LevelGeneration
 			return true;
 		}
 
-		private void AddLevelElementDestination(LevelElementDestination destination)
+		private void AddLevelElementPlacement(LevelElementPlacement placement)
 		{
-			float leftTimeMargin = GetLeftTimeMarginOfLevelElement(destination);
-			float rightTimeMargin = GetRightTimeMarginOfLevelElement(destination);
+			float leftTimeMargin = GetLeftTimeMarginOfLevelElement(placement);
+			float rightTimeMargin = GetRightTimeMarginOfLevelElement(placement);
 
 			ReserveTimeRange(leftTimeMargin, rightTimeMargin);
 
-			LevelPlan.AddLevelElementDestination(destination);
+			LevelPlan.AddLevelElementPlacement(placement);
 		}
 
 		private void ReserveTimeRange(float startTime, float endTime)

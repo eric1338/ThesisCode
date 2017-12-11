@@ -8,11 +8,13 @@ namespace GameApp.Levels.LevelGeneration
 {
 	enum LevelElementType
 	{
-		DuckObstacle,
-		JumpObstacle,
-		HighCollectible,
-		LowCollectible,
 		Chasm,
-		Projectile,
+		ChasmWithCollectibles,
+		JumpObstacle,
+		DuckObstacle,
+		LowCollectible,
+		HighCollectible,
+		SingleProjectile,
+		MultipleProjectiles
 	}
 }

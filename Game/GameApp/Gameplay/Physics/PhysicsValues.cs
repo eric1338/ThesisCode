@@ -62,22 +62,30 @@ namespace GameApp.Gameplay.Physics
 
 		private static float jumpHeight = -1;
 		private static float jumpLength = -1;
+		private static float jumpDuration = -1;
 
-		public static float GetJumpHeight()
+		public static float GetPlainJumpHeight()
 		{
-			if (jumpHeight < 0) CalculateJumpHeightAndLength();
+			if (jumpHeight < 0) CalculatePlainJumpValues();
 
 			return jumpHeight;
 		}
 
-		public static float GetJumpLength()
+		public static float GetPlainJumpLength()
 		{
-			if (jumpLength < 0) CalculateJumpHeightAndLength();
+			if (jumpLength < 0) CalculatePlainJumpValues();
 
 			return jumpLength;
 		}
 
-		private static void CalculateJumpHeightAndLength()
+		public static float GetPlainJumpDuration()
+		{
+			if (jumpDuration < 0) CalculatePlainJumpValues();
+
+			return jumpDuration;
+		}
+
+		private static void CalculatePlainJumpValues()
 		{
 			float y = 0.00001f;
 			float yAcceleration = JumpAcceleration;
@@ -99,6 +107,7 @@ namespace GameApp.Gameplay.Physics
 
 			jumpHeight = maximumJumpHeight;
 			jumpLength = iterations * GetHorizontalPlayerVelocityPerFrame();
+			jumpDuration = iterations * GeneralValues.FPS;
 		}
 
 

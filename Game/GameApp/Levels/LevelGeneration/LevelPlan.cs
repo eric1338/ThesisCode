@@ -9,61 +9,30 @@ namespace GameApp.Levels.LevelGeneration
 	class LevelPlan
 	{
 		
-		public List<LevelElementDestination> LevelElementDestinations { get; set; }
+		public List<LevelElementPlacement> LevelElementPlacements { get; set; }
 
 
 		public LevelPlan()
 		{
-			LevelElementDestinations = new List<LevelElementDestination>();
+			LevelElementPlacements = new List<LevelElementPlacement>();
 		}
-
-
-
 
 		private void CreateSingleSynchronisation(LevelElementType type, float synchronisationTime)
 		{
-			LevelElementDestination destination;
-
-			if (type == LevelElementType.JumpObstacle)
-			{
-				destination = LevelElementDestination.CreateJumpObstacle(synchronisationTime);
-			}
-			else if (type == LevelElementType.HighCollectible)
-			{
-				destination = LevelElementDestination.CreateHighCollectible(synchronisationTime);
-			}
-			else
-			{
-				destination = LevelElementDestination.CreateSingleProjectile(synchronisationTime);
-			}
-
-			AddLevelElementDestination(destination);
+			AddLevelElementPlacement(LevelElementPlacement.CreateSingleSynchro(type, synchronisationTime));
 		}
 
 		private void CreateProlongedSynchronisation(LevelElementType type,
-			float synchronisationStartingTime, float synchronisationEndTime)
+			float synchroStartTime, float synchroEndTime)
 		{
-			LevelElementDestination destination;
-
-			if (type == LevelElementType.Chasm)
-			{
-				destination = LevelElementDestination.CreateChasm(synchronisationStartingTime,
-					synchronisationEndTime);
-			}
-			else
-			{
-				destination = LevelElementDestination.CreateDuckingObstacle(synchronisationStartingTime,
-					synchronisationEndTime);
-			}
-
-			AddLevelElementDestination(destination);
+			AddLevelElementPlacement(LevelElementPlacement.CreateProlongedSynchro(type, synchroStartTime, synchroEndTime));
 		}
 
 
 
-		public void AddLevelElementDestination(LevelElementDestination destination)
+		public void AddLevelElementPlacement(LevelElementPlacement destination)
 		{
-			LevelElementDestinations.Add(destination);
+			LevelElementPlacements.Add(destination);
 		}
 
 		public void AddLevelElementDestination(LevelElementType type, float startingTime)
@@ -83,48 +52,51 @@ namespace GameApp.Levels.LevelGeneration
 		{
 			LevelPlan levelPlan = new LevelPlan();
 
+			levelPlan.AddLevelElementDestination(LevelElementType.LowCollectible, 4);
+			levelPlan.AddLevelElementDestination(LevelElementType.LowCollectible, 9);
+
 			//levelPlan.AddLevelElementDestination(LevelElementType.DuckObstacle, 5, 3);
 
-			levelPlan.AddLevelElementDestination(LevelElementType.HighCollectible, 4);
+			//levelPlan.AddLevelElementDestination(LevelElementType.HighCollectible, 4);
 
-			levelPlan.AddLevelElementDestination(LevelElementType.Projectile, 6);
-			levelPlan.AddLevelElementDestination(LevelElementType.Projectile, 7);
+			levelPlan.AddLevelElementDestination(LevelElementType.SingleProjectile, 6);
+			levelPlan.AddLevelElementDestination(LevelElementType.SingleProjectile, 7);
 
-			levelPlan.AddLevelElementDestination(LevelElementType.Chasm, 10, 1.3f);
+			//levelPlan.AddLevelElementDestination(LevelElementType.Chasm, 10, 1.3f);
 
-			levelPlan.AddLevelElementDestination(LevelElementType.HighCollectible, 13);
+			//levelPlan.AddLevelElementDestination(LevelElementType.HighCollectible, 13);
 
-			levelPlan.AddLevelElementDestination(LevelElementType.JumpObstacle, 14);
+			//levelPlan.AddLevelElementDestination(LevelElementType.JumpObstacle, 14);
 
-			levelPlan.AddLevelElementDestination(LevelElementType.Projectile, 19f);
+			//levelPlan.AddLevelElementDestination(LevelElementType.SingleProjectile, 19f);
 
-			levelPlan.AddLevelElementDestination(LevelElementType.Chasm, 16, 1.6f);
+			//levelPlan.AddLevelElementDestination(LevelElementType.Chasm, 16, 1.6f);
 
-			levelPlan.AddLevelElementDestination(LevelElementType.DuckObstacle, 21, 1.5f);
+			//levelPlan.AddLevelElementDestination(LevelElementType.DuckObstacle, 21, 1.5f);
 
 			return levelPlan;
 		}
 
 
-		public List<LevelElementDestination> GetChasms()
+		public List<LevelElementPlacement> GetChasms()
 		{
-			List<LevelElementDestination> chasms = new List<LevelElementDestination>();
+			List<LevelElementPlacement> chasms = new List<LevelElementPlacement>();
 
-			foreach (LevelElementDestination levelElementDestination in LevelElementDestinations)
+			foreach (LevelElementPlacement placement in LevelElementPlacements)
 			{
-				if (levelElementDestination.Type == LevelElementType.Chasm) chasms.Add(levelElementDestination);
+				if (placement.Type == LevelElementType.Chasm) chasms.Add(placement);
 			}
 
 			return chasms;
 		}
 
-		public List<LevelElementDestination> GetNonChasms()
+		public List<LevelElementPlacement> GetNonChasms()
 		{
-			List<LevelElementDestination> nonChasms = new List<LevelElementDestination>();
+			List<LevelElementPlacement> nonChasms = new List<LevelElementPlacement>();
 
-			foreach (LevelElementDestination levelElementDestination in LevelElementDestinations)
+			foreach (LevelElementPlacement placement in LevelElementPlacements)
 			{
-				if (levelElementDestination.Type != LevelElementType.Chasm) nonChasms.Add(levelElementDestination);
+				if (placement.Type != LevelElementType.Chasm) nonChasms.Add(placement);
 			}
 
 			return nonChasms;

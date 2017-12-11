@@ -30,9 +30,10 @@ namespace GameApp.Levels.LevelGeneration
 		{
 			singleBeatLevelElementDistributions.Add(LevelElementType.JumpObstacle, 0);
 			singleBeatLevelElementDistributions.Add(LevelElementType.HighCollectible, 0);
-			singleBeatLevelElementDistributions.Add(LevelElementType.Projectile, 0);
+			singleBeatLevelElementDistributions.Add(LevelElementType.SingleProjectile, 0);
 
-			multipleBeatsLevelElementDistributions.Add(LevelElementType.Projectile, 0);
+			multipleBeatsLevelElementDistributions.Add(LevelElementType.ChasmWithCollectibles, 0);
+			multipleBeatsLevelElementDistributions.Add(LevelElementType.MultipleProjectiles, 0);
 
 			heldNoteLevelElementDistributions.Add(LevelElementType.Chasm, 0);
 			heldNoteLevelElementDistributions.Add(LevelElementType.DuckObstacle, 0);
