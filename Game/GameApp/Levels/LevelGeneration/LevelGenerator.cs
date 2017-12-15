@@ -14,59 +14,108 @@ namespace GameApp.Levels.LevelGeneration
 		{
 			SongElements songElements = new SongElements();
 
-			songElements.AddSingleBeat(1f, 0.4f);
-			songElements.AddSingleBeat(1.9f, 0.5f);
-			songElements.AddSingleBeat(2.6f, 0.6f);
-			songElements.AddSingleBeat(3.64f, 0.3f);
+			/*
+			songElements.AddSingleBeat(2.1f, 0.4f);
+			songElements.AddSingleBeat(2.9f, 0.5f);
+			songElements.AddSingleBeat(3.6f, 0.6f);
+			songElements.AddSingleBeat(4.64f, 0.3f);
 
-			songElements.AddSingleBeat(5.0f, 0.8f);
-			songElements.AddSingleBeat(5.5f, 0.9f);
-			songElements.AddSingleBeat(7.0f, 1.0f);
+			songElements.AddSingleBeat(7.0f, 0.8f);
+			songElements.AddSingleBeat(7.1f, 0.9f);
+			songElements.AddSingleBeat(7.2f, 0.9f);
+			songElements.AddSingleBeat(7.3f, 0.9f);
+			songElements.AddSingleBeat(7.4f, 0.9f);
+			songElements.AddSingleBeat(7.5f, 0.9f);
+			songElements.AddSingleBeat(7.6f, 0.9f);
+			songElements.AddSingleBeat(7.7f, 0.9f);
+			songElements.AddSingleBeat(7.5f, 0.9f);
+			songElements.AddSingleBeat(9.0f, 1.0f);
+			songElements.AddSingleBeat(19.0f, 1.0f);
 
-			songElements.AddSingleBeat(10.0f, 0.5f);
+			songElements.AddSingleBeat(12.0f, 0.5f);
 
-			songElements.AddHeldNote(9f, 12f, 0.4f);
-			songElements.AddHeldNote(16f, 18f, 0.3f);
-			songElements.AddHeldNote(21f, 26f, 0.6f);
-			songElements.AddHeldNote(30f, 30.4f, 0.12f);
-			songElements.AddHeldNote(40f, 46f, 0.8f);
+			songElements.AddHeldNote(11f, 14f, 0.4f);
+			songElements.AddHeldNote(18f, 20f, 0.3f);
+			songElements.AddHeldNote(23f, 25f, 0.6f);
+			songElements.AddHeldNote(32f, 32.4f, 0.12f);
+			songElements.AddHeldNote(42f, 46f, 0.8f);
+
+
+
+			
+
+			songElements.AddSingleBeat(5, 1);
+			songElements.AddSingleBeat(10, 1);
+			songElements.AddSingleBeat(15, 1);
+			songElements.AddSingleBeat(20, 1);
+			songElements.AddSingleBeat(25, 1);
+			songElements.AddSingleBeat(30, 1);
+			*/
+
+			songElements.AddSingleBeat(4, 1);
+			songElements.AddSingleBeat(8, 1);
+			songElements.AddSingleBeat(12, 1);
+			songElements.AddSingleBeat(16, 1);
+			songElements.AddSingleBeat(20, 1);
+			songElements.AddSingleBeat(24, 1);
 
 			LevelPlanCreator levelPlanCreator = new LevelPlanCreator(songElements);
 
 			levelPlanCreator.CreateLevelPlan();
 
-			//return GenerateLevel(levelPlanCreator.LevelPlan);
+			LevelPlan test = levelPlanCreator.LevelPlan;
 
-			return GenerateLevel(LevelPlan.GetTestLevelPlan());
+			foreach (LevelElementPlacement pl in test.LevelElementPlacements)
+			{
+				Console.WriteLine(pl.Type + " von " + Math.Round(pl.LevelElementStartTime, 1) +
+					" bis " + Math.Round(pl.LevelElementEndTime, 1));
+			}
+
+			return GenerateLevel(levelPlanCreator.LevelPlan);
+
+			//return GenerateLevel(LevelPlan.GetTestLevelPlan());
 		}
 
 		public Level GenerateLevel(LevelPlan levelPlan)
 		{
 			Level level = new Level();
 
-			List<LevelElementPlacement> chasmsPlacements = new List<LevelElementPlacement>();
-			List<LevelElementPlacement> nonChasmsPlacements = new List<LevelElementPlacement>();
+			level.PlayerStartingPosition = LevelGenerationValues.PlayerStartPosition;
 
-			foreach (LevelElementPlacement levelElementDestination in levelPlan.LevelElementPlacements)
-			{
-				if (levelElementDestination.Type == LevelElementType.Chasm) chasmsPlacements.Add(levelElementDestination);
-				else nonChasmsPlacements.Add(levelElementDestination);
-			}
-			
+			List<LevelElementPlacement> chasmsPlacements = levelPlan.GetChasms();
+			List<LevelElementPlacement> nonChasmsPlacements = levelPlan.GetNonChasms();
 
 			float currentLeftX = LevelGenerationValues.FirstGroundLeftX;
 			float currentY = LevelGenerationValues.PlayerStartPosition.Y;
 
 			foreach (LevelElementPlacement placement in chasmsPlacements)
 			{
-				float currentRightX = LevelGenerationValues.GetXPositionByTime(placement.SynchroStartTime +
-					LevelGenerationValues.SuggestedChasmJumpTimeOffset);
+				float currentRightX = LevelGenerationValues.GetXPositionByTime(placement.LevelElementStartTime +
+					LevelGenerationValues.SuggestedChasmJumpTimingOffset);
 
 				level.AddGround(new Ground(currentLeftX, currentRightX, currentY));
 
-				currentLeftX = currentRightX + LevelGenerationValues.GetChasmXDifference(placement.GetSynchroDuration());
+				if (placement.Type == LevelElementType.ChasmWithCollectibles)
+				{
+					foreach (float synchroTime in placement.SynchroTimes)
+					{
+						float collectibleXPosition = LevelGenerationValues.GetXPositionByTime(synchroTime);
 
-				currentY = currentY + LevelGenerationValues.GetChasmYDifference(placement.GetSynchroDuration());
+						float timeAfterJump = synchroTime - placement.LevelElementStartTime;
+
+						float collectibleYPosition = currentY + LevelGenerationValues.GetYDifferenceAfterJump(timeAfterJump)
+							+ LevelGenerationValues.GetLowCollectibleYOffset();
+
+						level.AddCollectibleByPosition(new Vector2(collectibleXPosition, collectibleYPosition));
+					}
+				}
+
+				//float hangTime = placement.GetSynchroDuration();
+				float hangTime = placement.LevelElementEndTime - placement.LevelElementStartTime;
+
+				currentLeftX = currentRightX + LevelGenerationValues.GetChasmXDifference(hangTime);
+
+				currentY = currentY + LevelGenerationValues.GetChasmYDifference(hangTime);
 			}
 
 			float lastRightX = LevelGenerationValues.GetXPositionByTime(9999);
@@ -75,9 +124,6 @@ namespace GameApp.Levels.LevelGeneration
 
 
 			LevelElementCreator levelElementGenerator = new LevelElementCreator();
-
-			int projectileID = 0;
-			int collectibleID = 0;
 
 			foreach (LevelElementPlacement placement in nonChasmsPlacements)
 			{
@@ -97,39 +143,35 @@ namespace GameApp.Levels.LevelGeneration
 				}
 				if (placement.Type == LevelElementType.LowCollectible)
 				{
-					Collectible collectible = levelElementGenerator.CreateLowCollectible(placement,
-						collectibleID, groundY);
+					Vector2 collectiblePosition = levelElementGenerator.GetLowCollectiblePosition(placement, groundY);
 
-					collectibleID++;
-
-					level.AddCollectible(collectible);
+					level.AddCollectibleByPosition(collectiblePosition);
 				}
 				if (placement.Type == LevelElementType.HighCollectible)
 				{
-					Collectible collectible = levelElementGenerator.CreateHighCollectible(placement,
-						collectibleID, groundY);
+					Vector2 collectiblePosition = levelElementGenerator.GetHighCollectiblePosition(placement, groundY);
 
-					collectibleID++;
-
-					level.AddCollectible(collectible);
+					level.AddCollectibleByPosition(collectiblePosition);
 				}
 				if (placement.Type == LevelElementType.SingleProjectile)
 				{
-					Projectile projectile = levelElementGenerator.CreateProjectile(placement, projectileID, groundY);
+					Vector2 projectilePosition = levelElementGenerator.GetProjectilePosition(placement.SynchroStartTime, groundY);
 
-					projectileID++;
-
-					level.AddProjectile(projectile);
+					level.AddProjectileByPosition(projectilePosition);
 				}
 				if (placement.Type == LevelElementType.MultipleProjectiles)
 				{
+					foreach (float synchroTime in placement.SynchroTimes)
+					{
+						Vector2 projectilePosition = levelElementGenerator.GetProjectilePosition(synchroTime, groundY);
 
+						level.AddProjectileByPosition(projectilePosition);
+					}
 				}
 			}
 
 			return level;
 		}
-
 
 		private float GetGroundY(Level level, float time)
 		{

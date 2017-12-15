@@ -20,32 +20,18 @@ namespace GameApp.Levels.LevelGeneration
 		{
 			return GetXPositionByTime(time) + PhysicsValues.GetHalfPlayerHitboxWidth();
 		}
-		
-
-
-
-		public Collectible CreateChasmCollectibles(LevelElementPlacement placement)
-		{
-			return new Collectible(0, new Vector2(0, 0));
-		}
-
-
-
 
 		public Obstacle CreateJumpObstacle(LevelElementPlacement placement, float groundY)
 		{
-			float halfJumpLength = PhysicsValues.GetPlainJumpLength() / 2.0f;
-			float jumpHeight = PhysicsValues.GetPlainJumpHeight();
+			float centerOfObstacle = GetXPositionByTime(placement.SynchroStartTime) +
+				PhysicsValues.GetPlainJumpLength() / 2.0f;
 
-			float jumpPosition = GetXPositionByTime(placement.SynchroStartTime);
+			float halfObstacleWidth = LevelGenerationValues.GetJumpObstacleWidth() / 2.0f;
 
-			float lengthFactor = 0.5f;
-			float heightFactor = 0.2f;
+			float leftX = centerOfObstacle - halfObstacleWidth;
+			float rightX = centerOfObstacle + halfObstacleWidth;
 
-			float leftX = jumpPosition + halfJumpLength - (halfJumpLength * lengthFactor);
-			float rightX = jumpPosition + halfJumpLength + (halfJumpLength * lengthFactor);
-
-			float topY = groundY + jumpHeight * heightFactor;
+			float topY = groundY + LevelGenerationValues.GetJumpObstacleHeight();
 
 			return new Obstacle(new Vector2(leftX, topY), new Vector2(rightX, groundY));
 		}
@@ -64,30 +50,28 @@ namespace GameApp.Levels.LevelGeneration
 			return new Obstacle(new Vector2(leftX, topY), new Vector2(rightX, bottomY));
 		}
 
-		public Collectible CreateLowCollectible(LevelElementPlacement placement, int id, float groundY)
+		public Vector2 GetLowCollectiblePosition(LevelElementPlacement placement, float groundY)
 		{
-			return CreateCollectible(placement, LevelGenerationValues.GetLowObstacleYOffset(), id, groundY);
+			return GetCollectiblePosition(placement, LevelGenerationValues.GetLowCollectibleYOffset(), groundY);
 		}
 
-		public Collectible CreateHighCollectible(LevelElementPlacement placement, int id, float groundY)
+		public Vector2 GetHighCollectiblePosition(LevelElementPlacement placement, float groundY)
 		{
-			return CreateCollectible(placement, LevelGenerationValues.GetHighObstacleYOffset(), id, groundY);
+			return GetCollectiblePosition(placement, LevelGenerationValues.GetHighCollectibleYOffset(), groundY);
 		}
 
-		private Collectible CreateCollectible(LevelElementPlacement placement, float collectibleYOffset, int id, float groundY)
+		private Vector2 GetCollectiblePosition(LevelElementPlacement placement, float collectibleYOffset, float groundY)
 		{
 			float xPosition = GetPlayerRightEdgeXByTime(placement.SynchroStartTime)
 				+ (PhysicsValues.CollectibleHitboxWidth / 2.0f);
 
 			float yPosition = groundY + collectibleYOffset;
 
-			return new Collectible(id, new Vector2(xPosition, yPosition));
+			return new Vector2(xPosition, yPosition);
 		}
 
-		public Projectile CreateProjectile(LevelElementPlacement placement, int id, float groundY)
+		public Vector2 GetProjectilePosition(float time, float groundY)
 		{
-			float time = placement.SynchroStartTime;
-
 			float hitXPosition = GetPlayerRightEdgeXByTime(time);
 
 			float startingXPosition = hitXPosition + time * PhysicsValues.ProjectileVelocity
@@ -95,14 +79,8 @@ namespace GameApp.Levels.LevelGeneration
 
 			float startingYPosition = groundY + LevelGenerationValues.GetProjectileYOffset();
 
-			return new Projectile(id, new Vector2(startingXPosition, startingYPosition));
+			return new Vector2(startingXPosition, startingYPosition);
 		}
-
-
-
-
-
-
 
 
 	}

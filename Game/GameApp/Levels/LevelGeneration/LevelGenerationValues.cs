@@ -15,8 +15,6 @@ namespace GameApp.Levels.LevelGeneration
 
 		public static readonly float TimeBeforeLevelElement = 2;
 
-		public static readonly float TimeToJump = 1;
-
 
 		// Applicability Thresholds
 
@@ -35,9 +33,11 @@ namespace GameApp.Levels.LevelGeneration
 
 		// LevelElements
 
-		public static readonly float SuggestedChasmJumpTimeOffset = 0.2f;
+		public static readonly float SuggestedChasmJumpTimingOffset = 0.2f;
 
-		public static readonly float MaximumChasmJumpTimeOffset = 0.4f;
+		public static readonly float MaximumChasmJumpTimingOffset = 0.4f;
+
+		public static readonly float MaximumJumpObstacleJumpTimingOffset = 0.1f;
 
 
 		public static readonly float DuckingObstacleEnteringSafetyTime = 0.3f;
@@ -53,17 +53,46 @@ namespace GameApp.Levels.LevelGeneration
 			return PhysicsValues.PlayerHitboxWidth;
 		}
 
-		public static float GetHighObstacleYOffset()
+		public static float GetHighCollectibleYOffset()
 		{
 			return PhysicsValues.GetPlainJumpHeight() + PhysicsValues.PlayerHitboxHeight * 0.8f;
 		}
 
-		public static float GetLowObstacleYOffset()
+		public static float GetLowCollectibleYOffset()
 		{
 			return PhysicsValues.PlayerHitboxHeight * 0.6f;
 		}
 
-		public static readonly float LowObstaclePlayerHeightFactor = 0.6f;
+		public static float GetJumpObstacleWidth()
+		{
+			float minimumHorizontalDistanceRequired = 0;
+
+			for (float time = 0; time < 100; time += 1.0f / GeneralValues.FPS)
+			{
+				if (GetYDifferenceAfterJump(time) > GetJumpObstacleHeight())
+				{
+					minimumHorizontalDistanceRequired = time * PhysicsValues.HorizontalPlayerVelocity;
+					break;
+				}
+			}
+
+			float halfJumpObstacleWidth = PhysicsValues.GetPlainJumpLength() / 2.0f;
+
+			Console.WriteLine("safety: " + (MaximumJumpObstacleJumpTimingOffset * PhysicsValues.HorizontalPlayerVelocity));
+			Console.WriteLine("minReq: " + minimumHorizontalDistanceRequired);
+			Console.WriteLine("halfPl: " + PhysicsValues.GetHalfPlayerHitboxWidth());
+
+			halfJumpObstacleWidth -= MaximumJumpObstacleJumpTimingOffset * PhysicsValues.HorizontalPlayerVelocity;
+			halfJumpObstacleWidth -= minimumHorizontalDistanceRequired;
+			halfJumpObstacleWidth -= PhysicsValues.GetHalfPlayerHitboxWidth();
+
+			return halfJumpObstacleWidth * 2;
+		}
+
+		public static float GetJumpObstacleHeight()
+		{
+			return PhysicsValues.PlayerHitboxHeight * 0.3f;
+		}
 
 
 		public static float GetProjectileYOffset()
@@ -98,11 +127,6 @@ namespace GameApp.Levels.LevelGeneration
 			return PlayerStartPosition.X + time * GetPlayerVelocity();
 		}
 
-		public static float GetXDifferenceAfterJump(float timeAfterJump)
-		{
-			return timeAfterJump * GetPlayerVelocity();
-		}
-
 		public static float GetYDifferenceAfterJump(float timeAfterJump)
 		{
 			int iterations = (int)Math.Round(timeAfterJump * GeneralValues.FPS);
@@ -116,7 +140,7 @@ namespace GameApp.Levels.LevelGeneration
 
 		public static float GetChasmXDifference(float hangTime)
 		{
-			return (hangTime - MaximumChasmJumpTimeOffset) * GetPlayerVelocity();
+			return (hangTime - MaximumChasmJumpTimingOffset) * GetPlayerVelocity();
 		}
 
 		public static float GetChasmYDifference(float hangTime)

@@ -21,12 +21,17 @@ namespace GameApp.Levels.LevelGeneration
 		private SongElements songElements;
 		private DistributionManager distributionManager;
 
+		private List<MultipleBeats> multipleBeatsList = new List<MultipleBeats>();
+
 		private List<Tuple<float, float>> reservedTimeRanges;
 
 		private float songTimeRange = -1;
 
 		private float timeUsedForHeldNoteLevelElements = 0;
 		private float timeUsedForMultipleBeatsLevelElements = 0;
+
+		private float maximumTimeRatioUsedForHeldNotes = 2;
+		private float maximumTimeRatioUsedForMultipleBeats = 2;
 
 		public LevelPlan LevelPlan { get; set; }
 
@@ -52,58 +57,24 @@ namespace GameApp.Levels.LevelGeneration
 
 		public void CreateLevelPlan()
 		{
-			songElements.SortByApplicability();
+			songElements.SortByTime();
+			FillMultipleBeatsList();
 
 			CalculateSongTimeMargin();
+
+			songElements.SortByApplicability();
 
 			AddHeldNotes();
 			AddMultipleBeats();
 			AddSingleBeats();
 			FillWithLowCollectibles();
+
+			LevelPlan.SortByTime();
 		}
 
-		private void CalculateSongTimeMargin()
+		private void FillMultipleBeatsList()
 		{
-			float earliestTime = 9999;
-			float latestTime = -1;
-
-			foreach (SingleBeat singleBeat in songElements.SingleBeats)
-			{
-				earliestTime = Math.Min(earliestTime, singleBeat.Time);
-				latestTime = Math.Max(latestTime, singleBeat.Time);
-			}
-
-			foreach (HeldNote heldNote in songElements.HeldNotes)
-			{
-				earliestTime = Math.Min(earliestTime, heldNote.StartTime);
-				latestTime = Math.Max(latestTime, heldNote.EndTime);
-			}
-
-			songTimeRange = latestTime - earliestTime;
-		}
-
-		private void AddHeldNotes()
-		{
-			foreach (HeldNote heldNote in songElements.HeldNotes)
-			{
-				if (heldNote.Applicability < LevelGenerationValues.HeldNoteApplicabilityThreshold) continue;
-
-				if (timeUsedForHeldNoteLevelElements > songTimeRange * 0.5f) continue;
-
-				List<LevelElementType> types = distributionManager.GetPossibleHeldNoteLevelElementTypes();
-
-				foreach (LevelElementType type in types)
-				{
-					if (TryToAddHeldNoteLevelElement(heldNote, type)) break;
-				}
-			}
-		}
-
-		
-
-		private List<MultipleBeats> CreateMultipleBeatsList()
-		{
-			List<MultipleBeats> multipleBeatsList = new List<MultipleBeats>();
+			multipleBeatsList.Clear();
 
 			List<SingleBeat> tempList = new List<SingleBeat>();
 
@@ -140,14 +111,48 @@ namespace GameApp.Levels.LevelGeneration
 			});
 
 			multipleBeatsList.Reverse();
-
-			return multipleBeatsList;
 		}
+
+		private void CalculateSongTimeMargin()
+		{
+			float earliestTime = 9999;
+			float latestTime = -1;
+
+			foreach (SingleBeat singleBeat in songElements.SingleBeats)
+			{
+				earliestTime = Math.Min(earliestTime, singleBeat.Time);
+				latestTime = Math.Max(latestTime, singleBeat.Time);
+			}
+
+			foreach (HeldNote heldNote in songElements.HeldNotes)
+			{
+				earliestTime = Math.Min(earliestTime, heldNote.StartTime);
+				latestTime = Math.Max(latestTime, heldNote.EndTime);
+			}
+
+			songTimeRange = latestTime - earliestTime;
+		}
+
+		private void AddHeldNotes()
+		{
+			foreach (HeldNote heldNote in songElements.HeldNotes)
+			{
+				if (heldNote.Applicability < LevelGenerationValues.HeldNoteApplicabilityThreshold) continue;
+
+				if (timeUsedForHeldNoteLevelElements > songTimeRange * maximumTimeRatioUsedForHeldNotes) continue;
+
+				List<LevelElementType> types = distributionManager.GetPossibleHeldNoteLevelElementTypes();
+
+				foreach (LevelElementType type in types)
+				{
+					if (TryToAddHeldNoteLevelElement(heldNote, type)) break;
+				}
+			}
+		}
+		
 
 		private void AddMultipleBeats()
 		{
-			List<MultipleBeats> multipleBeatsList = CreateMultipleBeatsList();
-
 			Console.WriteLine("MultipleBeats");
 
 			foreach (MultipleBeats multipleBeats in multipleBeatsList)
@@ -159,7 +164,7 @@ namespace GameApp.Levels.LevelGeneration
 					continue;
 				}
 
-				if (timeUsedForMultipleBeatsLevelElements > songTimeRange * 0.25f) continue;
+				if (timeUsedForMultipleBeatsLevelElements > songTimeRange * maximumTimeRatioUsedForMultipleBeats) continue;
 
 				List<LevelElementType> types = distributionManager.GetPossibleMultipleBeatsLevelElementTypes();
 
@@ -216,6 +221,7 @@ namespace GameApp.Levels.LevelGeneration
 			{
 				AddLevelElementPlacement(placement);
 
+				distributionManager.AddHeldNoteLevelElementUse(type);
 				timeUsedForHeldNoteLevelElements += (rightTimeMargin - leftTimeMargin);
 
 				return true;
@@ -236,6 +242,7 @@ namespace GameApp.Levels.LevelGeneration
 			{
 				AddLevelElementPlacement(placement);
 
+				distributionManager.AddMultipleBeatsLevelElementUse(type);
 				timeUsedForMultipleBeatsLevelElements += (rightTimeMargin - leftTimeMargin);
 
 				return true;
@@ -255,6 +262,8 @@ namespace GameApp.Levels.LevelGeneration
 			if (IsTimeRangeFree(leftTimeMargin, rightTimeMargin))
 			{
 				AddLevelElementPlacement(placement);
+
+				distributionManager.AddSingleBeatLevelElementUse(type);
 
 				return true;
 			}

@@ -107,7 +107,7 @@ namespace GameApp.Gameplay.Physics
 
 			jumpHeight = maximumJumpHeight;
 			jumpLength = iterations * GetHorizontalPlayerVelocityPerFrame();
-			jumpDuration = iterations * GeneralValues.FPS;
+			jumpDuration = iterations / (float) GeneralValues.FPS;
 		}
 
 

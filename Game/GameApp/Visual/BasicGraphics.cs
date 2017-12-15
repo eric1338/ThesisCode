@@ -30,25 +30,27 @@ namespace GameApp.Visual
 			GL.End();
 		}
 
-		public static void DrawSquare(Vector2 topLeft, Vector2 bottomRight)
+		public static void DrawSquare(Vector2 topLeftCorner, Vector2 bottomRightCorner)
 		{
 			GL.Begin(PrimitiveType.Quads);
-			GL.Vertex2(topLeft.X, bottomRight.Y);
-			GL.Vertex2(topLeft.X, topLeft.Y);
-			GL.Vertex2(bottomRight.X, topLeft.Y);
-			GL.Vertex2(bottomRight.X, bottomRight.Y);
+			GL.Vertex2(topLeftCorner.X, bottomRightCorner.Y);
+			GL.Vertex2(topLeftCorner.X, topLeftCorner.Y);
+			GL.Vertex2(bottomRightCorner.X, topLeftCorner.Y);
+			GL.Vertex2(bottomRightCorner.X, bottomRightCorner.Y);
 			GL.End();
 		}
 
-		public static void DrawRectangularTexture(Texture texture, Vector2 topLeft, Vector2 bottomRight, float alpha = 1.0f)
+		public static void DrawRectangularTexture(Texture texture, Vector2 topLeftCorner,
+			Vector2 bottomRightCorner, float alpha = 1.0f)
 		{
-			Vector2 bottomLeft = new Vector2(topLeft.X, bottomRight.Y);
-			Vector2 topRight = new Vector2(bottomRight.X, topLeft.Y);
+			Vector2 bottomLeft = new Vector2(topLeftCorner.X, bottomRightCorner.Y);
+			Vector2 topRight = new Vector2(bottomRightCorner.X, topLeftCorner.Y);
 
-			DrawTexture(texture, bottomLeft, bottomRight, topRight, topLeft, alpha);
+			DrawTexture(texture, bottomLeft, bottomRightCorner, topRight, topLeftCorner, alpha);
 		}
 
-		public static void DrawTexture(Texture texture, Vector2 bottomLeft, Vector2 bottomRight, Vector2 topRight, Vector2 topLeft, float alpha = 1.0f)
+		public static void DrawTexture(Texture texture, Vector2 bottomLeftCorner,
+			Vector2 bottomRightCorner, Vector2 topRightCorner, Vector2 topLeftCorner, float alpha = 1.0f)
 		{
 			texture.BeginUse();
 
@@ -56,13 +58,13 @@ namespace GameApp.Visual
 
 			GL.Begin(PrimitiveType.Quads);
 			GL.TexCoord2(0.0f, 0.0f);
-			GL.Vertex2(bottomLeft);
+			GL.Vertex2(bottomLeftCorner);
 			GL.TexCoord2(1.0f, 0.0f);
-			GL.Vertex2(bottomRight);
+			GL.Vertex2(bottomRightCorner);
 			GL.TexCoord2(1.0f, 1.0f);
-			GL.Vertex2(topRight);
+			GL.Vertex2(topRightCorner);
 			GL.TexCoord2(0.0f, 1.0f);
-			GL.Vertex2(topLeft);
+			GL.Vertex2(topLeftCorner);
 			GL.End();
 
 			texture.EndUse();

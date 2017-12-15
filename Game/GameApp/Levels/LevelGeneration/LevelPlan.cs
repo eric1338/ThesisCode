@@ -17,6 +17,14 @@ namespace GameApp.Levels.LevelGeneration
 			LevelElementPlacements = new List<LevelElementPlacement>();
 		}
 
+		public void SortByTime()
+		{
+			LevelElementPlacements.Sort(delegate (LevelElementPlacement p1, LevelElementPlacement p2)
+			{
+				return p1.LevelElementStartTime.CompareTo(p2.LevelElementStartTime);
+			});
+		}
+
 		private void CreateSingleSynchronisation(LevelElementType type, float synchronisationTime)
 		{
 			AddLevelElementPlacement(LevelElementPlacement.CreateSingleSynchro(type, synchronisationTime));
@@ -78,13 +86,18 @@ namespace GameApp.Levels.LevelGeneration
 		}
 
 
+		private bool IsLevelElementTypeAChasm(LevelElementType type)
+		{
+			return type == LevelElementType.Chasm || type == LevelElementType.ChasmWithCollectibles;
+		}
+
 		public List<LevelElementPlacement> GetChasms()
 		{
 			List<LevelElementPlacement> chasms = new List<LevelElementPlacement>();
 
 			foreach (LevelElementPlacement placement in LevelElementPlacements)
 			{
-				if (placement.Type == LevelElementType.Chasm) chasms.Add(placement);
+				if (IsLevelElementTypeAChasm(placement.Type)) chasms.Add(placement);
 			}
 
 			return chasms;
@@ -96,7 +109,7 @@ namespace GameApp.Levels.LevelGeneration
 
 			foreach (LevelElementPlacement placement in LevelElementPlacements)
 			{
-				if (placement.Type != LevelElementType.Chasm) nonChasms.Add(placement);
+				if (!IsLevelElementTypeAChasm(placement.Type)) nonChasms.Add(placement);
 			}
 
 			return nonChasms;

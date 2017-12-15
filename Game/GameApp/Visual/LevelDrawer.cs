@@ -163,7 +163,7 @@ namespace GameApp.Visual
 			BasicGraphics.SetColor(0.7f, 0.2f, 0.3f);
 
 			Vector2 v1 = new Vector2(ground.LeftX, ground.TopY);
-			Vector2 v2 = new Vector2(ground.RightX, -10.0f);
+			Vector2 v2 = new Vector2(ground.RightX, -10000.0f);
 
 			DrawSquare(v1, v2);
 		}

@@ -16,6 +16,8 @@ namespace GameApp.Screens.Input
 		ResetLevel,
 		TogglePauseGame,
 
-		ChooseCurrentMenuItem
+		SelectCurrentMenuItem,
+		GoUpInMenu,
+		GoDownInMenu
 	}
 }

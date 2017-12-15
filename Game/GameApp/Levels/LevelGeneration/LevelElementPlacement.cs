@@ -49,6 +49,11 @@ namespace GameApp.Levels.LevelGeneration
 				placement.LevelElementStartTime = synchroTime - halfJumpDuration;
 				placement.LevelElementEndTime = synchroTime + halfJumpDuration;
 			}
+			if (type == LevelElementType.LowCollectible)
+			{
+				placement.LevelElementStartTime = synchroTime - 0.01f;
+				placement.LevelElementEndTime = synchroTime + 0.01f;
+			}
 			if (type == LevelElementType.SingleProjectile)
 			{
 				placement.LevelElementStartTime = synchroTime - LevelGenerationValues.ProjectileSafetyTime;

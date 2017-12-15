@@ -44,9 +44,21 @@ namespace GameApp.Levels.LevelGeneration
 			return GetPossibleLevelElements(singleBeatLevelElementDistributions);
 		}
 
+		public void AddSingleBeatLevelElementUse(LevelElementType levelElementType)
+		{
+			singleBeatLevelElementDistributions[levelElementType] =
+				singleBeatLevelElementDistributions[levelElementType] + 1;
+		}
+
 		public List<LevelElementType> GetPossibleMultipleBeatsLevelElementTypes()
 		{
 			return GetPossibleLevelElements(multipleBeatsLevelElementDistributions);
+		}
+
+		public void AddMultipleBeatsLevelElementUse(LevelElementType levelElementType)
+		{
+			multipleBeatsLevelElementDistributions[levelElementType] =
+				multipleBeatsLevelElementDistributions[levelElementType] + 1;
 		}
 
 		public List<LevelElementType> GetPossibleHeldNoteLevelElementTypes()
@@ -56,7 +68,8 @@ namespace GameApp.Levels.LevelGeneration
 
 		public void AddHeldNoteLevelElementUse(LevelElementType levelElementType)
 		{
-			heldNoteLevelElementDistributions[levelElementType] = heldNoteLevelElementDistributions[levelElementType] + 1;
+			heldNoteLevelElementDistributions[levelElementType] =
+				heldNoteLevelElementDistributions[levelElementType] + 1;
 		}
 
 		private List<LevelElementType> GetPossibleLevelElements(Dictionary<LevelElementType, int> distributions)

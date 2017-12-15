@@ -30,6 +30,19 @@ namespace GameApp.Levels.LevelGeneration
 			HeldNotes.Add(new HeldNote(startingTime, endTime, applicability));
 		}
 
+		public void SortByTime()
+		{
+			SingleBeats.Sort(delegate (SingleBeat s1, SingleBeat s2)
+			{
+				return s1.Time.CompareTo(s2.Time);
+			});
+
+			HeldNotes.Sort(delegate (HeldNote h1, HeldNote h2)
+			{
+				return h1.StartTime.CompareTo(h2.StartTime);
+			});
+		}
+
 		public void SortByApplicability()
 		{
 			SingleBeats.Sort(delegate (SingleBeat s1, SingleBeat s2)

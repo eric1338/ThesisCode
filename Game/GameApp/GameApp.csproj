@@ -95,6 +95,7 @@
     <Compile Include="Visual\BasicGraphics.cs" />
     <Compile Include="Visual\IVisual.cs" />
     <Compile Include="Visual\LevelDrawer.cs" />
+    <Compile Include="Visual\MainMenuDrawer.cs" />
     <Compile Include="Visual\Texture.cs" />
     <Compile Include="Visual\TextureLoader.cs" />
     <Compile Include="Visual\Textures.cs" />
@@ -123,6 +124,24 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Textures\playerTest.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\menuDeExit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\menuDeTestSong.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\menuDeTutorial.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\menuEnExit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\menuEnTestSong.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\menuEnTutorial.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

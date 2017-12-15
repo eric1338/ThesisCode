@@ -18,6 +18,9 @@ namespace GameApp.Levels
 
 		public Vector2 PlayerStartingPosition { get; set; }
 
+		private int currentCollectibleID = 0;
+		private int currentProjectileID = 0;
+
 		public Level()
 		{
 			Grounds = new List<Ground>();
@@ -25,6 +28,19 @@ namespace GameApp.Levels
 			DestructibleObstacles = new List<Obstacle>();
 			Collectibles = new List<Collectible>();
 			Projectiles = new List<Projectile>();
+		}
+
+		public static Level CreateTutorialLevel()
+		{
+			Level level = new Level();
+
+			level.PlayerStartingPosition = new Vector2(0, 1);
+			
+			level.AddGround(new Ground(-2, 40, 1));
+
+
+
+			return level;
 		}
 
 		public static Level CreateTestLevel()
@@ -52,9 +68,9 @@ namespace GameApp.Levels
 			Collectible c2 = new Collectible(1, new Vector2(6.5f, 1f));
 			Collectible c3 = new Collectible(2, new Vector2(10f, 1f));
 
-			level.AddCollectible(c1);
-			level.AddCollectible(c2);
-			level.AddCollectible(c3);
+			//level.AddCollectible(c1);
+			//level.AddCollectible(c2);
+			//level.AddCollectible(c3);
 
 			level.PlayerStartingPosition = new Vector2(0, 1);
 
@@ -76,14 +92,18 @@ namespace GameApp.Levels
 			DestructibleObstacles.Add(destructibleObstacle);
 		}
 
-		public void AddCollectible(Collectible collectible)
+		public void AddCollectibleByPosition(Vector2 collectiblePosition)
 		{
-			Collectibles.Add(collectible);
+			Collectibles.Add(new Collectible(currentCollectibleID, collectiblePosition));
+
+			currentCollectibleID++;
 		}
 
-		public void AddProjectile(Projectile projectile)
+		public void AddProjectileByPosition(Vector2 projectilePosition)
 		{
-			Projectiles.Add(projectile);
+			Projectiles.Add(new Projectile(currentProjectileID, projectilePosition));
+
+			currentProjectileID++;
 		}
 
 

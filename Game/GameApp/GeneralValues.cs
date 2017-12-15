@@ -11,6 +11,8 @@ namespace GameApp
 
 		public static readonly int FPS = 60;
 
+		public static readonly bool UseEnglishLanguage = false;
+
 		public static readonly float OptimizationX = 2;
 
 	}

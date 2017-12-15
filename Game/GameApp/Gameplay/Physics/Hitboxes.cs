@@ -35,7 +35,7 @@ namespace GameApp.Gameplay.Physics
 
 		public static Hitbox GetGroundHitbox(Ground ground)
 		{
-			Vector2 bottomRightCorner = new Vector2(ground.RightX, -1000.0f);
+			Vector2 bottomRightCorner = new Vector2(ground.RightX, -100000.0f);
 
 			return new BoxHitbox(ground.TopLeftCorner, bottomRightCorner);
 		}
