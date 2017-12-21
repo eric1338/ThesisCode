@@ -146,7 +146,7 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 		public void DetectOnsets(float sensitivity = 1.5f)
 		{
-			onsetDetection = new OnsetDetection(PCMStream, 1024);
+			onsetDetection = new OnsetDetection(PCMStream, SAMPLE_SIZE);
 			// Has finished reading in the audio file
 			bool finished = false;
 			// Set the pcm data back to the beginning

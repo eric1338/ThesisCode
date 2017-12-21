@@ -14,11 +14,24 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 	class HeldNoteDetection
 	{
+		FFT fft = new FFT();
+		AudioFileReader PCM;
+		int SampleSize;
+
+		int nSamples = 0;
+
 
 		private List<FrequencyBand> frequencyBands = new List<FrequencyBand>();
+
 		
-		public HeldNoteDetection()
+
+
+		// Constructor
+		public HeldNoteDetection(AudioFileReader pcm, int sampleWindow)
 		{
+			PCM = pcm;
+			SampleSize = sampleWindow;
+
 			CreateFrequencyBands();
 		}
 
@@ -76,12 +89,48 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 			*/
 		}
 
-		public void AnalyzeSpectrum(float[] fftSpectrum, float time)
+
+		/// <summary>
+		///  Perform Spectral Flux onset detection on loaded audio file
+		///  <para>Recommended onset detection algorithm for most needs</para>  
+		/// </summary>
+		///  <param name="hamming">Apply hamming window before FFT function. 
+		///  <para>Smooths out the noise in between peaks.</para> 
+		///  <para>Small improvement but isn't too costly.</para> 
+		///  <para>Default: true</para></param>
+		public bool AnalyzeSpectrum(float[] samples, bool hamming = true)
 		{
+			// Find the spectral flux of the audio
+			if (samples != null)
+			{
+				// Perform Fast Fourier Transform on the audio samples
+				fft.RealFFT(samples, hamming);
+
+				float time = nSamples * GetTimePerSample();
+
+				foreach (FrequencyBand frequencyBand in frequencyBands)
+				{
+					AddFrequencyToFrequencyBands(frequencyBand, time, fft.GetPowerSpectrum());
+				}
+
+				nSamples++;
+
+				return false;
+			}
+
+			return true;
+		}
+
+		public void AnalyzeSpectrum2(float[] fftSpectrum, bool hamming = true)
+		{
+			float time = nSamples * GetTimePerSample();
+
 			foreach (FrequencyBand frequencyBand in frequencyBands)
 			{
 				AddFrequencyToFrequencyBands(frequencyBand, time, fftSpectrum);
 			}
+
+			nSamples++;
 		}
 
 		private void AddFrequencyToFrequencyBands(FrequencyBand frequencyBand, float time, float[] spectrum)
@@ -98,15 +147,11 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 			frequencyBand.AddFrequency(time, maxValue);
 		}
-		
 
-		// TEST
 
-		public SongPropertyValues CreateHeldNoteTest()
+		public float GetTimePerSample()
 		{
-			RectangleDetection recDetec = new RectangleDetection();
-
-			return recDetec.GetHeldNotes(GetFrequencyBands());
+			return SampleSize / (float) PCM.WaveFormat.SampleRate;
 		}
 
 	}

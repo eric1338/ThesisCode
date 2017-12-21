@@ -11,7 +11,7 @@ namespace SongVisualizationApp.SongAnalyzing.SongPropertyAnalyzers
 	class AmplitudeAnalyzer : SongPropertyAnalyzer
 	{
 
-		private int pointsPerSecond = 10;
+		private int pointsPerSecond = 40;
 
 		public AmplitudeAnalyzer()
 		{

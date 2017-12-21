@@ -12,34 +12,68 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 {
 	class OnsetDetection
 	{
-
-		private int sampleRate;
-		private int sampleSize;
-		private float timePerSample;
+		FFT fft = new FFT();
+		AudioFileReader PCM;
+		int SampleSize;
 
 		public float[] Onsets { get; set; }
+		float[] LowOnsets { get; set; }
+		float[] MidOnsets { get; set; }
+		float[] HighOnsets { get; set; }
 
-		private float[] previousSpectrum;
-		private float[] spectrum;
+		float[] previousSpectrum;
+		float[] spectrum;
 
-		private bool rectify;
+		bool rectify;
 
-		private List<float> fluxes;
+		List<float> fluxes;
 
-		public OnsetDetection(int sampleRate, int sampleSize, float timePerSample)
+
+		// Constructor
+		public OnsetDetection(AudioFileReader pcm, int sampleWindow)
 		{
-			this.sampleRate = sampleRate;
-			this.sampleSize = sampleSize;
-			this.timePerSample = timePerSample;
+			PCM = pcm;
+			SampleSize = sampleWindow;
 
-			spectrum = new float[sampleSize / 2 + 1];
+			spectrum = new float[sampleWindow / 2 + 1];
 			previousSpectrum = new float[spectrum.Length];
 			rectify = true;
 			fluxes = new List<float>();
 		}
+
+		/// <summary>
+		///  Perform Spectral Flux onset detection on loaded audio file
+		///  <para>Recommended onset detection algorithm for most needs</para>  
+		/// </summary>
+		///  <param name="hamming">Apply hamming window before FFT function. 
+		///  <para>Smooths out the noise in between peaks.</para> 
+		///  <para>Small improvement but isn't too costly.</para> 
+		///  <para>Default: true</para></param>
+		public bool AddFlux(float[] samples, bool hamming = true)
+		{
+			// Find the spectral flux of the audio
+			if (samples != null)
+			{
+				// Perform Fast Fourier Transform on the audio samples
+				fft.RealFFT(samples, hamming);
+
+				// Update spectrums
+				Array.Copy(spectrum, previousSpectrum, spectrum.Length);
+				Array.Copy(fft.GetPowerSpectrum(), spectrum, spectrum.Length);
+
+				fluxes.Add(CompareSpectrums(spectrum, previousSpectrum, rectify));
+				return false;
+			}
+			// End of audio file
+			else
+			{
+				return true;
+			}
+		}
+
 		
 
-		public void AddFlux(float[] fftSpectrum, bool hamming = true)
+		public void AddFlux2(float[] fftSpectrum, bool hamming = true)
 		{
 			if (fftSpectrum == null) return;
 
@@ -60,10 +94,10 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 		// Use threshold average to find the onsets from the spectral flux
 		public void FindOnsets(float sensitivity = 1.5f, float thresholdTimeSpan = 0.5f)
 		{
-			float[] thresholdAverage = GetThresholdAverage(fluxes, sampleSize,
+			float[] thresholdAverage = GetThresholdAverage(fluxes, SampleSize,
 			thresholdTimeSpan, sensitivity);
 
-			Onsets = GetPeaks(fluxes, thresholdAverage, sampleSize);
+			Onsets = GetPeaks(fluxes, thresholdAverage, SampleSize);
 		}
 
 		/// <summary>
@@ -146,7 +180,7 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 			const float indistinguishableRange = 0.01f; // 10ms
 														// Number of set of samples to ignore after an onset
 			int immunityPeriod = (int)((float)sampleCount
-				/ (float)sampleRate
+				/ (float)PCM.WaveFormat.SampleRate
 				/ indistinguishableRange);
 
 			// Results
@@ -200,7 +234,7 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 			List<float> thresholdAverage = new List<float>();
 
 			// How many spectral fluxes to look at, at a time (approximation is fine)
-			float sourceTimeSpan = (float)(sampleWindow) / (float)(sampleRate);
+			float sourceTimeSpan = (float)(sampleWindow) / (float)(PCM.WaveFormat.SampleRate);
 			int windowSize = (int)(thresholdTimeSpan / sourceTimeSpan / 2);
 
 			for (int i = 0; i < data.Count; i++)
@@ -227,6 +261,13 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 			return thresholdAverage.ToArray();
 		}
+
+		public float TimePerSample()
+		{
+			// Length of time per sample
+			return (float)SampleSize / (float)PCM.WaveFormat.SampleRate;
+		}
 		
+
 	}
 }

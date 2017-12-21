@@ -87,8 +87,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SongAnalyzing\FFTValues.cs" />
     <Compile Include="SongAnalyzing\ISongAnalyzingFacade.cs" />
-    <Compile Include="SongAnalyzing\OnSetDetection\AudioAnalysis.cs" />
-    <Compile Include="SongAnalyzing\OnSetDetection\AudioAnalysis2.cs" />
+    <Compile Include="SongAnalyzing\OnSetDetection\AmplitudeDetection.cs" />
+    <Compile Include="SongAnalyzing\OnSetDetection\AudioAnalyzer.cs" />
     <Compile Include="SongAnalyzing\OnSetDetection\FFT.cs" />
     <Compile Include="SongAnalyzing\OnSetDetection\FrequencyBand.cs" />
     <Compile Include="SongAnalyzing\OnSetDetection\HeldNoteDetection.cs" />

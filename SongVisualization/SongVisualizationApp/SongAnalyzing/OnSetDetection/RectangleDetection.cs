@@ -137,7 +137,7 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 				testPoints.Add(new MyPoint(heldNote.EndTime + 0.03f, 0));
 			}
 
-			SongPropertyValues heldNoteValues = new SongPropertyValues("Held Notes");
+			SongPropertyValues heldNoteValues = new SongPropertyValues("Held Notes " + DateTime.Now.Millisecond);
 
 			heldNoteValues.Points = testPoints;
 
