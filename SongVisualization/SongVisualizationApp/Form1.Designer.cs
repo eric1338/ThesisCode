@@ -161,7 +161,6 @@
 			this.songValueChart.Legends.Add(legend1);
 			this.songValueChart.Location = new System.Drawing.Point(26, 326);
 			this.songValueChart.Name = "songValueChart";
-			this.songValueChart.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Berry;
 			this.songValueChart.Size = new System.Drawing.Size(971, 313);
 			this.songValueChart.TabIndex = 16;
 			this.songValueChart.Text = "chart1";

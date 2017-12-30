@@ -26,55 +26,7 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 		{
 			return frequencyBands;
 		}
-
-
-		private int GetMargin(float val)
-		{
-			float exponent = 1.6f;
-
-			float bandWidthFactor = 8;
-
-			int frequencyOffset = 15;
-
-			return frequencyOffset + (int) Math.Round(bandWidthFactor * Math.Pow(val, exponent));
-		}
-
-		private FrequencyBand CreateFrequencyBand(int index)
-		{
-			int leftFrequencyMargin = GetMargin(index * 0.5f);
-			int rightFrequencyMargin = GetMargin(index * 0.5f + 1);
-
-			Console.WriteLine(leftFrequencyMargin + " - " + rightFrequencyMargin);
-
-			return new FrequencyBand(leftFrequencyMargin, rightFrequencyMargin);
-		}
-
-		private void CreateFrequencyBands()
-		{
-			for (int i = 0; i < 6; i++)
-			{
-				frequencyBands.Add(CreateFrequencyBand(i));
-			}
-
-			/*
-			frequencyBands.Add(new FrequencyBand(0, 16));
-			frequencyBands.Add(new FrequencyBand(16, 32));
-			frequencyBands.Add(new FrequencyBand(32, 64));
-			frequencyBands.Add(new FrequencyBand(64, 128));
-			frequencyBands.Add(new FrequencyBand(128, 256));
-			frequencyBands.Add(new FrequencyBand(256, 512));
-			frequencyBands.Add(new FrequencyBand(512, 1024));
-
-			frequencyBands.Add(new FrequencyBand(31, 62));
-			frequencyBands.Add(new FrequencyBand(63, 125));
-			frequencyBands.Add(new FrequencyBand(125, 250));
-			frequencyBands.Add(new FrequencyBand(250, 500));
-			frequencyBands.Add(new FrequencyBand(500, 1000));
-			frequencyBands.Add(new FrequencyBand(1000, 2000));
-			frequencyBands.Add(new FrequencyBand(2000, 4000));
-			frequencyBands.Add(new FrequencyBand(4000, 8000));
-			*/
-		}
+		
 
 		public void AnalyzeSpectrum(float[] fftSpectrum, float time)
 		{
@@ -86,19 +38,17 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 		private void AddFrequencyToFrequencyBands(FrequencyBand frequencyBand, float time, float[] spectrum)
 		{
-			int start = frequencyBand.LeftFrequencyMargin;
-			int end = Math.Min(frequencyBand.RightFrequencyMargin, spectrum.Length);
+			float maxValue = -1;
 
-			float maxValue = 0;
-
-			for (int i = start; i < end; i++)
+			foreach (int spectrumBand in frequencyBand.SpectrumBands)
 			{
-				if (spectrum[i] > maxValue) maxValue = spectrum[i];
+				float value = spectrum[spectrumBand];
+
+				if (value > maxValue) maxValue = value;
 			}
 
 			frequencyBand.AddFrequency(time, maxValue);
 		}
-		
 
 		// TEST
 
@@ -108,6 +58,148 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 			return recDetec.GetHeldNotes(GetFrequencyBands());
 		}
+
+
+		private float fftFrequencyBandWidth = 43.1f;
+
+		private float[] semitoneFrequencies;
+
+		public static int TEST_FREQUENCY_BAND_WIDTH = 3;
+
+		public static int TEST_STARTING_FREQUENCY_INDEX = 0;
+		public static int TEST_NUMBER_OF_FREQUENCIES = 72;
+
+		private void InitSemitoneFrequencies()
+		{
+			float[] semitoneFrequenciesBase = new float[72];
+
+			semitoneFrequenciesBase[0] = 65.4064f;
+			semitoneFrequenciesBase[1] = 69.2957f;
+			semitoneFrequenciesBase[2] = 73.4162f;
+			semitoneFrequenciesBase[3] = 77.7817f;
+			semitoneFrequenciesBase[4] = 82.4069f;
+			semitoneFrequenciesBase[5] = 87.3071f;
+			semitoneFrequenciesBase[6] = 92.4986f;
+			semitoneFrequenciesBase[7] = 97.9989f;
+			semitoneFrequenciesBase[8] = 103.826f;
+			semitoneFrequenciesBase[9] = 110.000f;
+			semitoneFrequenciesBase[10] = 116.541f;
+			semitoneFrequenciesBase[11] = 123.471f;
+			semitoneFrequenciesBase[12] = 130.813f;
+			semitoneFrequenciesBase[13] = 138.591f;
+			semitoneFrequenciesBase[14] = 146.832f;
+			semitoneFrequenciesBase[15] = 155.563f;
+			semitoneFrequenciesBase[16] = 164.814f;
+			semitoneFrequenciesBase[17] = 174.614f;
+			semitoneFrequenciesBase[18] = 184.997f;
+			semitoneFrequenciesBase[19] = 195.998f;
+			semitoneFrequenciesBase[20] = 207.652f;
+			semitoneFrequenciesBase[21] = 220.000f;
+			semitoneFrequenciesBase[22] = 233.082f;
+			semitoneFrequenciesBase[23] = 246.942f;
+			semitoneFrequenciesBase[24] = 261.626f;
+			semitoneFrequenciesBase[25] = 277.183f;
+			semitoneFrequenciesBase[26] = 293.665f;
+			semitoneFrequenciesBase[27] = 311.127f;
+			semitoneFrequenciesBase[28] = 329.628f;
+			semitoneFrequenciesBase[29] = 349.228f;
+			semitoneFrequenciesBase[30] = 369.994f;
+			semitoneFrequenciesBase[31] = 391.995f;
+			semitoneFrequenciesBase[32] = 415.305f;
+			semitoneFrequenciesBase[33] = 440.000f;
+			semitoneFrequenciesBase[34] = 466.164f;
+			semitoneFrequenciesBase[35] = 493.883f;
+			semitoneFrequenciesBase[36] = 523.251f;
+			semitoneFrequenciesBase[37] = 554.365f;
+			semitoneFrequenciesBase[38] = 587.330f;
+			semitoneFrequenciesBase[39] = 622.254f;
+			semitoneFrequenciesBase[40] = 659.255f;
+			semitoneFrequenciesBase[41] = 698.456f;
+			semitoneFrequenciesBase[42] = 739.989f;
+			semitoneFrequenciesBase[43] = 783.991f;
+			semitoneFrequenciesBase[44] = 830.609f;
+			semitoneFrequenciesBase[45] = 880.000f;
+			semitoneFrequenciesBase[46] = 932.328f;
+			semitoneFrequenciesBase[47] = 987.767f;
+			semitoneFrequenciesBase[48] = 1046.50f;
+			semitoneFrequenciesBase[49] = 1108.73f;
+			semitoneFrequenciesBase[50] = 1174.66f;
+			semitoneFrequenciesBase[51] = 1244.51f;
+			semitoneFrequenciesBase[52] = 1318.51f;
+			semitoneFrequenciesBase[53] = 1396.91f;
+			semitoneFrequenciesBase[54] = 1479.98f;
+			semitoneFrequenciesBase[55] = 1567.98f;
+			semitoneFrequenciesBase[56] = 1661.22f;
+			semitoneFrequenciesBase[57] = 1760.00f;
+			semitoneFrequenciesBase[58] = 1864.66f;
+			semitoneFrequenciesBase[59] = 1975.53f;
+			semitoneFrequenciesBase[60] = 2093.00f;
+			semitoneFrequenciesBase[61] = 2217.46f;
+			semitoneFrequenciesBase[62] = 2349.32f;
+			semitoneFrequenciesBase[63] = 2489.02f;
+			semitoneFrequenciesBase[64] = 2637.02f;
+			semitoneFrequenciesBase[65] = 2793.83f;
+			semitoneFrequenciesBase[66] = 2959.96f;
+			semitoneFrequenciesBase[67] = 3135.96f;
+			semitoneFrequenciesBase[68] = 3322.44f;
+			semitoneFrequenciesBase[69] = 3520.00f;
+			semitoneFrequenciesBase[70] = 3729.31f;
+			semitoneFrequenciesBase[71] = 3951.07f;
+
+			int firstIndex = TEST_STARTING_FREQUENCY_INDEX;
+			int max = Math.Min(72, TEST_STARTING_FREQUENCY_INDEX + TEST_NUMBER_OF_FREQUENCIES);
+
+			semitoneFrequencies = new float[max - firstIndex];
+
+			int n = 0;
+
+			//Console.WriteLine(" ");
+			//Console.Write("FreqSI=" + TEST_STARTING_FREQUENCY_INDEX + ", FreqN=" + TEST_NUMBER_OF_FREQUENCIES + " -> ");
+			for (int i = firstIndex; i < max; i++)
+			{
+				//Console.Write(i + ", ");
+				semitoneFrequencies[n] = semitoneFrequenciesBase[i];
+				n++;
+			}
+		}
+
+
+		private void CreateFrequencyBands()
+		{
+			InitSemitoneFrequencies();
+
+			int nSemitonesPerFrequencyBand = TEST_FREQUENCY_BAND_WIDTH;
+
+			float max = semitoneFrequencies.Length / (float)nSemitonesPerFrequencyBand - 2;
+
+			for (float i = 0; i < max; i += 0.5f)
+			{
+				int firstIndex = (int)Math.Floor(i * nSemitonesPerFrequencyBand);
+				int secondIndex = (int)Math.Floor((i + 1) * nSemitonesPerFrequencyBand);
+
+				float lowestFrequency = semitoneFrequencies[firstIndex];
+				float highestFrequency = semitoneFrequencies[secondIndex];
+
+				int lowestFFTBand = (int)Math.Floor(lowestFrequency / fftFrequencyBandWidth);
+				int highestFFTBand = (int)Math.Ceiling(highestFrequency / fftFrequencyBandWidth);
+
+				FrequencyBand frequencyBand = new FrequencyBand();
+
+				List<int> fftBands = new List<int>();
+
+				for (int j = lowestFFTBand; j <= highestFFTBand; j++)
+				{
+					frequencyBand.AddSpectrumBand(j);
+				}
+
+				frequencyBands.Add(frequencyBand);
+			}
+
+			
+
+
+		}
+
 
 	}
 }

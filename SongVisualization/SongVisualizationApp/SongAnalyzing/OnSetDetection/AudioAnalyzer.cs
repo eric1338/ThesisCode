@@ -27,12 +27,18 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 		private FFT fft;
 
-		public AudioAnalyzer()
+		private int testVal1 = 0;
+		private int testVal2 = 0;
+
+		public AudioAnalyzer(int tv1 = 4, int tv2 = 6)
 		{
 			fft = new FFT();
 			
 			fft.A = 0;
 			fft.B = 1;
+
+			testVal1 = tv1;
+			testVal2 = tv2;
 		}
 
 		public void LoadAudioFromFile(string filePath)
@@ -98,7 +104,7 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 		public SongPropertyValues GetSuperOnsetThingy()
 		{
-			SongPropertyValues onsetValues = new SongPropertyValues("SuperOnsets");
+			SongPropertyValues onsetValues = new SongPropertyValues("SuperOnsets [" + testVal1 + ", " + testVal2 + "]");
 
 			List<Util.MyPoint> amplitudePoints = amplitudeDetection.Values.Points;
 
@@ -106,11 +112,13 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 			for (int i = 0; i < onsets.Length; i++)
 			{
+				if (i < 40) continue;
+
 				float onset = onsets[i];
 
 				float previousValuesSum = 0;
 
-				for (int j = 1; j < 4; j++)
+				for (int j = 2; j < testVal1; j++)
 				{
 					float val = amplitudePoints[Math.Max(0, i - j)].Y;
 
@@ -119,7 +127,7 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 				float bestAfterValue = -1;
 
-				for (int k = 1; k < 6; k++)
+				for (int k = 1; k < testVal2; k++)
 				{
 					float val = amplitudePoints[Math.Min(onsets.Length - 1, i + k)].Y;
 
@@ -139,10 +147,87 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 
 
+		private SongPropertyValues freqValues = new SongPropertyValues("freqValues");
 
+		public SongPropertyValues GetFreqValues()
+		{
+			return freqValues;
+		}
 
+		private List<string> freqLines = new List<string>();
+		
+		private void DoFreqTest(float[] samples, float time)
+		{
+			float sum = 0;
+			int n = 0;
 
+			if (time * 3 - Math.Floor(time * 3) < 0.04f)
+			{
+				int minutes = (int)Math.Floor(time / 60.0f);
 
+				float seconds = (float)Math.Round(time - minutes * 60, 2);
+
+				string freqLine = minutes + ":" + seconds + " | ";
+
+				//for (int i = 0; i < samples.Length; i++)
+				//{
+				//	if (samples[i] > 0.9f) freqLine += (i + ", ");
+				//}
+
+				List<Tuple<int, float>> bands = new List<Tuple<int, float>>();
+
+				float sum2 = 0;
+
+				for (int i = 0; i < samples.Length; i++)
+				{
+					if (samples[i] > 0.2f)
+					{
+						sum2 += samples[i];
+						bands.Add(new Tuple<int, float>(i, samples[i]));
+					}
+				}
+
+				float val = 0;
+
+				foreach (Tuple<int, float> band in bands)
+				{
+					val += band.Item1 * (band.Item2 / sum2);
+				}
+
+				freqLine += val;
+
+				freqLines.Add(freqLine);
+			}
+
+			for (int i = 0; i < samples.Length; i++)
+			{
+				if (samples[i] > 0.2f)
+				{
+					sum += i;
+					n++;
+				}
+			}
+
+			n = Math.Max(n, 1);
+
+			float value = sum / n;
+
+			freqValues.AddPoint(time, value);
+		}
+
+		public void FinalizeFreqTest()
+		{
+			using (System.IO.StreamWriter file =
+				new System.IO.StreamWriter(@"C:\ForVS\WriteFreqLines.txt"))
+			{
+				foreach (string line in freqLines)
+				{
+					file.WriteLine(line);
+				}
+			}
+		}
+
+		
 
 		public void Analyze()
 		{
@@ -169,13 +254,15 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 				fft.RealFFT(samples, true);
 				float[] fftSpectrum = fft.GetPowerSpectrum();
+				//float[] fftSpectrum = GetAccordFFTValues(samples);
+
 				float[] fftSpectrumCopy = new float[fftSpectrum.Length];
 
 				Array.Copy(fftSpectrum, fftSpectrumCopy, fftSpectrum.Length);
 
-				amplitudeDetection.Analyze(fftSpectrum, time);
+				DoFreqTest(fftSpectrum, time);
 
-				// evtl nSamples * timePerSample als Parameter für Analyze-Methoden
+				amplitudeDetection.Analyze(fftSpectrum, time);
 
 				heldNoteDetection.AnalyzeSpectrum(fftSpectrumCopy, time);
 				onsetDetection.AddFlux(fftSpectrum);

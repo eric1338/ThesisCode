@@ -15,17 +15,28 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 		public int LeftFrequencyMargin { get; set; }
 		public int RightFrequencyMargin { get; set; }
 
+		public List<int> SpectrumBands { get; set; }
+
+		public FrequencyBand()
+		{
+			SpectrumBands = new List<int>();
+
+			Points = new List<MyPoint>();
+		}
+
 		public FrequencyBand(int leftFrequencyMargin, int rightFrequencyMargin)
 		{
 			LeftFrequencyMargin = leftFrequencyMargin;
 			RightFrequencyMargin = rightFrequencyMargin;
 
+			SpectrumBands = new List<int>();
+
 			Points = new List<MyPoint>();
 		}
 
-		public bool IsFrequencyInBand(float frequency)
+		public void AddSpectrumBand(int spectrumBand)
 		{
-			return LeftFrequencyMargin < frequency && frequency < RightFrequencyMargin;
+			SpectrumBands.Add(spectrumBand);
 		}
 
 		public void AddFrequency(float time, float frequency)

@@ -39,19 +39,16 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 		public float MinimumTimeWidth { get; set; }
 
+
+		public static float TEST_VALUE_THRESHOLD = 0.1f;
+		public static float TEST_RECDETEC_MINIMUM_TIME_WIDTH = 0.9f;
+
 		public RectangleDetection()
 		{
-			ValueThreshold = 0.15f;
-			MinimumTimeWidth = 0.5f;
+			ValueThreshold = TEST_VALUE_THRESHOLD;
+			MinimumTimeWidth = TEST_RECDETEC_MINIMUM_TIME_WIDTH;
 		}
-
-		public void RectangulateSongPropertyValues(SongPropertyValues values)
-		{
-			List<MyPoint> recPoints = GetRectanglePoints(values.Points);
-
-			values.Points = recPoints;
-		}
-
+		
 		private class HeldNotes
 		{
 			public List<HeldNote> HeldNotesList { get; set; }
@@ -83,6 +80,11 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 					{
 						return true;
 					}
+					if (IsInBetween(newHeldNote, heldNote.StartTime) ||
+						IsInBetween(newHeldNote, heldNote.EndTime))
+					{
+						return true;
+					}
 				}
 
 				return false;
@@ -104,9 +106,17 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 				allHeldNotes.AddRange(GetHeldNotesFromFrequencyBand(frequencyBand.Points));
 			}
 
+			/*
 			allHeldNotes.Sort(delegate (HeldNote h1, HeldNote h2)
 			{
 				return h1.GetDuration().CompareTo(h2.GetDuration());
+			});
+			allHeldNotes.Reverse();
+			*/
+
+			allHeldNotes.Sort(delegate (HeldNote h1, HeldNote h2)
+			{
+				return h1.AmplitudeMeanValue.CompareTo(h2.AmplitudeMeanValue);
 			});
 			allHeldNotes.Reverse();
 
@@ -115,15 +125,6 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 			foreach (HeldNote heldNote in allHeldNotes) heldNotesObj.TryToAddHeldNote(heldNote);
 
 			heldNotesObj.SortByTime();
-
-			Console.WriteLine("------");
-
-			foreach (HeldNote heldNote in heldNotesObj.HeldNotesList)
-			{
-				Console.WriteLine(Math.Round(heldNote.StartTime, 1) + " - " + Math.Round(heldNote.EndTime, 1));
-			}
-
-			Console.WriteLine("------");
 
 			List<MyPoint> testPoints = new List<MyPoint>();
 
@@ -144,152 +145,165 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 			return heldNoteValues;
 		}
 
-		private List<HeldNote> GetHeldNotesFromFrequencyBand(List<MyPoint> curve)
+
+		public static float TEST_MAXIMUM_SQUARED_ERROR = 0.0244f;
+
+
+		private class Pocket
+		{
+
+			public List<MyPoint> Points { get; set; }
+
+			public float Mean { get; set; }
+			public float ErrorSum { get; set; }
+			
+			public Pocket(List<MyPoint> points)
+			{
+				Points = points;
+
+				Mean = -1;
+				ErrorSum = 0;
+			}
+
+			public bool CalculateError()
+			{
+				CalculateMean();
+
+				foreach (MyPoint point in Points)
+				{
+					float squaredError = (float)Math.Pow(point.Y - Mean, 2);
+
+					if (squaredError > TEST_MAXIMUM_SQUARED_ERROR) return false;
+
+					ErrorSum += squaredError;
+				}
+
+				return true;
+			}
+
+			private void CalculateMean()
+			{
+				float sum = 0;
+
+				foreach (MyPoint point in Points) sum += point.Y;
+
+				Mean = sum / Points.Count;
+			}
+
+		}
+
+
+		private List<HeldNote> GetHeldNotesFromFrequencyBand(List<MyPoint> frequencyBandPoints)
 		{
 			List<HeldNote> heldNotes = new List<HeldNote>();
 
-			float rectangleStartTime = -1;
-			List<MyPoint> possibleRectanglePoints = new List<MyPoint>();
+			float pocketTimeWidth = MinimumTimeWidth / 2.0f;
 
-			foreach (MyPoint point in curve)
+			int elementsPerPocket = 0;
+
+			float startTime = frequencyBandPoints[0].X;
+
+			foreach (MyPoint point in frequencyBandPoints)
 			{
-				float pointTime = point.X;
-				float pointValue = point.Y;
+				if (point.X - startTime > pocketTimeWidth) break;
+				elementsPerPocket++;
+			}
 
-				if (pointValue < ValueThreshold && possibleRectanglePoints.Count > 0)
+			List<Pocket> pockets = new List<Pocket>();
+
+			int maxIndex = (int)Math.Floor(frequencyBandPoints.Count / (float)elementsPerPocket) * elementsPerPocket;
+
+			for (int i = 0; i < maxIndex; i += elementsPerPocket)
+			{
+				List<MyPoint> pocketPoints = new List<MyPoint>();
+				bool fullPocket = true;
+
+				for (int j = i; j < i + elementsPerPocket; j++)
 				{
-					if ((pointTime - rectangleStartTime) >= MinimumTimeWidth)
+					MyPoint point = frequencyBandPoints[j];
+
+					if (point.Y < ValueThreshold)
 					{
-						heldNotes.Add(GetHeldNote(possibleRectanglePoints));
+						fullPocket = false;
+						break;
 					}
 
-					rectangleStartTime = -1;
-					possibleRectanglePoints.Clear();
+					pocketPoints.Add(point);
 				}
-				else
-				{
-					if (rectangleStartTime < 0) rectangleStartTime = pointTime;
 
-					possibleRectanglePoints.Add(point);
+				if (fullPocket)
+				{
+					Pocket pocket = new Pocket(pocketPoints);
+
+					bool isValid = pocket.CalculateError();
+
+					if (isValid) pockets.Add(pocket);
 				}
+			}
+
+			pockets.Sort(delegate(Pocket p1, Pocket p2)
+			{
+				return p1.ErrorSum.CompareTo(p2.ErrorSum);
+			});
+
+			
+			foreach (Pocket pocket in pockets)
+			{
+				HeldNote heldNote = GetHeldNoteTest(frequencyBandPoints, pocket);
+
+				if (heldNote != null) heldNotes.Add(heldNote);
 			}
 
 			return heldNotes;
 		}
 
-		private float DeviationTolerance = 0.2f;
 
-
-		private HeldNote GetHeldNote(List<MyPoint> rectanglePoints)
+		private HeldNote GetHeldNoteTest(List<MyPoint> frequencyBandPoints, Pocket pocket)
 		{
+			List<MyPoint> pocketPoints = pocket.Points;
+
+			int leftestIndex = frequencyBandPoints.IndexOf(pocketPoints[0]);
+			int rightestIndex = frequencyBandPoints.IndexOf(pocketPoints[pocketPoints.Count - 1]);
+
+
+			for (int i = leftestIndex - 1; i >= 0; i--)
+			{
+				if (!IsValueValid(frequencyBandPoints[i].Y, pocket.Mean)) break;
+
+				leftestIndex = i;
+			}
+
+			for (int i = rightestIndex + 1; i < frequencyBandPoints.Count; i++)
+			{
+				if (!IsValueValid(frequencyBandPoints[i].Y, pocket.Mean)) break;
+
+				rightestIndex = i;
+			}
+
+			float startTime = frequencyBandPoints[leftestIndex].X;
+			float endTime = frequencyBandPoints[rightestIndex].X;
+
+			if ((endTime - startTime) < MinimumTimeWidth) return null;
+
 			HeldNote heldNote = new HeldNote();
 
-			float sum = 0;
+			heldNote.StartTime = startTime;
+			heldNote.EndTime = endTime;
 
-			foreach (MyPoint point in rectanglePoints)
-			{
-				sum += point.Y;
-			}
-
-			float mean = sum / rectanglePoints.Count;
-
-			heldNote.AmplitudeMeanValue = mean;
-
-			float confidenceSum = 0;
-
-			foreach (MyPoint point in rectanglePoints)
-			{
-				confidenceSum += 1 - Math.Max(0, Math.Abs(point.Y - mean) - DeviationTolerance);
-			}
-
-			heldNote.ConfidenceValue = confidenceSum / rectanglePoints.Count;
-
-			heldNote.StartTime = rectanglePoints[0].X;
-			heldNote.EndTime = rectanglePoints[rectanglePoints.Count - 1].X;
+			heldNote.AmplitudeMeanValue = pocket.Mean;
+			heldNote.ConfidenceValue = 1;
 
 			return heldNote;
 		}
 
-
-
-
-
-
-
-
-		private List<MyPoint> GetRectanglePoints(List<MyPoint> curve)
+		private bool IsValueValid(float value, float mean)
 		{
-			List<MyPoint> points = new List<MyPoint>();
+			if (value < ValueThreshold) return false;
 
-			float rectangleStartTime = -1;
-			List<MyPoint> possibleRectanglePoints = new List<MyPoint>();
+			if ((float)Math.Pow(value - mean, 2) > TEST_MAXIMUM_SQUARED_ERROR) return false;
 
-			foreach (MyPoint point in curve)
-			{
-				float pointTime = point.X;
-				float pointValue = point.Y;
-
-				if (pointValue < ValueThreshold && possibleRectanglePoints.Count <= 0)
-				{
-					points.Add(new MyPoint(pointTime, 0));
-				}
-				if (pointValue < ValueThreshold)
-				{
-
-					if ((pointTime - rectangleStartTime) < MinimumTimeWidth)
-					{
-						foreach (MyPoint newPoint in possibleRectanglePoints)
-						{
-							points.Add(new MyPoint(newPoint.X, 0));
-						}
-					}
-					else
-					{
-						points.AddRange(GetRectangleWithConfidence(possibleRectanglePoints));
-					}
-
-					points.Add(new MyPoint(pointTime, 0));
-
-					rectangleStartTime = -1;
-					possibleRectanglePoints.Clear();
-				}
-				else
-				{
-					if (rectangleStartTime < 0) rectangleStartTime = pointTime;
-
-					possibleRectanglePoints.Add(point);
-				}
-			}
-
-			return points;
+			return true;
 		}
-
-
-		private List<MyPoint> GetRectangleWithConfidence(List<MyPoint> rectanglePoints)
-		{
-			List<MyPoint> pointsWithConfidence = new List<MyPoint>();
-
-			float sum = 0;
-
-			foreach (MyPoint point in rectanglePoints)
-			{
-				sum += point.Y;
-			}
-
-			float mean = sum / rectanglePoints.Count;
-
-
-			foreach (MyPoint point in rectanglePoints)
-			{
-				float confidence = 1 - Math.Max(0, Math.Abs(point.Y - mean) - DeviationTolerance);
-
-				pointsWithConfidence.Add(new MyPoint(point.X, confidence));
-			}
-
-			return pointsWithConfidence;
-		}
-
-
 
 	}
 }
