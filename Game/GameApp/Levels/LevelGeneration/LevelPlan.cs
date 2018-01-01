@@ -17,6 +17,7 @@ namespace GameApp.Levels.LevelGeneration
 			LevelElementPlacements = new List<LevelElementPlacement>();
 		}
 
+
 		public void SortByTime()
 		{
 			LevelElementPlacements.Sort(delegate (LevelElementPlacement p1, LevelElementPlacement p2)
@@ -35,8 +36,6 @@ namespace GameApp.Levels.LevelGeneration
 		{
 			AddLevelElementPlacement(LevelElementPlacement.CreateProlongedSynchro(type, synchroStartTime, synchroEndTime));
 		}
-
-
 
 		public void AddLevelElementPlacement(LevelElementPlacement destination)
 		{

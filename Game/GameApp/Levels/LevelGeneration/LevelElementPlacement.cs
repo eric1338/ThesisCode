@@ -18,7 +18,7 @@ namespace GameApp.Levels.LevelGeneration
 
 		public List<float> SynchroTimes { get; set; }
 
-		public LevelElementPlacement(LevelElementType type)
+		private LevelElementPlacement(LevelElementType type)
 		{
 			Type = type;
 

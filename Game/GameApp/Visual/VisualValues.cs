@@ -10,10 +10,8 @@ namespace GameApp.Visual
 	class VisualValues
 	{
 
-		public static int ScreenWidth;
-		public static int ScreenHeight;
-
-		public static readonly float ZoomFactor = 0.75f;
+		public static readonly int ScreenWidth = 1280;
+		public static readonly int ScreenHeight = 720;
 
 		public static float GetAspectRatio()
 		{
@@ -21,6 +19,8 @@ namespace GameApp.Visual
 		}
 
 		public static readonly Vector2 ScreenCenterOffset = new Vector2(0.65f, 0.35f);
+
+		public static readonly float ZoomFactor = 0.75f;
 
 		// temp
 		public static readonly float HalfCollectibleWidthHeight = 0.05f;

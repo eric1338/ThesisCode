@@ -26,13 +26,16 @@ namespace GameApp.Screens
 
 		private bool isGamePaused = false;
 
-		public GameScreen(MyGameWindow gameWindow) : base(gameWindow)
+		public GameScreen(MyGameWindow gameWindow, bool isTutorial = false) : base(gameWindow)
 		{
 			//Level level = Level.CreateTestLevel();
 
 			LevelGenerator levelGenerator = new LevelGenerator();
 
-			Level level = levelGenerator.GenerateTestLevel();
+			Level level;
+
+			if (isTutorial) level = levelGenerator.GenerateTutorialLevel();
+			else level = levelGenerator.GenerateTestLevel();
 
 			levelAttempt = new LevelAttempt(level);
 
@@ -47,9 +50,12 @@ namespace GameApp.Screens
 			AddKeyToSingleUserActionMapping(Key.A, UserAction.Hit);
 			AddKeyToProlongedUserActionMapping(Key.D, UserAction.Defend);
 			AddKeyToProlongedUserActionMapping(Key.S, UserAction.Duck);
+			AddKeyToProlongedUserActionMapping(Key.ControlLeft, UserAction.Duck);
 
-			AddKeyToSingleUserActionMapping(Key.R, UserAction.ResetLevel);
 			AddKeyToSingleUserActionMapping(Key.P, UserAction.TogglePauseGame);
+			AddKeyToSingleUserActionMapping(Key.Escape, UserAction.TogglePauseGame);
+			AddKeyToSingleUserActionMapping(Key.F10, UserAction.ResetLevel);
+			AddKeyToSingleUserActionMapping(Key.X, UserAction.ReturnToMainMenu);
 
 			AddSingleUserActionToFunctionMapping(UserAction.Jump, Jump);
 			AddSingleUserActionToFunctionMapping(UserAction.Hit, Hit);
@@ -58,6 +64,7 @@ namespace GameApp.Screens
 
 			AddSingleUserActionToFunctionMapping(UserAction.ResetLevel, ResetLevel);
 			AddSingleUserActionToFunctionMapping(UserAction.TogglePauseGame, TogglePauseGame);
+			AddSingleUserActionToFunctionMapping(UserAction.ReturnToMainMenu, ReturnToMainMenu);
 		}
 
 		private LevelProgression GetLevelProgression()
@@ -98,9 +105,19 @@ namespace GameApp.Screens
 			GetLevelProgression().Reset();
 		}
 
+		private void ReturnToMainMenu()
+		{
+			if (isGamePaused || GetLevelProgression().IsLevelComplete)
+			{
+				SwitchToScreen(new MainMenuScreen(gameWindow));
+			}
+		}
+
 		private void TogglePauseGame()
 		{
 			isGamePaused = !isGamePaused;
+
+			GetLevelProgression().IsGamePaused = isGamePaused;
 
 			if (isGamePaused) musicPlayer.PauseTrack();
 			else musicPlayer.PlayTrack();

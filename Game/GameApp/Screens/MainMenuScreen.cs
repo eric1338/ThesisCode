@@ -71,9 +71,16 @@ namespace GameApp.Screens
 
 		public void SelectCurrentMenuItem()
 		{
-			if (currentIndex == 0) Console.WriteLine("2do :)");
+			if (currentIndex == 0) StartTutorial();
 			if (currentIndex == 1) StartGame();
 			if (currentIndex == 2) gameWindow.Exit();
+		}
+
+		private void StartTutorial()
+		{
+			GameScreen gameScreen = new GameScreen(gameWindow, true);
+
+			SwitchToScreen(gameScreen);
 		}
 
 		private void StartGame()

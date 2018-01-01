@@ -53,16 +53,21 @@ namespace GameApp.Gameplay
 
 		public void DoLogic()
 		{
+
+
 			GetLevelProgression().UpdateTime(1.0f / GeneralValues.FPS);
 
 			SetNewPlayerPosition();
 			SetNewProjectilePositions();
 
+			if (GetLevelProgression().IsLevelComplete) return;
 			if (GetLevelProgression().IsPlayerInGodmode()) return;
 
 			CheckPlayerObstacleCollision();
 			CheckPlayerCollectibleCollision();
 			CheckPlayerProjectileCollision();
+
+			CheckIfLevelIsComplete();
 		}
 
 		private void SetNewPlayerPosition()
@@ -194,6 +199,13 @@ namespace GameApp.Gameplay
 			Vector2 deflectionDirection = new Vector2(xVelocity, yVelocity);
 
 			GetLevelProgression().DeflectProjectile(projectile, deflectionDirection);
+		}
+
+		private void CheckIfLevelIsComplete()
+		{
+			float playerX = GetLevelProgression().CurrentPlayerPosition.X;
+
+			GetLevelProgression().IsLevelComplete = playerX >= levelAttempt.Level.GoalLineX;
 		}
 
 	}

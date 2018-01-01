@@ -143,6 +143,57 @@
   <ItemGroup>
     <None Include="Resources\Textures\menuEnTutorial.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\title.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\tutorialDeDeflect.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\tutorialDeDucken.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\tutorialDeJump.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\tutorialEnDeflect.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\tutorialEnDuck.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\tutorialEnJump.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\tutorialDeDuck.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\overlayEnGamePaused.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\overlayEnPressX.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\ratingFull.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\ratingHalf.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\ratingNone.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\overlayDeGameComplete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\overlayDeGamePaused.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\overlayDePressX.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\overlayEnGameComplete.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

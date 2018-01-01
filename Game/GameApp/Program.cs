@@ -11,13 +11,8 @@ namespace GameApp
 	{
 		static void Main(string[] args)
 		{
-			int width = 1366;
-			int height = 768;
 
-			VisualValues.ScreenWidth = width;
-			VisualValues.ScreenHeight = height;
-
-			MyGameWindow gameWindow = new MyGameWindow(width, height);
+			MyGameWindow gameWindow = new MyGameWindow(VisualValues.ScreenWidth, VisualValues.ScreenHeight);
 
 			gameWindow.Run(GeneralValues.FPS);
 

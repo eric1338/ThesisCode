@@ -22,6 +22,11 @@ namespace GameApp.Visual
 			GL.Color3(color.X, color.Y, color.Z);
 		}
 
+		public static void SetColor4(float r, float g, float b, float a)
+		{
+			GL.Color4(r, g, b, a);
+		}
+
 		public static void DrawOpenGLLine(Vector2 point1, Vector2 point2)
 		{
 			GL.Begin(PrimitiveType.Lines);
@@ -40,18 +45,41 @@ namespace GameApp.Visual
 			GL.End();
 		}
 
-		public static void DrawRectangularTexture(Texture texture, Vector2 topLeftCorner,
-			Vector2 bottomRightCorner, float alpha = 1.0f)
+		public static void DrawTextureWithFadeIn(Texture texture, Vector2 topLeftCorner,
+			Vector2 bottomRightCorner, float percentage)
 		{
-			Vector2 bottomLeft = new Vector2(topLeftCorner.X, bottomRightCorner.Y);
-			Vector2 topRight = new Vector2(bottomRightCorner.X, topLeftCorner.Y);
+			if (percentage <= 0) return;
 
-			DrawTexture(texture, bottomLeft, bottomRightCorner, topRight, topLeftCorner, alpha);
+			Vector2 bottomLeftCorner = new Vector2(topLeftCorner.X, bottomRightCorner.Y);
+			Vector2 topRightCorner = new Vector2(bottomRightCorner.X, topLeftCorner.Y);
+
+			topRightCorner.X *= percentage;
+			bottomRightCorner.X *= percentage;
+
+			texture.BeginUse();
+
+			GL.Color3(1, 1, 1);
+
+			GL.Begin(PrimitiveType.Quads);
+			GL.TexCoord2(0.0f, 0.0f);
+			GL.Vertex2(bottomLeftCorner);
+			GL.TexCoord2(percentage, 0.0f);
+			GL.Vertex2(bottomRightCorner);
+			GL.TexCoord2(percentage, 1.0f);
+			GL.Vertex2(topRightCorner);
+			GL.TexCoord2(0.0f, 1.0f);
+			GL.Vertex2(topLeftCorner);
+			GL.End();
+
+			texture.EndUse();
 		}
 
-		public static void DrawTexture(Texture texture, Vector2 bottomLeftCorner,
-			Vector2 bottomRightCorner, Vector2 topRightCorner, Vector2 topLeftCorner, float alpha = 1.0f)
+		public static void DrawTexture(Texture texture, Vector2 topLeftCorner, Vector2 bottomRightCorner,
+			float alpha = 1)
 		{
+			Vector2 bottomLeftCorner = new Vector2(topLeftCorner.X, bottomRightCorner.Y);
+			Vector2 topRightCorner = new Vector2(bottomRightCorner.X, topLeftCorner.Y);
+
 			texture.BeginUse();
 
 			GL.Color3(alpha, alpha, alpha);

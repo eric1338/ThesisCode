@@ -28,6 +28,9 @@ namespace GameApp.Levels
 		public bool IsPlayerStanding { get; set; }
 		public bool IsPlayerDefending { get; set; }
 
+		public bool IsLevelComplete { get; set; }
+		public bool IsGamePaused { get; set; }
+
 		private float secondsPlayed;
 		private float secondsOfHittingModeLeft;
 		private float secondsOfGodModeLeft;
@@ -63,6 +66,9 @@ namespace GameApp.Levels
 
 			IsPlayerStanding = true;
 			IsPlayerDefending = false;
+
+			IsLevelComplete = false;
+			IsGamePaused = false;
 
 			secondsPlayed = 0;
 			secondsOfHittingModeLeft = 0;

@@ -18,27 +18,31 @@ namespace GameApp.Levels
 
 		public Vector2 PlayerStartingPosition { get; set; }
 
+		public float GoalLineX { get; set; }
+
+		public bool IsTutorial { get; set; }
+
 		private int currentCollectibleID = 0;
 		private int currentProjectileID = 0;
 
-		public Level()
+		public Level(bool isTutorial = false)
 		{
 			Grounds = new List<Ground>();
 			SolidObstacles = new List<Obstacle>();
 			DestructibleObstacles = new List<Obstacle>();
 			Collectibles = new List<Collectible>();
 			Projectiles = new List<Projectile>();
+
+			IsTutorial = isTutorial;
 		}
 
 		public static Level CreateTutorialLevel()
 		{
-			Level level = new Level();
+			Level level = new Level(true);
 
 			level.PlayerStartingPosition = new Vector2(0, 1);
 			
 			level.AddGround(new Ground(-2, 40, 1));
-
-
 
 			return level;
 		}

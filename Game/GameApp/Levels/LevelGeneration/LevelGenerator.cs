@@ -10,6 +10,23 @@ namespace GameApp.Levels.LevelGeneration
 	class LevelGenerator
 	{
 
+		public Level GenerateTutorialLevel()
+		{
+			LevelPlan levelPlan = new LevelPlan();
+
+			LevelElementPlacement highCollectible = LevelElementPlacement.CreateSingleSynchro(LevelElementType.HighCollectible, 5);
+			LevelElementPlacement jumpObstacle = LevelElementPlacement.CreateSingleSynchro(LevelElementType.JumpObstacle, 5);
+
+			levelPlan.AddLevelElementPlacement(highCollectible);
+			levelPlan.AddLevelElementPlacement(jumpObstacle);
+
+			Level level = GenerateLevel(levelPlan);
+
+			level.GoalLineX = 24;
+
+			return level;
+		}
+
 		public Level GenerateTestLevel()
 		{
 			SongElements songElements = new SongElements();
@@ -81,6 +98,8 @@ namespace GameApp.Levels.LevelGeneration
 			Level level = new Level();
 
 			level.PlayerStartingPosition = LevelGenerationValues.PlayerStartPosition;
+
+			level.GoalLineX = 99999;
 
 			List<LevelElementPlacement> chasmsPlacements = levelPlan.GetChasms();
 			List<LevelElementPlacement> nonChasmsPlacements = levelPlan.GetNonChasms();

@@ -17,11 +17,35 @@ namespace GameApp.Visual
 
 		private Texture playerStandardTexture;
 
+		public Texture overlayGameComplete;
+		public Texture overlayGamePaused;
+		public Texture overlayPressX;
+
+		public Texture ratingNone;
+		public Texture ratingHalf;
+		public Texture ratingFull;
+
+		private Texture tutorialJumpTexture;
+		private Texture tutorialDuckTexture;
+		private Texture tutorialDeflectTexture;
+
 		public LevelDrawer(Level level)
 		{
 			Textures.Instance.LoadTextures();
 
 			playerStandardTexture = Textures.Instance.PlayerTexture;
+
+			overlayGameComplete = Textures.Instance.OverlayGameComplete;
+			overlayGamePaused = Textures.Instance.OverlayGamePaused;
+			overlayPressX = Textures.Instance.OverlayPressX;
+
+			ratingNone = Textures.Instance.RatingNone;
+			ratingHalf = Textures.Instance.RatingHalf;
+			ratingFull = Textures.Instance.RatingFull;
+
+			tutorialJumpTexture = Textures.Instance.TutorialJumpTexture;
+			tutorialDuckTexture = Textures.Instance.TutorialDuckTexture;
+			tutorialDeflectTexture = Textures.Instance.TutorialDeflectTexture;
 
 			this.level = level;
 		}
@@ -41,10 +65,30 @@ namespace GameApp.Visual
 
 			DrawDebugLines();
 
-			BasicGraphics.SetColor(1.0f, 0.0f, 0.3f);
+			/*
+			float percentage = (levelProgression.CurrentPlayerPosition.X - 4) * 0.25f;
 
-			//DrawOpenGLLine(new Vector2(-1, 0), new Vector2(1, 0));
-			//DrawOpenGLLine(new Vector2(0, -1), new Vector2(0, 1));
+			percentage = Math.Max(Math.Min(percentage, 1), 0);
+
+			Texture tutorialTexture = tutorialJumpTexture;
+
+			Vector2 topLeftCorner = new Vector2(-0.6f, 0.85f);
+			Vector2 bottomRightCorner = new Vector2(0.6f, 0.45f);
+
+			BasicGraphics.DrawTextureWithFadeIn(tutorialTexture, topLeftCorner, bottomRightCorner, percentage);
+			*/
+
+			float percentage = (levelProgression.CurrentPlayerPosition.X - 4) * 0.1f;
+
+			percentage = Math.Max(Math.Min(percentage, 1), 0);
+
+			//DrawRatings(percentage);
+
+			if (levelProgression.IsLevelComplete) DrawLevelCompleteScreen(0.92f);
+
+			if (level.IsTutorial) DrawTutorialInfoTexture();
+
+			if (levelProgression.IsGamePaused) DrawPauseScreen();
 		}
 
 		private void CalculateVisualCenter(LevelProgression levelProgression)
@@ -142,7 +186,7 @@ namespace GameApp.Visual
 
 			if (useTextureTest)
 			{
-				DrawRectangularTexture(playerStandardTexture, v1, v2);
+				DrawAdjustedTexture(playerStandardTexture, v1, v2);
 				return;
 			}
 
@@ -254,6 +298,76 @@ namespace GameApp.Visual
 
 
 
+
+		private void DrawPauseScreen()
+		{
+			DrawOverlayScreen(false);
+		}
+
+		private void DrawLevelCompleteScreen(float rating)
+		{
+			DrawOverlayScreen(true, rating);
+		}
+
+		private void DrawOverlayScreen(bool isLevelCompleteScreen, float rating = 0)
+		{
+			BasicGraphics.SetColor4(0.0f, 0.0f, 0.0f, 0.85f);
+			BasicGraphics.DrawSquare(new Vector2(-2, 2), new Vector2(2, -2));
+
+			Texture headerTexture = isLevelCompleteScreen ? overlayGameComplete : overlayGamePaused;
+
+			DrawTexture(headerTexture, new Vector2(-0.6f, 0.6f), new Vector2(0.6f, 0.36f));
+
+			if (isLevelCompleteScreen) DrawRatings(rating);
+
+			DrawTexture(overlayPressX, new Vector2(-0.6f, -0.4f), new Vector2(0.6f, -0.64f));
+		}
+
+		private void DrawRatings(float rating)
+		{
+			float ratingSymbolWidth = 0.25f;
+			float ratingSymbolMargin = 0.03f;
+
+			for (int i = 0; i < 5; i++)
+			{
+				float leftXWidthFactor = i - 2.5f;
+				float rightXWidthFactor = i - 1.5f;
+
+				float marginOffset = (i - 2) * ratingSymbolMargin;
+
+				float leftX = leftXWidthFactor * ratingSymbolWidth + marginOffset;
+				float rightX = rightXWidthFactor * ratingSymbolWidth + marginOffset;
+
+				float topY = 0.105f;
+				float bottomY = topY - ratingSymbolWidth;
+
+				Texture ratingTexture;
+
+				if (rating > i * 0.2f + 0.15f) ratingTexture = ratingFull;
+				else if (rating > i * 0.2f + 0.05f) ratingTexture = ratingHalf;
+				else ratingTexture = ratingNone;
+
+				Vector2 topLeftCorner = new Vector2(leftX, topY);
+				Vector2 bottomRightCorner = new Vector2(rightX, bottomY);
+
+				DrawTexture(ratingTexture, topLeftCorner, bottomRightCorner);
+			}
+		}
+
+
+
+		private void DrawTutorialInfoTexture()
+		{
+			Texture tutorialTexture = tutorialJumpTexture;
+
+			Vector2 topLeftCorner = new Vector2(-0.6f, 0.85f);
+			Vector2 bottomRightCorner = new Vector2(0.6f, 0.45f);
+
+			DrawTexture(tutorialTexture, topLeftCorner, bottomRightCorner);
+		}
+
+
+
 		private Vector2 GetTransformedVector(Vector2 vector)
 		{
 			Vector2 newVector = vector - visualCenter;
@@ -337,22 +451,17 @@ namespace GameApp.Visual
 			debugLines.Clear();
 		}
 
-		private void DrawRectangularTexture(Texture texture, Vector2 topLeft, Vector2 bottomRight)
+		private void DrawAdjustedTexture(Texture texture, Vector2 topLeftCorner, Vector2 bottomRightCorner)
 		{
-			Vector2 bottomLeft = new Vector2(topLeft.X, bottomRight.Y);
-			Vector2 topRight = new Vector2(bottomRight.X, topLeft.Y);
+			topLeftCorner = GetTransformedVector(topLeftCorner);
+			bottomRightCorner = GetTransformedVector(bottomRightCorner);
 
-			DrawTexture(texture, bottomLeft, bottomRight, topRight, topLeft);
+			BasicGraphics.DrawTexture(texture, topLeftCorner, bottomRightCorner);
 		}
 
-		private void DrawTexture(Texture texture, Vector2 bottomLeft, Vector2 bottomRight, Vector2 topRight, Vector2 topLeft)
+		private void DrawTexture(Texture texture, Vector2 topLeftCorner, Vector2 bottomRightCorner)
 		{
-			Vector2 bL = GetTransformedVector(bottomLeft);
-			Vector2 bR = GetTransformedVector(bottomRight);
-			Vector2 tR = GetTransformedVector(topRight);
-			Vector2 tL = GetTransformedVector(topLeft);
-
-			BasicGraphics.DrawTexture(texture, bL, bR, tR, tL, 1);
+			BasicGraphics.DrawTexture(texture, topLeftCorner, bottomRightCorner);
 		}
 
 
