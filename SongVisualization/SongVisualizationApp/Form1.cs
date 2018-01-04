@@ -217,19 +217,59 @@ namespace SongVisualizationApp
 
 		private void debugButton1_Click(object sender, EventArgs e)
 		{
-			int index = Convert.ToInt32(debugTextBox1.Text);
+			string fileDirectory = songFile.FileDirectory;
 
-			currentFFTValues = fftValuesList[index];
+			int startingFrequencyIndex = Convert.ToInt32(debugTextBox1.Text);
+			int numberOfFrequency = Convert.ToInt32(debugTextBox2.Text);
+			int frequencyBandWidth = Convert.ToInt32(debugTextBox3.Text);
+			float valueThreshold = (float)Convert.ToDouble(debugTextBox4.Text);
+			float maximumSquaredError = (float)Convert.ToDouble(debugTextBox5.Text);
 
-			debugChart1.ChartAreas["ChartArea1"].AxisX.Minimum = 150;
-			debugChart1.ChartAreas["ChartArea1"].AxisX.Maximum = 1000;
-			debugChart1.ChartAreas["ChartArea1"].AxisY.Maximum = 0.08;
+			SongPropertyValues spv = SongAnalyzer.GetSongPropertyValues(fileDirectory, startingFrequencyIndex,
+				numberOfFrequency, frequencyBandWidth, valueThreshold, maximumSquaredError);
 
-			Console.WriteLine(currentFFTValues.PropertyName);
+			if (lastSeries != null) songValueChart.Series.Remove(lastSeries);
+
+			PlotSPVTest(spv);
+
+			int x = 0;
+
+			foreach (MyPoint point in spv.Points)
+			{
+				if (point.Y > 0 && x++ > 8) Console.WriteLine("* " + point.X);
+			}
 
 			Update();
 		}
 
-		
+
+		private Series lastSeries = null;
+
+		private void PlotSPVTest(SongPropertyValues songPropertyValues)
+		{
+			Series series = new Series();
+
+			series.Name = songPropertyValues.PropertyName + DateTime.Now.Millisecond;
+
+			foreach (MyPoint point in songPropertyValues.Points)
+			{
+				series.Points.AddXY(point.X, point.Y);
+			}
+
+			series.ChartArea = "ChartArea1";
+
+			series.ChartType = SeriesChartType.FastLine;
+
+			series.BorderWidth = 2;
+
+			songValueChart.Series.Add(series);
+
+			lastSeries = series;
+		}
+
+		private void songValueChart_Click(object sender, EventArgs e)
+		{
+
+		}
 	}
 }

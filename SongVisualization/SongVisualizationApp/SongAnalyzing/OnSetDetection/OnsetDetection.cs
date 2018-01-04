@@ -50,14 +50,6 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 		}
 
 
-
-		/// <param name="thresholdTimeSpan">Amount of data used during threshold averaging, in seconds.
-		/// <para>Default: 1</para></param>
-		/// <param name="sensitivity">Sensitivivity of onset detection.
-		/// <para>Lower increases the sensitivity</para>
-		/// <para>Recommended: 1.3 - 1.6</para>
-		/// <para>Default: 1.5</para></param>
-		// Use threshold average to find the onsets from the spectral flux
 		public void FindOnsets(float sensitivity = 1.5f, float thresholdTimeSpan = 0.5f)
 		{
 			float[] thresholdAverage = GetThresholdAverage(fluxes, sampleSize,
@@ -66,12 +58,6 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 			Onsets = GetPeaks(fluxes, thresholdAverage, sampleSize);
 		}
 
-		/// <summary>
-		///  Normalize the beats found.
-		/// </summary>
-		/// <param name="type">Type of normaliztion.
-		/// <para>0 = Normalize onsets between 0 and max onset</para>
-		/// <para>1 = Normalize onsets between min onset and max onset.</para></param>
 		public void NormalizeOnsets(int type)
 		{
 			if (Onsets != null)

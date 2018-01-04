@@ -24,8 +24,7 @@ namespace SongVisualizationApp.SongAnalyzing
 			this.visualFacade = visualFacade;
 		}
 
-
-		public void AnalyzeSong4(string fileDirectory)
+		public void AnalyzeSong(string fileDirectory)
 		{
 			visualFacade.SetProgress("Loading Song...", 0.0f);
 
@@ -63,9 +62,9 @@ namespace SongVisualizationApp.SongAnalyzing
 			//songPropertyValuesList.Add(GetSongPropertyValues(fileDirectory, 9, 0.025f, 0.06f));
 			//songPropertyValuesList.Add(GetSongPropertyValues(fileDirectory, 2, 0.01f, 0.04f));
 
-			songPropertyValuesList.Add(GetSongPropertyValues(fileDirectory, 40, 18, 8, 0.001f, 0.2f));
-			songPropertyValuesList.Add(GetSongPropertyValues(fileDirectory, 36, 18, 8, 0.025f, 0.2f));
-			songPropertyValuesList.Add(GetSongPropertyValues(fileDirectory, 30, 50, 16, 0.001f, 0.1f));
+			//songPropertyValuesList.Add(GetSongPropertyValues(fileDirectory, 40, 18, 8, 0.001f, 0.2f));
+			//songPropertyValuesList.Add(GetSongPropertyValues(fileDirectory, 36, 18, 8, 0.025f, 0.2f));
+			//songPropertyValuesList.Add(GetSongPropertyValues(fileDirectory, 30, 50, 16, 0.001f, 0.1f));
 
 			visualFacade.PlotSongPropertyValues(songPropertyValuesList);
 
@@ -79,13 +78,15 @@ namespace SongVisualizationApp.SongAnalyzing
 			return GetSongPropertyValues(fileDirectory, 0, 72, fbw, vth, msqe);
 		}
 
-		private SongPropertyValues GetSongPropertyValues(string fileDirectory, int sfi, int nf, int fbw, float vth, float msqe)
+		public static SongPropertyValues GetSongPropertyValues(string fileDirectory, int sfi, int nf, int fbw, float vth, float msqe)
 		{
 			HeldNoteDetection.TEST_STARTING_FREQUENCY_INDEX = sfi;
 			HeldNoteDetection.TEST_NUMBER_OF_FREQUENCIES = nf;
 			HeldNoteDetection.TEST_FREQUENCY_BAND_WIDTH = fbw;
 			RectangleDetection.TEST_VALUE_THRESHOLD = vth;
 			RectangleDetection.TEST_MAXIMUM_SQUARED_ERROR = msqe;
+
+			Console.WriteLine(sfi + " / " + nf + " / " + fbw + " / " + vth + " / " + msqe);
 
 			AudioAnalyzer audioAnalyzer = new AudioAnalyzer();
 			audioAnalyzer.LoadAudioFromFile(fileDirectory);
@@ -95,15 +96,15 @@ namespace SongVisualizationApp.SongAnalyzing
 
 			foreach (MyPoint point in spv.Points)
 			{
-				if (point.Y > 0) point.Y = f;
+				if (point.Y > 0) point.Y = 0.55f;
 			}
 
-			f += 0.2f;
+			//f += 0.2f;
 
 			return spv;
 		}
 
-		public void AnalyzeSong(string fileDirectory)
+		public void AnalyzeSong22(string fileDirectory)
 		{
 			int n = 1;
 
@@ -502,10 +503,10 @@ namespace SongVisualizationApp.SongAnalyzing
 
 		}
 
-		HeldNoteTest heldNoteTest = new HeldNoteTest();
+		static HeldNoteTest heldNoteTest = new HeldNoteTest();
 		
 
-		private void InitHeldNoteTest()
+		private static void InitHeldNoteTest()
 		{
 			heldNoteTest.AddPoint(12.069f, 0);
 			heldNoteTest.AddPoint(12.099f, 1);

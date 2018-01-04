@@ -40,7 +40,7 @@ namespace GameApp.Visual
 			Vector2 titleTopLeftCorner = new Vector2(-aspectRatio, 1);
 			Vector2 titleBottomRightCorner = new Vector2(aspectRatio, -1);
 
-			BasicGraphics.DrawTexture(titleTexture, titleTopLeftCorner, titleBottomRightCorner);
+			BasicGraphics.DrawTextureWithUse(titleTexture, titleTopLeftCorner, titleBottomRightCorner);
 
 			for (int i = 0; i < 3; i++)
 			{
@@ -62,7 +62,7 @@ namespace GameApp.Visual
 			Vector2 topLeftCorner = menuTopLeftCorner + new Vector2(xOffset, -yOffset);
 			Vector2 bottomRightCorner = topLeftCorner + new Vector2(menuItemHeight * 7, -menuItemHeight);
 
-			BasicGraphics.DrawTexture(texture, topLeftCorner, bottomRightCorner);
+			BasicGraphics.DrawTextureWithUse(texture, topLeftCorner, bottomRightCorner);
 		}
 
 	}

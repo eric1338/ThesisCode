@@ -74,8 +74,28 @@ namespace GameApp.Visual
 			texture.EndUse();
 		}
 
-		public static void DrawTexture(Texture texture, Vector2 topLeftCorner, Vector2 bottomRightCorner,
-			float alpha = 1)
+		public static void DrawTexture(Texture texture, Vector2 topLeftCorner,
+			Vector2 bottomRightCorner, float alpha = 1)
+		{
+			Vector2 bottomLeftCorner = new Vector2(topLeftCorner.X, bottomRightCorner.Y);
+			Vector2 topRightCorner = new Vector2(bottomRightCorner.X, topLeftCorner.Y);
+
+			GL.Color3(alpha, alpha, alpha);
+
+			GL.Begin(PrimitiveType.Quads);
+			GL.TexCoord2(0.0f, 0.0f);
+			GL.Vertex2(bottomLeftCorner);
+			GL.TexCoord2(1.0f, 0.0f);
+			GL.Vertex2(bottomRightCorner);
+			GL.TexCoord2(1.0f, 1.0f);
+			GL.Vertex2(topRightCorner);
+			GL.TexCoord2(0.0f, 1.0f);
+			GL.Vertex2(topLeftCorner);
+			GL.End();
+		}
+
+		public static void DrawTextureWithUse(Texture texture, Vector2 topLeftCorner,
+			Vector2 bottomRightCorner, float alpha = 1)
 		{
 			Vector2 bottomLeftCorner = new Vector2(topLeftCorner.X, bottomRightCorner.Y);
 			Vector2 topRightCorner = new Vector2(bottomRightCorner.X, topLeftCorner.Y);
@@ -98,6 +118,25 @@ namespace GameApp.Visual
 			texture.EndUse();
 		}
 
+		public static void DrawPartialTexture(Texture texture, Vector2 topLeftCorner,
+			Vector2 bottomRightCorner, float xPercentage, float alpha = 1)
+		{
+			Vector2 bottomLeftCorner = new Vector2(topLeftCorner.X, bottomRightCorner.Y);
+			Vector2 topRightCorner = new Vector2(bottomRightCorner.X, topLeftCorner.Y);
+
+			GL.Color3(alpha, alpha, alpha);
+
+			GL.Begin(PrimitiveType.Quads);
+			GL.TexCoord2(0.0f, 0.0f);
+			GL.Vertex2(bottomLeftCorner);
+			GL.TexCoord2(xPercentage, 0.0f);
+			GL.Vertex2(bottomRightCorner);
+			GL.TexCoord2(xPercentage, 1.0f);
+			GL.Vertex2(topRightCorner);
+			GL.TexCoord2(0.0f, 1.0f);
+			GL.Vertex2(topLeftCorner);
+			GL.End();
+		}
 
 	}
 }

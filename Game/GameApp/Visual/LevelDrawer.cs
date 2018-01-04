@@ -16,6 +16,16 @@ namespace GameApp.Visual
 		private Vector2 visualCenter = Vector2.Zero;
 
 		private Texture playerStandardTexture;
+		private Texture playerDefendingTexture;
+		private Texture playerHitTexture1;
+
+		private Texture cloudTexture1;
+		private Texture cloudTexture2;
+		private Texture groundTopTexture;
+		private Texture groundBottomTexture;
+		private Texture lowObstacleTexture;
+		private Texture duckObstacleTexture;
+		private Texture collectibleTexture;
 
 		public Texture overlayGameComplete;
 		public Texture overlayGamePaused;
@@ -34,6 +44,17 @@ namespace GameApp.Visual
 			Textures.Instance.LoadTextures();
 
 			playerStandardTexture = Textures.Instance.PlayerTexture;
+
+			playerDefendingTexture = Textures.Instance.TitleTexture;
+			playerHitTexture1 = Textures.Instance.OverlayPressX;
+
+			cloudTexture1 = Textures.Instance.TitleTexture;
+			cloudTexture2 = Textures.Instance.TutorialDuckTexture;
+			groundTopTexture = Textures.Instance.RatingFull;
+			groundBottomTexture = Textures.Instance.RatingHalf;
+			lowObstacleTexture = Textures.Instance.TitleTexture;
+			duckObstacleTexture = Textures.Instance.TutorialDeflectTexture;
+			collectibleTexture = Textures.Instance.RatingNone;
 
 			overlayGameComplete = Textures.Instance.OverlayGameComplete;
 			overlayGamePaused = Textures.Instance.OverlayGamePaused;
@@ -55,7 +76,7 @@ namespace GameApp.Visual
 		{
 			CalculateVisualCenter(levelProgression);
 
-			DrawBackground();
+			DrawBackground(levelProgression);
 
 			DrawGrounds();
 			DrawObstacles(levelProgression);
@@ -149,50 +170,46 @@ namespace GameApp.Visual
 			//return IsCoordOnScreen(leftestObjectX) || IsCoordOnScreen(rightestObjectX);
 		}
 
-		private void DrawBackground()
+		private void DrawBackground(LevelProgression levelProgression)
 		{
 			BasicGraphics.SetColor(0.4f, 0.8f, 1.0f);
 
 			DrawSquare(new Vector2(-2.1f, 1.1f), new Vector2(2.1f, -1.1f), false);
+
+			DrawClouds(levelProgression);
+		}
+
+		private void DrawClouds(LevelProgression levelProgression)
+		{
+
 		}
 
 		private void DrawPlayer(LevelProgression levelProgression)
 		{
-			bool useTextureTest = false;
+			Texture playerTexture;
 
-			if (levelProgression.IsPlayerInGodmode()) BasicGraphics.SetColor(1.0f, 1.0f, 1.0f);
-			else if (levelProgression.IsPlayerDefending) BasicGraphics.SetColor(0.2f, 0.2f, 0.2f);
-			else if (levelProgression.IsPlayerInHittingMode()) BasicGraphics.SetColor(0.2f, 0.6f, 0.35f);
-			else useTextureTest = true;
+			if (levelProgression.IsPlayerInGodmode()) playerTexture = playerHitTexture1;
+			else if (levelProgression.IsPlayerDefending) playerTexture = playerDefendingTexture;
+			else playerTexture = playerStandardTexture;
 
 			Vector2 playerPosition = levelProgression.CurrentPlayerPosition;
-
-			float halfPlayerWidth = VisualValues.PlayerWidth / 2;
-			float halfPlayerHeight = VisualValues.PlayerHeight / 2;
-
-			float x1 = playerPosition.X - halfPlayerWidth;
-			float x2 = playerPosition.X + halfPlayerWidth;
+			
+			float x1 = playerPosition.X - (VisualValues.PlayerWidth / 2.0f);
+			float x2 = playerPosition.X + (VisualValues.PlayerWidth / 2.0f);
 			float y1 = playerPosition.Y + VisualValues.PlayerHeight;
 
 			if (!levelProgression.IsPlayerStanding)
 			{
-				x1 = playerPosition.X - halfPlayerHeight;
-				x2 = playerPosition.X + halfPlayerHeight;
+				x1 = playerPosition.X - (VisualValues.PlayerHeight / 2.0f);
+				x2 = playerPosition.X + (VisualValues.PlayerHeight / 2.0f);
 				y1 = playerPosition.Y + VisualValues.PlayerWidth;
 			}
 
 			Vector2 v1 = new Vector2(x1, y1);
 			Vector2 v2 = new Vector2(x2, playerPosition.Y);
 
-			if (useTextureTest)
-			{
-				DrawAdjustedTexture(playerStandardTexture, v1, v2);
-				return;
-			}
-
-			DrawSquare(v1, v2);
+			DrawAdjustedTexture(playerTexture, v1, v2);
 		}
-
 
 		private void DrawGrounds()
 		{
@@ -207,7 +224,10 @@ namespace GameApp.Visual
 			BasicGraphics.SetColor(0.7f, 0.2f, 0.3f);
 
 			Vector2 v1 = new Vector2(ground.LeftX, ground.TopY);
-			Vector2 v2 = new Vector2(ground.RightX, -10000.0f);
+			Vector2 v2 = new Vector2(ground.RightX, ground.TopY - 99999f);
+
+			//Vector2 v2 = new Vector2(ground.RightX, ground.TopY - 0.15f);
+			//DrawMultipleHorizontalTextures(groundTopTexture, v1, v2);
 
 			DrawSquare(v1, v2);
 		}
@@ -377,8 +397,6 @@ namespace GameApp.Visual
 			return newVector;
 		}
 
-
-
 		private void DrawSquare(Vector2 topLeft, Vector2 bottomRight)
 		{
 			DrawSquare(topLeft, bottomRight, true);
@@ -396,7 +414,79 @@ namespace GameApp.Visual
 		}
 
 
-		
+
+
+		private void DrawTextureMultipleTimes(Texture texture, Vector2 topLeftCorner,
+			Vector2 bottomRightCorner, float textureWidth, float textureHeight)
+		{
+			Vector2 tlc = GetTransformedVector(topLeftCorner);
+			Vector2 brc = GetTransformedVector(bottomRightCorner);
+
+
+		}
+
+
+		private void DrawMultipleHorizontalTextures(Texture texture,
+			Vector2 topLeftCorner, Vector2 bottomRightCorner)
+		{
+			float yDifference = topLeftCorner.Y - bottomRightCorner.Y;
+
+			float topY = topLeftCorner.Y;
+			float bottomY = bottomRightCorner.Y;
+
+			float leftX = topLeftCorner.X;
+
+			texture.BeginUse();
+
+			while (leftX < bottomRightCorner.X)
+			{
+				float fullRightX = leftX + yDifference;
+
+				if (fullRightX > bottomRightCorner.X)
+				{
+					Vector2 tlc = GetTransformedVector(new Vector2(leftX, topY));
+					Vector2 brc = GetTransformedVector(new Vector2(fullRightX, bottomY));
+					
+					BasicGraphics.DrawTexture(texture, tlc, brc);
+				}
+				else
+				{
+					Vector2 tlc = GetTransformedVector(new Vector2(leftX, topY));
+					Vector2 brc = GetTransformedVector(new Vector2(bottomRightCorner.X, bottomY));
+
+					float xPercentage = (bottomRightCorner.X - leftX) / yDifference;
+
+					BasicGraphics.DrawPartialTexture(texture, tlc, brc, xPercentage);
+				}
+
+				//Vector2 topLeftCorner2 = new Vector2(leftX, )
+
+				leftX += yDifference;
+			}
+
+			texture.EndUse();
+		}
+
+		private void DrawAdjustedTexture(Texture texture, Vector2 topLeftCorner, Vector2 bottomRightCorner)
+		{
+			topLeftCorner = GetTransformedVector(topLeftCorner);
+			bottomRightCorner = GetTransformedVector(bottomRightCorner);
+
+			BasicGraphics.DrawTextureWithUse(texture, topLeftCorner, bottomRightCorner);
+		}
+
+		private void DrawTexture(Texture texture, Vector2 topLeftCorner, Vector2 bottomRightCorner)
+		{
+			BasicGraphics.DrawTextureWithUse(texture, topLeftCorner, bottomRightCorner);
+		}
+
+
+
+
+
+
+
+
 		class DebugLine
 		{
 			public Vector2 Vector1 { get; set; }
@@ -410,7 +500,6 @@ namespace GameApp.Visual
 				Color = color;
 			}
 		}
-
 
 		private static List<DebugLine> debugLines = new List<DebugLine>();
 
@@ -449,19 +538,6 @@ namespace GameApp.Visual
 			}
 
 			debugLines.Clear();
-		}
-
-		private void DrawAdjustedTexture(Texture texture, Vector2 topLeftCorner, Vector2 bottomRightCorner)
-		{
-			topLeftCorner = GetTransformedVector(topLeftCorner);
-			bottomRightCorner = GetTransformedVector(bottomRightCorner);
-
-			BasicGraphics.DrawTexture(texture, topLeftCorner, bottomRightCorner);
-		}
-
-		private void DrawTexture(Texture texture, Vector2 topLeftCorner, Vector2 bottomRightCorner)
-		{
-			BasicGraphics.DrawTexture(texture, topLeftCorner, bottomRightCorner);
 		}
 
 

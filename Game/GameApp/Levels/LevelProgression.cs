@@ -106,6 +106,11 @@ namespace GameApp.Levels
 			secondsOfGodModeLeft = secondsOfGodMode;
 		}
 
+		public float GetSecondsPlayed()
+		{
+			return secondsPlayed;
+		}
+
 		public bool IsPlayerInHittingMode()
 		{
 			return secondsOfHittingModeLeft > 0;
