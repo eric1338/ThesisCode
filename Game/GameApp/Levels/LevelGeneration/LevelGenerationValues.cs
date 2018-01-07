@@ -29,6 +29,8 @@ namespace GameApp.Levels.LevelGeneration
 
 		public static readonly Vector2 PlayerStartPosition = new Vector2(0, 0);
 
+		public static readonly float MusicStartPositionX = 0;
+
 		public static readonly float FirstGroundLeftX = -10;
 
 		// LevelElements
@@ -124,7 +126,7 @@ namespace GameApp.Levels.LevelGeneration
 
 		public static float GetXPositionByTime(float time)
 		{
-			return PlayerStartPosition.X + time * GetPlayerVelocity();
+			return MusicStartPositionX + time * GetPlayerVelocity();
 		}
 
 		public static float GetYDifferenceAfterJump(float timeAfterJump)

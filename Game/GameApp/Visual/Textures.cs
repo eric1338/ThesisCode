@@ -13,9 +13,11 @@ namespace GameApp.Visual
 
 		private bool _texturesLoaded = false;
 
-		public Texture PlayerTexture { get; set; }
-
 		public Texture TitleTexture { get; set; }
+
+		public Texture PlayerStandardTexture { get; set; }
+		public Texture PlayerDefendingTexture { get; set; }
+		public Texture PlayerGhostTexture { get; set; }
 
 		public Texture PlayTutorialTexture { get; set; }
 		public Texture PlayTestSongTexture { get; set; }
@@ -37,9 +39,11 @@ namespace GameApp.Visual
 		{
 			if (_texturesLoaded) return;
 
-			PlayerTexture = TextureLoader.FromBitmap(Resources.playerTest);
-
 			TitleTexture = TextureLoader.FromBitmap(Resources.title);
+
+			PlayerStandardTexture = TextureLoader.FromBitmap(Resources.playerStandard);
+			PlayerDefendingTexture = TextureLoader.FromBitmap(Resources.playerDefending);
+			PlayerGhostTexture = TextureLoader.FromBitmap(Resources.playerGhost);
 
 			RatingNone = TextureLoader.FromBitmap(Resources.ratingNone);
 			RatingHalf = TextureLoader.FromBitmap(Resources.ratingHalf);

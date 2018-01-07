@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace GameApp.Screens
 {
@@ -30,10 +31,12 @@ namespace GameApp.Screens
 			AddKeyToSingleUserActionMapping(Key.Down, UserAction.GoDownInMenu);
 			AddKeyToSingleUserActionMapping(Key.S, UserAction.GoDownInMenu);
 			AddKeyToSingleUserActionMapping(Key.Enter, UserAction.SelectCurrentMenuItem);
+			AddKeyToSingleUserActionMapping(Key.N, UserAction.SelectSong);
 
 			AddSingleUserActionToFunctionMapping(UserAction.GoUpInMenu, GoUpInMenu);
 			AddSingleUserActionToFunctionMapping(UserAction.GoDownInMenu, GoDownInMenu);
 			AddSingleUserActionToFunctionMapping(UserAction.SelectCurrentMenuItem, SelectCurrentMenuItem);
+			AddSingleUserActionToFunctionMapping(UserAction.SelectSong, SelectSong);
 
 			menuItemXPaddings = new int[numberOfMenuItems];
 
@@ -68,11 +71,10 @@ namespace GameApp.Screens
 			}
 		}
 
-
-		public void SelectCurrentMenuItem()
+		private void SelectCurrentMenuItem()
 		{
 			if (currentIndex == 0) StartTutorial();
-			if (currentIndex == 1) StartGame();
+			if (currentIndex == 1) StartTestLevel();
 			if (currentIndex == 2) gameWindow.Exit();
 		}
 
@@ -83,7 +85,16 @@ namespace GameApp.Screens
 			SwitchToScreen(gameScreen);
 		}
 
-		private void StartGame()
+		private void SelectSong()
+		{
+			OpenFileDialog openFileDialog = new OpenFileDialog();
+
+			if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+
+			Console.WriteLine(openFileDialog.FileName);
+		}
+
+		private void StartTestLevel()
 		{
 			GameScreen gameScreen = new GameScreen(gameWindow);
 

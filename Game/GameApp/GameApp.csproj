@@ -39,6 +39,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -91,7 +92,9 @@
     <Compile Include="Screens\MainMenuScreen.cs" />
     <Compile Include="Screens\Screen.cs" />
     <Compile Include="Screens\ScreenName.cs" />
+    <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\MyMath.cs" />
+    <Compile Include="Utils\PlaySessionLog.cs" />
     <Compile Include="Visual\BasicGraphics.cs" />
     <Compile Include="Visual\IVisual.cs" />
     <Compile Include="Visual\LevelDrawer.cs" />
@@ -99,7 +102,6 @@
     <Compile Include="Visual\Texture.cs" />
     <Compile Include="Visual\TextureLoader.cs" />
     <Compile Include="Visual\Textures.cs" />
-    <Compile Include="Visual\VisualManager.cs" />
     <Compile Include="Visual\VisualValues.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +195,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Textures\overlayEnGameComplete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\lowObstacle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\playerDefending.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\playerGhost.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\playerStandard.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

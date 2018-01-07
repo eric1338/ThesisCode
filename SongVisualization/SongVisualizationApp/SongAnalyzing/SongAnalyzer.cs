@@ -45,7 +45,32 @@ namespace SongVisualizationApp.SongAnalyzing
 				goal.AddPoint(i, heldNoteTest.GetValue(i));
 			}
 
-			songPropertyValuesList.Add(goal);
+			//songPropertyValuesList.Add(goal);
+
+			AudioAnalyzer audioAnalyzer = new AudioAnalyzer();
+
+			audioAnalyzer.LoadAudioFromFile(fileDirectory);
+
+			audioAnalyzer.Analyze();
+
+			songPropertyValuesList.Add(audioAnalyzer.GetSuperOnsetThingy());
+
+			AudioAnalyzer audioAnalyzer2 = new AudioAnalyzer(4, 3);
+
+			audioAnalyzer2.LoadAudioFromFile(fileDirectory);
+
+			audioAnalyzer2.Analyze();
+
+			songPropertyValuesList.Add(audioAnalyzer2.GetSuperOnsetThingy());
+
+
+			AudioAnalyzer audioAnalyzer3 = new AudioAnalyzer(4, 2);
+
+			audioAnalyzer3.LoadAudioFromFile(fileDirectory);
+
+			audioAnalyzer3.Analyze();
+
+			songPropertyValuesList.Add(audioAnalyzer3.GetSuperOnsetThingy());
 
 			//gut
 			//songPropertyValuesList.Add(GetSongPropertyValues(fileDirectory, 22, 0.1f, 0.3f));

@@ -65,6 +65,8 @@ namespace GameApp.Screens
 			AddSingleUserActionToFunctionMapping(UserAction.ResetLevel, ResetLevel);
 			AddSingleUserActionToFunctionMapping(UserAction.TogglePauseGame, TogglePauseGame);
 			AddSingleUserActionToFunctionMapping(UserAction.ReturnToMainMenu, ReturnToMainMenu);
+
+			Utils.Logger.StartNewLog(levelAttempt.Level.LevelName);
 		}
 
 		private LevelProgression GetLevelProgression()
@@ -109,6 +111,8 @@ namespace GameApp.Screens
 		{
 			if (isGamePaused || GetLevelProgression().IsLevelComplete)
 			{
+				Utils.Logger.FinishLog();
+
 				SwitchToScreen(new MainMenuScreen(gameWindow));
 			}
 		}

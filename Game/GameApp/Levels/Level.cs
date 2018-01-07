@@ -10,6 +10,8 @@ namespace GameApp.Levels
 	class Level
 	{
 
+		public string LevelName { get; set; }
+
 		public List<Ground> Grounds { get; set; }
 		public List<Obstacle> SolidObstacles { get; set; }
 		public List<Obstacle> DestructibleObstacles { get; set; }
@@ -25,8 +27,10 @@ namespace GameApp.Levels
 		private int currentCollectibleID = 0;
 		private int currentProjectileID = 0;
 
-		public Level(bool isTutorial = false)
+		public Level(string levelName = "", bool isTutorial = false)
 		{
+			LevelName = levelName;
+
 			Grounds = new List<Ground>();
 			SolidObstacles = new List<Obstacle>();
 			DestructibleObstacles = new List<Obstacle>();
@@ -38,7 +42,7 @@ namespace GameApp.Levels
 
 		public static Level CreateTutorialLevel()
 		{
-			Level level = new Level(true);
+			Level level = new Level("Tutorial", true);
 
 			level.PlayerStartingPosition = new Vector2(0, 1);
 			

@@ -154,8 +154,14 @@
   <data name="overlayEnPressX" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Textures\overlayEnPressX.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="playerTest" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Textures\playerTest.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="playerDefending" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Textures\playerDefending.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="playerGhost" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Textures\playerGhost.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="playerStandard" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Textures\playerStandard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ratingFull" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Textures\ratingFull.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

@@ -183,9 +183,29 @@ namespace GameApp {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap playerTest {
+        internal static System.Drawing.Bitmap playerDefending {
             get {
-                object obj = ResourceManager.GetObject("playerTest", resourceCulture);
+                object obj = ResourceManager.GetObject("playerDefending", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap playerGhost {
+            get {
+                object obj = ResourceManager.GetObject("playerGhost", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap playerStandard {
+            get {
+                object obj = ResourceManager.GetObject("playerStandard", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -46,13 +46,17 @@ namespace GameApp
 			currentScreen = newScreen;
 		}
 
-		private void MyGameWindow_KeyUp(object sender,  KeyboardKeyEventArgs e)
+		private void MyGameWindow_KeyUp(object sender, KeyboardKeyEventArgs e)
 		{
+			Utils.Logger.AddKeyPress(DateTime.Now, e.Key, true);
+
 			currentScreen.ProcessKeyUp(e.Key);
 		}
 
 		private void MyGameWindow_KeyDown(object sender, KeyboardKeyEventArgs e)
 		{
+			Utils.Logger.AddKeyPress(DateTime.Now, e.Key, false);
+
 			currentScreen.ProcessKeyDown(e.Key);
 		}
 
