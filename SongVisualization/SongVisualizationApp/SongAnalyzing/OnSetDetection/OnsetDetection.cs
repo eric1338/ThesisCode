@@ -37,7 +37,7 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 			rectify = true;
 			fluxes = new List<float>();
 		}
-		
+
 
 		public void AddFlux(float[] fftSpectrum, bool hamming = true)
 		{
@@ -105,7 +105,7 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 			return;
 		}
 
-		
+
 		float CompareSpectrums(float[] spectrum, float[] previousSpectrum, bool rectify)
 		{
 			// Find difference between each respective bins of each spectrum
@@ -213,6 +213,6 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 			return thresholdAverage.ToArray();
 		}
-		
+
 	}
 }

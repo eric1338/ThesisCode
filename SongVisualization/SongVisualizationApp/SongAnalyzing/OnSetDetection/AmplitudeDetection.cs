@@ -18,14 +18,14 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 		public void Analyze(float[] samples, float time)
 		{
-			float value = -1;
+			float maxValue = -1;
 
 			foreach (float sample in samples)
 			{
-				if (sample > value) value = sample;
+				if (sample > maxValue) maxValue = sample;
 			}
 
-			Values.AddPoint(time, value);
+			Values.AddPoint(time, maxValue);
 		}
 	}
 }

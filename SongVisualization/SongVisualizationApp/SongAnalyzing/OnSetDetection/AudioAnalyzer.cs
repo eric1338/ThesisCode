@@ -114,8 +114,6 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 			for (int i = 0; i < onsets.Length; i++)
 			{
-				if (i < 40) continue;
-
 				if (sperrX > 0)
 				{
 					sperrX--;
@@ -123,41 +121,15 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 					continue;
 				}
 
-				float onset = onsets[i];
-
-				float previousValuesSum = 0;
-
-				for (int j = 2; j < testVal1; j++)
+				if (onsets[i] > 0.01f)
 				{
-					float val = amplitudePoints[Math.Max(0, i - j)].Y;
-
-					previousValuesSum += val;
-				}
-
-				float bestAfterValue = -1;
-
-				for (int k = 0; k < testVal2; k++)
-				{
-					float val = amplitudePoints[Math.Min(onsets.Length - 1, i + k)].Y;
-
-					bestAfterValue = Math.Max(bestAfterValue, val);
-				}
-
-
-				float suitability = bestAfterValue / (previousValuesSum / 4.0f);
-
-				if (onset > 0.01f)
-				{
-					onsetValues.AddPoint(timePerSample * i, onset > 0 ? bestAfterValue : 0.0f);
-					sperrX = 2;
+					onsetValues.AddPoint(timePerSample * i, amplitudePoints[i].Y);
+					sperrX = 4;
 				}
 				else
 				{
 					onsetValues.AddPoint(timePerSample * i, 0);
 				}
-
-
-				//onsetValues.AddPoint(timePerSample * i, onset * suitability);
 			}
 
 			onsetValues.AbsAndNormalize();

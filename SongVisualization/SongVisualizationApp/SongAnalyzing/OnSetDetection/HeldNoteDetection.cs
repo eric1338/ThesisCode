@@ -16,6 +16,7 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 	{
 
 		private List<FrequencyBand> frequencyBands = new List<FrequencyBand>();
+		private List<NewFrequencyBand> newFrequencyBands = new List<NewFrequencyBand>();
 		
 		public HeldNoteDetection()
 		{
@@ -32,11 +33,46 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 		{
 			foreach (FrequencyBand frequencyBand in frequencyBands)
 			{
-				AddFrequencyToFrequencyBands(frequencyBand, time, fftSpectrum);
+				//AddFrequencyToFrequencyBand(frequencyBand, time, fftSpectrum);
+			}
+
+			foreach (NewFrequencyBand newFrequencyBand in newFrequencyBands)
+			{
+				AddFrequencyToNewFrequencyBand(newFrequencyBand, time, fftSpectrum);
 			}
 		}
 
-		private void AddFrequencyToFrequencyBands(FrequencyBand frequencyBand, float time, float[] spectrum)
+		private void AddFrequencyToNewFrequencyBand(NewFrequencyBand newFrequencyBand, float time, float[] spectrum)
+		{
+			int c = newFrequencyBand.SpectrumBands.Count;
+
+			float[] frequencyValues = new float[c];
+
+			for (int i = 0; i < c; i++)
+			{
+				frequencyValues[i] = spectrum[newFrequencyBand.SpectrumBands[i]];
+			}
+
+			newFrequencyBand.AddAmplitudes(time, frequencyValues);
+		}
+
+		private void AddFrequencyToFrequencyBand(FrequencyBand frequencyBand, float time, float[] spectrum)
+		{
+			float valueSum = 0;
+
+			int numberOfValues = 0;
+
+			foreach (int spectrumBand in frequencyBand.SpectrumBands)
+			{
+				valueSum += spectrum[spectrumBand];
+
+				numberOfValues++;
+			}
+
+			frequencyBand.AddAmplitude(time, valueSum / numberOfValues);
+		}
+
+		private void AddFrequencyToFrequencyBandsOLD(FrequencyBand frequencyBand, float time, float[] spectrum)
 		{
 			float maxValue = -1;
 
@@ -47,16 +83,20 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 				if (value > maxValue) maxValue = value;
 			}
 
-			frequencyBand.AddFrequency(time, maxValue);
+			frequencyBand.AddAmplitude(time, maxValue);
 		}
 
 		// TEST
 
 		public SongPropertyValues CreateHeldNoteTest()
 		{
-			RectangleDetection recDetec = new RectangleDetection();
+			//RectangleDetection recDetec = new RectangleDetection();
 
-			return recDetec.GetHeldNotes(GetFrequencyBands());
+			//return recDetec.GetHeldNotes(GetFrequencyBands());
+
+			NewRectangleDetection recDetec = new NewRectangleDetection();
+
+			return recDetec.GetHeldNotes(newFrequencyBands);
 		}
 
 
@@ -163,6 +203,11 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 			}
 		}
 
+		private float GetFrequency(float x)
+		{
+			return (float) Math.Pow(2, ((x - 49) / 12.0f)) * 440;
+			//return 65.40636393f * (float) Math.Pow(Math.E, 0.05776227579f * x);
+		}
 
 		private void CreateFrequencyBands()
 		{
@@ -172,27 +217,30 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 			float max = semitoneFrequencies.Length / (float)nSemitonesPerFrequencyBand - 2;
 
-			for (float i = 0; i < max; i += 0.5f)
-			{
-				int firstIndex = (int)Math.Floor(i * nSemitonesPerFrequencyBand);
-				int secondIndex = (int)Math.Floor((i + 1) * nSemitonesPerFrequencyBand);
+			float firstKey = 16; // C2
+			float lastKey = 75; // B6
 
-				float lowestFrequency = semitoneFrequencies[firstIndex];
-				float highestFrequency = semitoneFrequencies[secondIndex];
+			for (float i = firstKey; i < lastKey; i += 0.5f)
+			{
+				float lowestFrequency = GetFrequency(i);
+				float highestFrequency = GetFrequency(i + 1);
 
 				int lowestFFTBand = (int)Math.Floor(lowestFrequency / fftFrequencyBandWidth);
 				int highestFFTBand = (int)Math.Ceiling(highestFrequency / fftFrequencyBandWidth);
 
 				FrequencyBand frequencyBand = new FrequencyBand();
+				NewFrequencyBand newFrequencyBand = new NewFrequencyBand();
 
 				List<int> fftBands = new List<int>();
 
 				for (int j = lowestFFTBand; j <= highestFFTBand; j++)
 				{
 					frequencyBand.AddSpectrumBand(j);
+					newFrequencyBand.AddSpectrumBand(j);
 				}
 
 				frequencyBands.Add(frequencyBand);
+				newFrequencyBands.Add(newFrequencyBand);
 			}
 
 			

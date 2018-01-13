@@ -13,7 +13,8 @@ namespace GameApp.Screens.Input
 		Duck,
 		Defend,
 
-		JumpToNextTutorialLevel,
+		JumpToNextLevel,
+		RestartLevel,
 		ResetLevel,
 		TogglePauseGame,
 		ReturnToMainMenu,

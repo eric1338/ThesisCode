@@ -236,7 +236,7 @@ namespace SongVisualizationApp
 
 			foreach (MyPoint point in spv.Points)
 			{
-				if (point.Y > 0 && x++ > 8) Console.WriteLine("* " + point.X);
+				//if (point.Y > 0 && x++ < 8) Console.WriteLine("* " + point.X);
 			}
 
 			Update();

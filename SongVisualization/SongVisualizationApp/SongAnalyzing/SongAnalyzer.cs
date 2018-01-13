@@ -53,24 +53,26 @@ namespace SongVisualizationApp.SongAnalyzing
 
 			audioAnalyzer.Analyze();
 
+			//songPropertyValuesList.Add(audioAnalyzer.GetOnsetThingy());
+
 			songPropertyValuesList.Add(audioAnalyzer.GetSuperOnsetThingy());
 
-			AudioAnalyzer audioAnalyzer2 = new AudioAnalyzer(4, 3);
+			//AudioAnalyzer audioAnalyzer2 = new AudioAnalyzer(4, 3);
 
-			audioAnalyzer2.LoadAudioFromFile(fileDirectory);
+			//audioAnalyzer2.LoadAudioFromFile(fileDirectory);
 
-			audioAnalyzer2.Analyze();
+			//audioAnalyzer2.Analyze();
 
-			songPropertyValuesList.Add(audioAnalyzer2.GetSuperOnsetThingy());
+			//songPropertyValuesList.Add(audioAnalyzer2.GetSuperOnsetThingy());
 
 
-			AudioAnalyzer audioAnalyzer3 = new AudioAnalyzer(4, 2);
+			//AudioAnalyzer audioAnalyzer3 = new AudioAnalyzer(4, 2);
 
-			audioAnalyzer3.LoadAudioFromFile(fileDirectory);
+			//audioAnalyzer3.LoadAudioFromFile(fileDirectory);
 
-			audioAnalyzer3.Analyze();
+			//audioAnalyzer3.Analyze();
 
-			songPropertyValuesList.Add(audioAnalyzer3.GetSuperOnsetThingy());
+			//songPropertyValuesList.Add(audioAnalyzer3.GetSuperOnsetThingy());
 
 			//gut
 			//songPropertyValuesList.Add(GetSongPropertyValues(fileDirectory, 22, 0.1f, 0.3f));
@@ -111,6 +113,9 @@ namespace SongVisualizationApp.SongAnalyzing
 			RectangleDetection.TEST_VALUE_THRESHOLD = vth;
 			RectangleDetection.TEST_MAXIMUM_SQUARED_ERROR = msqe;
 
+			NewRectangleDetection.TEST_MAXIMUM_SQUARED_ERROR = msqe;
+			NewFrequencyBand.ValueThreshold = vth;
+
 			Console.WriteLine(sfi + " / " + nf + " / " + fbw + " / " + vth + " / " + msqe);
 
 			AudioAnalyzer audioAnalyzer = new AudioAnalyzer();
@@ -119,9 +124,11 @@ namespace SongVisualizationApp.SongAnalyzing
 
 			SongPropertyValues spv = audioAnalyzer.GetHeldNoteThingy();
 
+			spv.Normalize();
+
 			foreach (MyPoint point in spv.Points)
 			{
-				if (point.Y > 0) point.Y = 0.55f;
+				//if (point.Y > 0) point.Y = 0.55f;
 			}
 
 			//f += 0.2f;
@@ -145,11 +152,12 @@ namespace SongVisualizationApp.SongAnalyzing
 			songPropertyValuesList.Add(GetSongPropertyValues(fileDirectory, 30, 50, 16, 0.001f, 0.1f));
 			 * */
 
-			int[] freqBandWidthVals = { 2, 3, 4, 5, 6, 7, 8, 9, 12, 14, 16 };
-			float[] valueThresholdVals = { 0.001f, 0.01f, 0.025f, 0.06f, 0.1f, 0.2f };
-			float[] maxSquaredErrorVals = { 0.0001f, 0.001f, 0.005f, 0.01f, 0.03f, 0.06f, 0.1f, 0.2f };
+			int[] freqBandWidthVals = { 1 };
+			//int[] freqBandWidthVals = { 2, 3, 4, 5, 6, 7, 8, 9, 12, 14, 16 };
+			float[] valueThresholdVals = { 0.001f, 0.0025f, 0.005f, 0.0075f, 0.01f, 0.0125f, 0.015f, 0.02f, 0.04f, 0.06f, 0.1f };
+			float[] maxSquaredErrorVals = { 0.0001f, 0.0003f, 0.0006f, 0.001f, 0.00121f, 0.00144f, 0.002f, 0.004f };
 
-			int[] startingFrequencyVals = { 0, 30 };
+			int[] startingFrequencyVals = { 0 };
 			int[] numberOfFrequenciesVals = { 72 };
 
 			/*
@@ -299,7 +307,7 @@ namespace SongVisualizationApp.SongAnalyzing
 			newLines.Sort();
 
 			using (System.IO.StreamWriter file =
-				new System.IO.StreamWriter(@"C:\ForVS\HN-Test4-Unsorted-" + n + ".txt"))
+				new System.IO.StreamWriter(@"C:\ForVS\HN-New1-Unsorted-" + n + ".txt"))
 			{
 				foreach (string line in lines)
 				{
@@ -308,7 +316,7 @@ namespace SongVisualizationApp.SongAnalyzing
 			}
 
 			using (System.IO.StreamWriter file =
-				new System.IO.StreamWriter(@"C:\ForVS\HN-Test4-Sorted-" + n + ".txt"))
+				new System.IO.StreamWriter(@"C:\ForVS\HN-New1-Sorted-" + n + ".txt"))
 			{
 				foreach (string line in newLines)
 				{

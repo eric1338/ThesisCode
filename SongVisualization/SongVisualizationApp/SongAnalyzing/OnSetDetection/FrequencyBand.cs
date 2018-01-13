@@ -39,9 +39,9 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 			SpectrumBands.Add(spectrumBand);
 		}
 
-		public void AddFrequency(float time, float frequency)
+		public void AddAmplitude(float time, float amplitude)
 		{
-			Points.Add(new MyPoint(time, frequency));
+			Points.Add(new MyPoint(time, amplitude));
 		}
 
 	}

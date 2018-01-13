@@ -104,6 +104,18 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 			foreach (FrequencyBand frequencyBand in frequencyBands)
 			{
 				allHeldNotes.AddRange(GetHeldNotesFromFrequencyBand(frequencyBand.Points));
+
+				List<HeldNote> heldNotesTest = GetHeldNotesFromFrequencyBand(frequencyBand.Points);
+
+				foreach (HeldNote hn in heldNotesTest)
+				{
+					if (hn.StartTime > 120 && hn.StartTime < 135)
+					{
+						//Console.WriteLine("FCK TEST");
+
+						//foreach (int sb in frequencyBand.SpectrumBands) Console.WriteLine("++ " + sb);
+					}
+				}
 			}
 
 			/*
@@ -149,7 +161,9 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 		public static float TEST_MAXIMUM_SQUARED_ERROR = 0.0244f;
 
 
-		private class Pocket
+		// a segment half the size of the minimum length of a held note
+
+		private class SongSegment
 		{
 
 			public List<MyPoint> Points { get; set; }
@@ -157,7 +171,7 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 			public float Mean { get; set; }
 			public float ErrorSum { get; set; }
 			
-			public Pocket(List<MyPoint> points)
+			public SongSegment(List<MyPoint> points)
 			{
 				Points = points;
 
@@ -197,59 +211,60 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 		{
 			List<HeldNote> heldNotes = new List<HeldNote>();
 
-			float pocketTimeWidth = MinimumTimeWidth / 2.0f;
+			float songSegmentTimeWidth = MinimumTimeWidth / 2.0f;
 
-			int elementsPerPocket = 0;
+			int elementsPerSongSegment = 0;
 
 			float startTime = frequencyBandPoints[0].X;
 
 			foreach (MyPoint point in frequencyBandPoints)
 			{
-				if (point.X - startTime > pocketTimeWidth) break;
-				elementsPerPocket++;
+				if (point.X - startTime > songSegmentTimeWidth) break;
+				elementsPerSongSegment++;
 			}
 
-			List<Pocket> pockets = new List<Pocket>();
+			List<SongSegment> songSegments = new List<SongSegment>();
 
-			int maxIndex = (int)Math.Floor(frequencyBandPoints.Count / (float)elementsPerPocket) * elementsPerPocket;
+			int maxIndex = (int)Math.Floor(frequencyBandPoints.Count / (float)elementsPerSongSegment) * elementsPerSongSegment;
 
-			for (int i = 0; i < maxIndex; i += elementsPerPocket)
+			// one iteration for each SongSegment
+			for (int i = 0; i < maxIndex; i += elementsPerSongSegment)
 			{
-				List<MyPoint> pocketPoints = new List<MyPoint>();
-				bool fullPocket = true;
+				List<MyPoint> songSegmentPoints = new List<MyPoint>();
+				bool fullSongSegment = true;
 
-				for (int j = i; j < i + elementsPerPocket; j++)
+				for (int j = i; j < i + elementsPerSongSegment; j++)
 				{
 					MyPoint point = frequencyBandPoints[j];
 
 					if (point.Y < ValueThreshold)
 					{
-						fullPocket = false;
+						fullSongSegment = false;
 						break;
 					}
 
-					pocketPoints.Add(point);
+					songSegmentPoints.Add(point);
 				}
 
-				if (fullPocket)
+				if (fullSongSegment)
 				{
-					Pocket pocket = new Pocket(pocketPoints);
+					SongSegment songSegment = new SongSegment(songSegmentPoints);
 
-					bool isValid = pocket.CalculateError();
+					bool isValid = songSegment.CalculateError();
 
-					if (isValid) pockets.Add(pocket);
+					if (isValid) songSegments.Add(songSegment);
 				}
 			}
 
-			pockets.Sort(delegate(Pocket p1, Pocket p2)
+			songSegments.Sort(delegate(SongSegment p1, SongSegment p2)
 			{
 				return p1.ErrorSum.CompareTo(p2.ErrorSum);
 			});
 
 			
-			foreach (Pocket pocket in pockets)
+			foreach (SongSegment songSegment in songSegments)
 			{
-				HeldNote heldNote = GetHeldNoteTest(frequencyBandPoints, pocket);
+				HeldNote heldNote = GetHeldNoteFromSongSegment(frequencyBandPoints, songSegment);
 
 				if (heldNote != null) heldNotes.Add(heldNote);
 			}
@@ -258,24 +273,24 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 		}
 
 
-		private HeldNote GetHeldNoteTest(List<MyPoint> frequencyBandPoints, Pocket pocket)
+		private HeldNote GetHeldNoteFromSongSegment(List<MyPoint> frequencyBandPoints, SongSegment songSegment)
 		{
-			List<MyPoint> pocketPoints = pocket.Points;
+			List<MyPoint> songSegmentPoints = songSegment.Points;
 
-			int leftestIndex = frequencyBandPoints.IndexOf(pocketPoints[0]);
-			int rightestIndex = frequencyBandPoints.IndexOf(pocketPoints[pocketPoints.Count - 1]);
+			int leftestIndex = frequencyBandPoints.IndexOf(songSegmentPoints[0]);
+			int rightestIndex = frequencyBandPoints.IndexOf(songSegmentPoints[songSegmentPoints.Count - 1]);
 
 
 			for (int i = leftestIndex - 1; i >= 0; i--)
 			{
-				if (!IsValueValid(frequencyBandPoints[i].Y, pocket.Mean)) break;
+				if (!IsValueValid(frequencyBandPoints[i].Y, songSegment.Mean)) break;
 
 				leftestIndex = i;
 			}
 
 			for (int i = rightestIndex + 1; i < frequencyBandPoints.Count; i++)
 			{
-				if (!IsValueValid(frequencyBandPoints[i].Y, pocket.Mean)) break;
+				if (!IsValueValid(frequencyBandPoints[i].Y, songSegment.Mean)) break;
 
 				rightestIndex = i;
 			}
@@ -290,7 +305,7 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 			heldNote.StartTime = startTime;
 			heldNote.EndTime = endTime;
 
-			heldNote.AmplitudeMeanValue = pocket.Mean;
+			heldNote.AmplitudeMeanValue = songSegment.Mean;
 			heldNote.ConfidenceValue = 1;
 
 			return heldNote;
