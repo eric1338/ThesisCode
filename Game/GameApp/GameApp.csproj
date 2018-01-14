@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.8.4\lib\net35\NAudio.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="OpenTK">
       <HintPath>..\ExLibs\OpenTK.dll</HintPath>
     </Reference>
@@ -48,14 +52,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio\AmplitudeDetection.cs" />
+    <Compile Include="Audio\AudioAnalyzer.cs" />
+    <Compile Include="Audio\FFT.cs" />
+    <Compile Include="Audio\FrequencyBand.cs" />
+    <Compile Include="Audio\HeldNote.cs" />
+    <Compile Include="Audio\HeldNoteDetection.cs" />
+    <Compile Include="Audio\LomontFFT.cs" />
     <Compile Include="Audio\MusicPlayer.cs" />
+    <Compile Include="Audio\OnsetDetection.cs" />
+    <Compile Include="Audio\RectangleDetection.cs" />
+    <Compile Include="Audio\SingleBeat.cs" />
+    <Compile Include="Audio\SongElements.cs" />
     <Compile Include="Gameplay\GameLogic.cs" />
     <Compile Include="Gameplay\GameplayValues.cs" />
     <Compile Include="GeneralValues.cs" />
     <Compile Include="Levels\LevelAnalysis.cs" />
     <Compile Include="Levels\LevelAttempt.cs" />
     <Compile Include="Levels\LevelGeneration\DistributionManager.cs" />
-    <Compile Include="Levels\LevelGeneration\HeldNote.cs" />
     <Compile Include="Levels\LevelGeneration\LevelElementType.cs" />
     <Compile Include="Levels\LevelGeneration\LevelElementCreator.cs" />
     <Compile Include="Levels\LevelGeneration\LevelGenerationValues.cs" />
@@ -64,8 +78,7 @@
     <Compile Include="Levels\LevelGeneration\LevelElementPlacement.cs" />
     <Compile Include="Levels\LevelGeneration\LevelPlanCreator.cs" />
     <Compile Include="Levels\LevelGeneration\MultipleBeats.cs" />
-    <Compile Include="Levels\LevelGeneration\SingleBeat.cs" />
-    <Compile Include="Levels\LevelGeneration\SongElements.cs" />
+    <Compile Include="Levels\LevelGeneration\MultipleBeatsCreator.cs" />
     <Compile Include="Levels\LevelProgression.cs" />
     <Compile Include="Levels\Obstacle.cs" />
     <Compile Include="Levels\Projectile.cs" />
@@ -125,6 +138,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Resources\Textures\playerTest.png" />
   </ItemGroup>
   <ItemGroup>
@@ -207,6 +221,30 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Textures\playerStandard.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\menuDeImportSong.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\menuDePlaySong1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\menuDePlaySong2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\menuDePlaySong3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\menuEnImportSong.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\menuEnPlaySong1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\menuEnPlaySong2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\menuEnPlaySong3.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

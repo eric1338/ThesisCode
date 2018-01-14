@@ -73,9 +73,39 @@ namespace GameApp {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap menuDeTestSong {
+        internal static System.Drawing.Bitmap menuDeImportSong {
             get {
-                object obj = ResourceManager.GetObject("menuDeTestSong", resourceCulture);
+                object obj = ResourceManager.GetObject("menuDeImportSong", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap menuDePlaySong1 {
+            get {
+                object obj = ResourceManager.GetObject("menuDePlaySong1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap menuDePlaySong2 {
+            get {
+                object obj = ResourceManager.GetObject("menuDePlaySong2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap menuDePlaySong3 {
+            get {
+                object obj = ResourceManager.GetObject("menuDePlaySong3", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -103,9 +133,39 @@ namespace GameApp {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap menuEnTestSong {
+        internal static System.Drawing.Bitmap menuEnImportSong {
             get {
-                object obj = ResourceManager.GetObject("menuEnTestSong", resourceCulture);
+                object obj = ResourceManager.GetObject("menuEnImportSong", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap menuEnPlaySong1 {
+            get {
+                object obj = ResourceManager.GetObject("menuEnPlaySong1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap menuEnPlaySong2 {
+            get {
+                object obj = ResourceManager.GetObject("menuEnPlaySong2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap menuEnPlaySong3 {
+            get {
+                object obj = ResourceManager.GetObject("menuEnPlaySong3", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

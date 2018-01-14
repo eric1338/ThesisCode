@@ -165,23 +165,6 @@ namespace SongVisualizationApp
 
 			visualValues.SetTimeCenter(timerSongStartTime + timePassed);
 
-			if (currentFFTValues != null)
-			{
-				float time = (float) (timerSongStartTime + timePassed);
-
-				List<MyPoint> points = currentFFTValues.GetSpectrum(time);
-
-				debugChart1.Series["Series1"].Points.Clear();
-
-				if (points != null)
-				{
-					foreach (MyPoint p in points)
-					{
-						debugChart1.Series["Series1"].Points.AddXY(p.X, p.Y);
-					}
-				}
-			}
-
 			UpdateSongVisualization();
 		}
 
@@ -204,40 +187,21 @@ namespace SongVisualizationApp
 			UpdateSongVisualization();
 		}
 
-
-
-		List<FFTValues> fftValuesList;
-
-		FFTValues currentFFTValues;
-
-		public void SetFFTValuesList(List<FFTValues> fftValuesList)
-		{
-			this.fftValuesList = fftValuesList;
-		}
+		
 
 		private void debugButton1_Click(object sender, EventArgs e)
 		{
 			string fileDirectory = songFile.FileDirectory;
-
-			int startingFrequencyIndex = Convert.ToInt32(debugTextBox1.Text);
-			int numberOfFrequency = Convert.ToInt32(debugTextBox2.Text);
-			int frequencyBandWidth = Convert.ToInt32(debugTextBox3.Text);
+			
 			float valueThreshold = (float)Convert.ToDouble(debugTextBox4.Text);
 			float maximumSquaredError = (float)Convert.ToDouble(debugTextBox5.Text);
 
-			SongPropertyValues spv = SongAnalyzer.GetSongPropertyValues(fileDirectory, startingFrequencyIndex,
-				numberOfFrequency, frequencyBandWidth, valueThreshold, maximumSquaredError);
+			SongPropertyValues spv = SongAnalyzer.GetSongPropertyValues(fileDirectory,
+				valueThreshold, maximumSquaredError);
 
 			if (lastSeries != null) songValueChart.Series.Remove(lastSeries);
 
 			PlotSPVTest(spv);
-
-			int x = 0;
-
-			foreach (MyPoint point in spv.Points)
-			{
-				//if (point.Y > 0 && x++ < 8) Console.WriteLine("* " + point.X);
-			}
 
 			Update();
 		}

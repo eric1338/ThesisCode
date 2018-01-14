@@ -25,12 +25,12 @@ namespace GameApp.Audio
 
 		public void PlayTrack()
 		{
-			//windowsMediaPlayer.controls.play();
+			windowsMediaPlayer.controls.play();
 		}
 
 		public void PauseTrack()
 		{
-			//windowsMediaPlayer.controls.pause();
+			windowsMediaPlayer.controls.pause();
 		}
 
 	}

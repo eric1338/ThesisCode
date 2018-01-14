@@ -12,10 +12,14 @@ namespace GameApp.Visual
 
 		private Texture titleTexture;
 		private Texture playTutorialTexture;
-		private Texture playTestSongTexture;
+		private Texture importSongTexture;
+		private Texture playSong1Texture;
+		private Texture playSong2Texture;
+		private Texture playSong3Texture;
 		private Texture exitGameTexture;
 
-		private Vector2 menuTopLeftCorner = new Vector2(0.4f, -0.2f);
+		//private Vector2 menuTopLeftCorner = new Vector2(0.4f, -0.2f);
+		private Vector2 menuTopLeftCorner = new Vector2(0.5f, 0.3f);
 
 		private float menuItemHeight = 0.12f;
 		private float menuItemYMargin = 0.05f;
@@ -29,7 +33,10 @@ namespace GameApp.Visual
 
 			titleTexture = Textures.Instance.TitleTexture;
 			playTutorialTexture = Textures.Instance.PlayTutorialTexture;
-			playTestSongTexture = Textures.Instance.PlayTestSongTexture;
+			importSongTexture = Textures.Instance.ImportSongTexture;
+			playSong1Texture = Textures.Instance.PlaySong1Texture;
+			playSong2Texture = Textures.Instance.PlaySong2Texture;
+			playSong3Texture = Textures.Instance.PlaySong3Texture;
 			exitGameTexture = Textures.Instance.ExitGameTexture;
 		}
 
@@ -42,7 +49,7 @@ namespace GameApp.Visual
 
 			BasicGraphics.DrawTextureWithUse(titleTexture, titleTopLeftCorner, titleBottomRightCorner);
 
-			for (int i = 0; i < 3; i++)
+			for (int i = 0; i < 6; i++)
 			{
 				DrawMenuItem(i, menuItemXPaddings[i]);
 			}
@@ -53,7 +60,10 @@ namespace GameApp.Visual
 			Texture texture;
 
 			if (index == 0) texture = playTutorialTexture;
-			else if (index == 1) texture = playTestSongTexture;
+			else if (index == 1) texture = playSong1Texture;
+			else if (index == 2) texture = playSong2Texture;
+			else if (index == 3) texture = playSong3Texture;
+			else if (index == 4) texture = importSongTexture;
 			else texture = exitGameTexture;
 
 			float xOffset = menuItemXPadding * menuItemXPaddingFactor;

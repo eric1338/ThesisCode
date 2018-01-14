@@ -1,5 +1,4 @@
-﻿using NAudio.Wave;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 // code by Anthony Lee and slightly altered
 // https://github.com/Teh-Lemon/Onset-Detection
 
-namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
+namespace GameApp.Audio
 {
 	class OnsetDetection
 	{
@@ -60,10 +59,10 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 		public void NormalizeOnsets()
 		{
 			if (Onsets == null) return;
-			
+
 			float max = 0;
 			float min = 0;
-				
+
 			for (int i = 0; i < Onsets.Length; i++)
 			{
 				max = Math.Max(max, Onsets[i]);

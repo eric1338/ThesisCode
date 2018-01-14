@@ -26,7 +26,7 @@ namespace GameApp.Screens
 
 		private bool isGamePaused = false;
 
-		public GameScreen(MyGameWindow gameWindow, bool isTutorial = false) : base(gameWindow)
+		public GameScreen(MyGameWindow gameWindow, bool isTutorial = false, Level pLevel = null, string fileDirectory = "") : base(gameWindow)
 		{
 			//Level level = Level.CreateTestLevel();
 
@@ -37,12 +37,12 @@ namespace GameApp.Screens
 			if (isTutorial) level = levelGenerator.GenerateTutorialLevel();
 			else level = levelGenerator.GenerateTestLevel();
 
+			if (pLevel != null) level = pLevel;
+
 			levelAttempt = new LevelAttempt(level);
 
 			gameLogic = new GameLogic(levelAttempt);
 			levelDrawer = new LevelDrawer(levelAttempt.Level);
-
-			musicPlayer = new MusicPlayer(@"C:\ForVS\taylor.mp3");
 
 			AddKeyToSingleUserActionMapping(Key.W, UserAction.Jump);
 			AddKeyToSingleUserActionMapping(Key.Space, UserAction.Jump);
@@ -65,6 +65,8 @@ namespace GameApp.Screens
 			AddSingleUserActionToFunctionMapping(UserAction.ResetLevel, ResetLevel);
 			AddSingleUserActionToFunctionMapping(UserAction.TogglePauseGame, TogglePauseGame);
 			AddSingleUserActionToFunctionMapping(UserAction.ReturnToMainMenu, ReturnToMainMenu);
+
+			if (fileDirectory.Length > 0) musicPlayer = new MusicPlayer(fileDirectory);
 
 			Utils.Logger.StartNewLog(levelAttempt.Level.LevelName);
 		}
@@ -123,17 +125,34 @@ namespace GameApp.Screens
 
 			GetLevelProgression().IsGamePaused = isGamePaused;
 
-			if (isGamePaused) musicPlayer.PauseTrack();
-			else musicPlayer.PlayTrack();
+			if (musicPlayer != null)
+			{
+				if (isGamePaused) musicPlayer.PauseTrack();
+				else musicPlayer.PlayTrack();
+			}
 		}
 
 		public override void DoLogic()
 		{
+			CheckMusicPlayerStart();
+
 			ProcessUserActions();
 
 			if (isGamePaused) return;
 
 			gameLogic.DoLogic();
+		}
+
+		bool musicStarted = false;
+
+		private void CheckMusicPlayerStart()
+		{
+			if (!musicStarted &&
+				GetLevelProgression().CurrentPlayerPosition.X >= GeneralValues.MusicStartPositionX)
+			{
+				if (musicPlayer != null) musicPlayer.PlayTrack();
+				musicStarted = true;
+			}
 		}
 
 		public override void Draw()

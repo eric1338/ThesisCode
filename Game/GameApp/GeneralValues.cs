@@ -13,6 +13,8 @@ namespace GameApp
 
 		public static readonly bool UseEnglishLanguage = false;
 
+		public static readonly float MusicStartPositionX = 15;
+
 		public static readonly float OptimizationX = 2;
 
 	}

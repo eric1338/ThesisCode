@@ -19,7 +19,7 @@ namespace GameApp.Screens.Input
 		TogglePauseGame,
 		ReturnToMainMenu,
 
-		SelectSong,
+		ImportSong,
 		SelectCurrentMenuItem,
 		GoUpInMenu,
 		GoDownInMenu

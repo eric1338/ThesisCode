@@ -9,110 +9,119 @@ namespace GameApp.Levels.LevelGeneration
 	class DistributionManager
 	{
 
-		private Random rng;
-
-		private Dictionary<LevelElementType, int> singleBeatLevelElementDistributions;
-		private Dictionary<LevelElementType, int> multipleBeatsLevelElementDistributions;
-		private Dictionary<LevelElementType, int> heldNoteLevelElementDistributions;
-
-		public DistributionManager(int rngSeed)
+		private class LevelElementDistribution
 		{
-			rng = new Random(rngSeed);
-			
-			singleBeatLevelElementDistributions = new Dictionary<LevelElementType, int>();
-			multipleBeatsLevelElementDistributions = new Dictionary<LevelElementType, int>();
-			heldNoteLevelElementDistributions = new Dictionary<LevelElementType, int>();
+
+			public LevelElementType Type { get; set; }
+			public int Occurrences { get; set; }
+			public int FavorValue { get; set; }
+
+			public LevelElementDistribution(LevelElementType type, int favorValue)
+			{
+				Type = type;
+				Occurrences = 0;
+				FavorValue = favorValue;
+			}
+
+			public void AddOccurrence()
+			{
+				Occurrences++;
+			}
+
+		}
+
+		private class LevelElementDistributions
+		{
+
+			private List<LevelElementDistribution> distributions;
+
+			public LevelElementDistributions()
+			{
+				distributions = new List<LevelElementDistribution>();
+			}
+
+			public void AddLevelElementType(LevelElementType type, int favorValue = -1)
+			{
+				distributions.Add(new LevelElementDistribution(type, favorValue));
+			}
+
+			public void AddLevelElementOccurence(LevelElementType type)
+			{
+				foreach (LevelElementDistribution distribution in distributions)
+				{
+					if (distribution.Type == type) distribution.AddOccurrence();
+				}
+			}
+
+			public List<LevelElementType> GetOrderedLevelElementTypes()
+			{
+				List<LevelElementType> types = new List<LevelElementType>();
+
+				distributions.Sort(delegate (LevelElementDistribution d1, LevelElementDistribution d2)
+				{
+					if (d1.Occurrences != d2.Occurrences) return d1.Occurrences.CompareTo(d2.Occurrences);
+
+					return d1.FavorValue.CompareTo(d2.FavorValue);
+				});
+
+				foreach (LevelElementDistribution distribution in distributions)
+				{
+					types.Add(distribution.Type);
+				}
+
+				return types;
+			}
+
+		}
+		
+
+		private LevelElementDistributions singleBeatDistributions;
+		private LevelElementDistributions multipleBeatsDistributions;
+		private LevelElementDistributions heldNoteDistributions;
+
+		public DistributionManager()
+		{
+			singleBeatDistributions = new LevelElementDistributions();
+			multipleBeatsDistributions = new LevelElementDistributions();
+			heldNoteDistributions = new LevelElementDistributions();
 
 			Init();
 		}
 
 		private void Init()
 		{
-			singleBeatLevelElementDistributions.Add(LevelElementType.JumpObstacle, 0);
-			singleBeatLevelElementDistributions.Add(LevelElementType.HighCollectible, 0);
-			singleBeatLevelElementDistributions.Add(LevelElementType.SingleProjectile, 0);
+			singleBeatDistributions.AddLevelElementType(LevelElementType.JumpObstacle, 1);
+			singleBeatDistributions.AddLevelElementType(LevelElementType.HighCollectible, 2);
+			singleBeatDistributions.AddLevelElementType(LevelElementType.SingleProjectile, 3);
 
-			multipleBeatsLevelElementDistributions.Add(LevelElementType.ChasmWithCollectibles, 0);
-			multipleBeatsLevelElementDistributions.Add(LevelElementType.MultipleProjectiles, 0);
+			multipleBeatsDistributions.AddLevelElementType(LevelElementType.MultipleProjectiles, 1);
+			multipleBeatsDistributions.AddLevelElementType(LevelElementType.ChasmWithCollectibles, 2);
 
-			heldNoteLevelElementDistributions.Add(LevelElementType.Chasm, 0);
-			heldNoteLevelElementDistributions.Add(LevelElementType.DuckObstacle, 0);
+			heldNoteDistributions.AddLevelElementType(LevelElementType.Chasm, 1);
+			heldNoteDistributions.AddLevelElementType(LevelElementType.DuckObstacle, 2);
 		}
 
-		public List<LevelElementType> GetPossibleSingleBeatLevelElementTypes()
+		public void AddLevelElementUse(LevelElementType type)
 		{
-			return GetPossibleLevelElements(singleBeatLevelElementDistributions);
+			singleBeatDistributions.AddLevelElementType(type);
+			multipleBeatsDistributions.AddLevelElementType(type);
+			heldNoteDistributions.AddLevelElementType(type);
 		}
 
-		public void AddSingleBeatLevelElementUse(LevelElementType levelElementType)
+		public List<LevelElementType> GetOrderedSingleBeatLevelElementTypes()
 		{
-			singleBeatLevelElementDistributions[levelElementType] =
-				singleBeatLevelElementDistributions[levelElementType] + 1;
+			return singleBeatDistributions.GetOrderedLevelElementTypes();
 		}
 
-		public List<LevelElementType> GetPossibleMultipleBeatsLevelElementTypes()
+		public List<LevelElementType> GetOrderedMultipleBeatsLevelElementTypes()
 		{
-			return GetPossibleLevelElements(multipleBeatsLevelElementDistributions);
+			return multipleBeatsDistributions.GetOrderedLevelElementTypes();
 		}
 
-		public void AddMultipleBeatsLevelElementUse(LevelElementType levelElementType)
+		public List<LevelElementType> GetOrderedHeldNoteLevelElementTypes()
 		{
-			multipleBeatsLevelElementDistributions[levelElementType] =
-				multipleBeatsLevelElementDistributions[levelElementType] + 1;
+			return heldNoteDistributions.GetOrderedLevelElementTypes();
 		}
-
-		public List<LevelElementType> GetPossibleHeldNoteLevelElementTypes()
-		{
-			return GetPossibleLevelElements(heldNoteLevelElementDistributions);
-		}
-
-		public void AddHeldNoteLevelElementUse(LevelElementType levelElementType)
-		{
-			heldNoteLevelElementDistributions[levelElementType] =
-				heldNoteLevelElementDistributions[levelElementType] + 1;
-		}
-
-		private List<LevelElementType> GetPossibleLevelElements(Dictionary<LevelElementType, int> distributions)
-		{
-			List<LevelElementType> possibleLevelElements = new List<LevelElementType>();
-
-			int lowestOccurenceValue = 9999;
-
-			foreach (KeyValuePair<LevelElementType, int> distribution in distributions.ToList())
-			{
-				LevelElementType levelElement = distribution.Key;
-				int numberOfOccurences = distribution.Value;
-
-				if (numberOfOccurences < lowestOccurenceValue)
-				{
-					possibleLevelElements.Clear();
-					possibleLevelElements.Add(levelElement);
-
-					lowestOccurenceValue = numberOfOccurences;
-				}
-				else if (numberOfOccurences == lowestOccurenceValue)
-				{
-					possibleLevelElements.Add(levelElement);
-				}
-			}
-
-			if (possibleLevelElements.Count < 2) return possibleLevelElements;
-
-			List<LevelElementType> shuffledPossibleLevelElements = new List<LevelElementType>();
-
-			for (int i = possibleLevelElements.Count; i >= 1; i--)
-			{
-				int randomIndex = rng.Next(i);
-
-				LevelElementType levelElement = possibleLevelElements[randomIndex];
-
-				shuffledPossibleLevelElements.Add(levelElement);
-				possibleLevelElements.Remove(levelElement);
-			}
-
-			return shuffledPossibleLevelElements;
-		}
-		
 
 	}
 }

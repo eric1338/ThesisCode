@@ -1,16 +1,14 @@
-﻿using NAudio.Wave;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
+namespace GameApp.Audio
 {
-
 	class HeldNoteDetection
 	{
-		
+
 		private List<FrequencyBand> frequencyBands = new List<FrequencyBand>();
 
 		private float fftFrequencyBandWidth = 43.1f;
@@ -49,10 +47,10 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 			rectangularDetection.AddHeldNotesFromFrequencyBands(songElements, frequencyBands);
 		}
-		
+
 		private float GetFrequency(float x)
 		{
-			return (float) Math.Pow(2, ((x - 49) / 12.0f)) * 440;
+			return (float)Math.Pow(2, ((x - 49) / 12.0f)) * 440;
 		}
 
 		private void CreateFrequencyBands()
@@ -67,20 +65,17 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 				int lowestFFTBand = (int)Math.Floor(lowestFrequency / fftFrequencyBandWidth);
 				int highestFFTBand = (int)Math.Ceiling(highestFrequency / fftFrequencyBandWidth);
-				
+
 				FrequencyBand frequencyBand = new FrequencyBand();
 
 				for (int j = lowestFFTBand; j <= highestFFTBand; j++)
 				{
 					frequencyBand.AddSpectrumBand(j);
 				}
-				
+
 				frequencyBands.Add(frequencyBand);
 			}
-
-
 		}
-
 
 	}
 }

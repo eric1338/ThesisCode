@@ -16,8 +16,7 @@ namespace SongVisualizationApp
 		void SetProgress(string progressText, float relativeProgress);
 
 		void SetSongFile(SongFile songFile);
-
-		void PlotFFTValues(List<FFTValues> fftValuesList);
+		
 		void PlotSongPropertyValues(List<SongPropertyValues> songPropertyValuesList);
 
 	}

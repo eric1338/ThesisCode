@@ -113,8 +113,6 @@ namespace GameApp.Visual
 			if (level.IsTutorial) DrawTutorialInfoTexture();
 
 			if (levelProgression.IsGamePaused) DrawPauseScreen();
-
-			//Console.WriteLine("ATTS: " + BasicGraphics.textureDrawAttempts);
 		}
 
 		private void CalculateVisualCenter(LevelProgression levelProgression)
@@ -122,34 +120,37 @@ namespace GameApp.Visual
 			visualCenter = GetVisualCenter(levelProgression) + VisualValues.ScreenCenterOffset;
 		}
 
+		private bool hasPlayerLeftCurrentGround = false;
+		private float lastGroundTopY = 99999;
+
 		private Vector2 GetVisualCenter(LevelProgression levelProgression)
 		{
 			Vector2 playerPosition = levelProgression.CurrentPlayerPosition;
-
 			Ground groundBelowPlayer = LevelAnalysis.GetGroundBelowVector(level, playerPosition);
+
+			if (hasPlayerLeftCurrentGround)
+			{
+				if (groundBelowPlayer != null)
+				{
+					if (Math.Abs(playerPosition.Y - groundBelowPlayer.TopY) < 0.001f) hasPlayerLeftCurrentGround = false;
+				}
+
+				return new Vector2(playerPosition.X, Math.Min(lastGroundTopY, playerPosition.Y));
+			}
 
 			if (groundBelowPlayer != null)
 			{
 				return new Vector2(playerPosition.X, groundBelowPlayer.TopY);
 			}
 
+			if (!hasPlayerLeftCurrentGround) hasPlayerLeftCurrentGround = true;
+
 			Ground groundLeftFromPlayer = LevelAnalysis.GetGroundLeftFromVector(level, playerPosition);
-			Ground groundRightFromPlayer = LevelAnalysis.GetGroundRightFromVector(level, playerPosition);
+			lastGroundTopY = groundLeftFromPlayer.TopY;
 
-			if (groundLeftFromPlayer == null || groundRightFromPlayer == null)
-			{
-				return playerPosition;
-			}
+			if (groundLeftFromPlayer == null) return playerPosition;
 
-			float chasmWidth = groundRightFromPlayer.LeftX - groundLeftFromPlayer.RightX;
-
-			float rightPercentage = Utils.MyMath.Smoothstep(groundLeftFromPlayer.RightX, groundRightFromPlayer.LeftX, playerPosition.X);
-
-			//float rightPercentage = (playerPosition.X - groundLeftFromPlayer.RightX) / chasmWidth;
-
-			float y = (1 - rightPercentage) * groundLeftFromPlayer.TopY + rightPercentage * groundRightFromPlayer.TopY;
-
-			return new Vector2(playerPosition.X, y);
+			return new Vector2(playerPosition.X, Math.Min(groundLeftFromPlayer.TopY, playerPosition.Y));
 		}
 
 		private float GetScreenWidth()
@@ -265,10 +266,10 @@ namespace GameApp.Visual
 		{
 			float groundPartWidth = 2.4f;
 			float groundMinimumHeight = 0.1f;
-			float triangleOffset = 0.05f;
+			float triangleYOffset = 0.05f;
 
-			float leftOffset = triangleOffset;
-			float rightOffset = 0;
+			float leftYOffset = triangleYOffset;
+			float rightYOffset = 0;
 
 			float topY = ground.TopY;
 
@@ -281,8 +282,8 @@ namespace GameApp.Visual
 			{
 				if (IsCoordRightOfScreen(leftX)) break;
 
-				leftOffset = leftOffset > 0 ? 0 : triangleOffset;
-				rightOffset = rightOffset > 0 ? 0 : triangleOffset;
+				leftYOffset = leftYOffset > 0 ? 0 : triangleYOffset;
+				rightYOffset = rightYOffset > 0 ? 0 : triangleYOffset;
 
 				float fullRightX = leftX + groundPartWidth;
 
@@ -293,7 +294,7 @@ namespace GameApp.Visual
 				}
 
 				Vector2 topLeftCorner = new Vector2(leftX, topY);
-				Vector2 bottomLeftCorner = new Vector2(leftX, topY - groundMinimumHeight - leftOffset);
+				Vector2 bottomLeftCorner = new Vector2(leftX, topY - groundMinimumHeight - leftYOffset);
 
 				Vector2 topRightCorner;
 				Vector2 bottomRightCorner;
@@ -301,15 +302,15 @@ namespace GameApp.Visual
 				if (fullRightX < maxRightX)
 				{
 					topRightCorner = new Vector2(fullRightX, topY);
-					bottomRightCorner = new Vector2(fullRightX, topY - groundMinimumHeight - rightOffset);
+					bottomRightCorner = new Vector2(fullRightX, topY - groundMinimumHeight - rightYOffset);
 				}
 				else
 				{
-					topRightCorner = new Vector2(fullRightX, maxRightX);
+					topRightCorner = new Vector2(maxRightX, topY);
 
-					float totalRightOffset = ((maxRightX - leftX) / groundPartWidth) * (groundMinimumHeight + rightOffset);
+					//float totalRightOffset = ((maxRightX - leftX) / groundPartWidth) * (groundMinimumHeight + rightYOffset);
 
-					bottomRightCorner = new Vector2(fullRightX, (topY - totalRightOffset));
+					bottomRightCorner = new Vector2(maxRightX, (topY - groundMinimumHeight - rightYOffset));
 				}
 
 				topLeftCorner = GetTransformedVector(topLeftCorner);
@@ -338,28 +339,57 @@ namespace GameApp.Visual
 			DrawSquare(obstacle.TopLeftCorner, obstacle.BottomRightCorner);
 		}
 
+
+
+		private int collectibleMaximumValue = 60;
+
+		private Dictionary<int, int> collectiblesStateValues = new Dictionary<int, int>();
+
 		private void DrawCollectibles(LevelProgression levelProgression)
 		{
+			foreach (KeyValuePair<int, int> csv in collectiblesStateValues.ToList())
+			{
+				collectiblesStateValues[csv.Key] = csv.Value - 1;
+			}
+
 			foreach (Collectible collectible in level.Collectibles)
 			{
-				if (levelProgression.IsCollectibleAlreadyCollected(collectible)) continue;
+				int id = collectible.ID;
+				int stateValue = collectibleMaximumValue;
+
+				if (levelProgression.IsCollectibleAlreadyCollected(collectible))
+				{
+					if (!collectiblesStateValues.ContainsKey(id))
+					{
+						collectiblesStateValues.Add(id, 60);
+					}
+
+					stateValue = collectiblesStateValues[id];
+				}
 
 				float halfCollectibleWidth = VisualValues.HalfCollectibleWidthHeight * 0.95f;
 
 				float leftX = collectible.Position.X - halfCollectibleWidth;
 				float rightX = collectible.Position.X + halfCollectibleWidth;
 
-				if (IsObjectOnScreen(leftX, rightX)) DrawCollectible(collectible);
+				if (IsObjectOnScreen(leftX, rightX)) DrawCollectible(collectible, stateValue);
 			}
 		}
 
-		private void DrawCollectible(Collectible collectible)
+
+
+
+		private void DrawCollectible(Collectible collectible, int stateValue)
 		{
-			BasicGraphics.SetColor(1.0f, 0.9f, 0.4f);
+			float alpha = Math.Max(stateValue / (float)collectibleMaximumValue, 0);
+			float sizeFactor = 1 - alpha;
+
+			BasicGraphics.SetColor4(1.0f, 0.9f, 0.4f, alpha);
 
 			float x = collectible.Position.X;
 			float y = collectible.Position.Y;
-			float h = VisualValues.HalfCollectibleWidthHeight;
+			float add = VisualValues.HalfCollectibleWidthHeight * sizeFactor * 1.5f;
+			float h = VisualValues.HalfCollectibleWidthHeight + add;
 
 			Vector2 v1 = new Vector2(x - h, y + h);
 			Vector2 v2 = new Vector2(x + h, y - h);

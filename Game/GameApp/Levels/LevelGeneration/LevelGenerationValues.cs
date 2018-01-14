@@ -13,23 +13,25 @@ namespace GameApp.Levels.LevelGeneration
 
 		// Difficulty
 
-		public static readonly float TimeBeforeLevelElement = 2;
+		public static readonly float TimeBeforeLevelElement = 1;
 
 
 		// Applicability Thresholds
 
-		public static readonly float HeldNoteApplicabilityThreshold = 0.2f;
-		public static readonly float MultipleBeatsApplicabilityThreshold = 0.1f;
-		public static readonly float SingleBeatsApplicabilityThreshold = 0.3f;
-		public static readonly float FillUpElementsApplicabilityThreshold = 0.4f;
+		public static readonly float HeldNoteApplicabilityThreshold = 0.0f;
+		public static readonly float MultipleBeatsApplicabilityThreshold = 0.0f;
+		public static readonly float SingleBeatsApplicabilityThreshold = 0.0f;
+		public static readonly float FillUpElementsApplicabilityThreshold = 0.0f;
 
 		// Rest
 
-		public static readonly float MaximumTimeMarginForMultipleBeats = 1f;
+		public static readonly int MininumBeatsForMultipleBeats = 3;
 
-		public static readonly Vector2 PlayerStartPosition = new Vector2(0, 0);
+		public static readonly float MaximumMultipleBeatsTotalTimeMargin = 2f;
+		public static readonly float MaximumMultipleBeatsTimeDelta = 0.5f;
 
-		public static readonly float MusicStartPositionX = 0;
+		public static readonly Vector2 PlayerStartPosition =
+			new Vector2(GeneralValues.MusicStartPositionX - 5, 0);
 
 		public static readonly float FirstGroundLeftX = -10;
 
@@ -80,10 +82,6 @@ namespace GameApp.Levels.LevelGeneration
 
 			float halfJumpObstacleWidth = PhysicsValues.GetPlainJumpLength() / 2.0f;
 
-			Console.WriteLine("safety: " + (MaximumJumpObstacleJumpTimingOffset * PhysicsValues.HorizontalPlayerVelocity));
-			Console.WriteLine("minReq: " + minimumHorizontalDistanceRequired);
-			Console.WriteLine("halfPl: " + PhysicsValues.GetHalfPlayerHitboxWidth());
-
 			halfJumpObstacleWidth -= MaximumJumpObstacleJumpTimingOffset * PhysicsValues.HorizontalPlayerVelocity;
 			halfJumpObstacleWidth -= minimumHorizontalDistanceRequired;
 			halfJumpObstacleWidth -= PhysicsValues.GetHalfPlayerHitboxWidth();
@@ -126,7 +124,7 @@ namespace GameApp.Levels.LevelGeneration
 
 		public static float GetXPositionByTime(float time)
 		{
-			return MusicStartPositionX + time * GetPlayerVelocity();
+			return GeneralValues.MusicStartPositionX + time * GetPlayerVelocity();
 		}
 
 		public static float GetYDifferenceAfterJump(float timeAfterJump)

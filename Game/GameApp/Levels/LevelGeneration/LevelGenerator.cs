@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿using GameApp.Audio;
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,21 @@ namespace GameApp.Levels.LevelGeneration
 {
 	class LevelGenerator
 	{
+
+		public static Level GenerateLevel(SongElements songElements)
+		{
+			LevelPlanCreator levelPlanCreator = new LevelPlanCreator(songElements);
+
+			levelPlanCreator.CreateLevelPlan();
+
+			LevelPlan levelPlan = levelPlanCreator.LevelPlan;
+
+			LevelGenerator levelGenerator = new LevelGenerator();
+
+			Level level = levelGenerator.GenerateLevel(levelPlan);
+
+			return level;
+		}
 
 		public Level GenerateTutorialLevel()
 		{
@@ -81,12 +97,6 @@ namespace GameApp.Levels.LevelGeneration
 			levelPlanCreator.CreateLevelPlan();
 
 			LevelPlan test = levelPlanCreator.LevelPlan;
-
-			foreach (LevelElementPlacement pl in test.LevelElementPlacements)
-			{
-				Console.WriteLine(pl.Type + " von " + Math.Round(pl.LevelElementStartTime, 1) +
-					" bis " + Math.Round(pl.LevelElementEndTime, 1));
-			}
 
 			return GenerateLevel(levelPlanCreator.LevelPlan);
 

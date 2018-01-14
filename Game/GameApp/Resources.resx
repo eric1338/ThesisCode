@@ -121,8 +121,17 @@
   <data name="menuDeExit" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Textures\menuDeExit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="menuDeTestSong" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Textures\menuDeTestSong.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="menuDeImportSong" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Textures\menuDeImportSong.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menuDePlaySong1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Textures\menuDePlaySong1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menuDePlaySong2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Textures\menuDePlaySong2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menuDePlaySong3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Textures\menuDePlaySong3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="menuDeTutorial" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Textures\menuDeTutorial.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -130,8 +139,17 @@
   <data name="menuEnExit" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Textures\menuEnExit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="menuEnTestSong" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Textures\menuEnTestSong.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="menuEnImportSong" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Textures\menuEnImportSong.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menuEnPlaySong1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Textures\menuEnPlaySong1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menuEnPlaySong2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Textures\menuEnPlaySong2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menuEnPlaySong3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Textures\menuEnPlaySong3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="menuEnTutorial" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Textures\menuEnTutorial.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

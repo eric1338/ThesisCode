@@ -4,10 +4,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameApp.Levels.LevelGeneration
+namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 {
 	class SongElements
 	{
+
+		public class SingleBeat
+		{
+			public float Time { get; set; }
+			public float Applicability { get; set; }
+
+			public SingleBeat(float time, float applicability)
+			{
+				Time = time;
+				Applicability = applicability;
+			}
+		}
+
+		public class HeldNote
+		{
+			public float StartTime { get; set; }
+			public float EndTime { get; set; }
+			public float Applicability { get; set; }
+
+			public HeldNote(float startingTime, float endTime, float applicability)
+			{
+				StartTime = startingTime;
+				EndTime = endTime;
+				Applicability = applicability;
+			}
+		}
 
 		public List<SingleBeat> SingleBeats { get; set; }
 
@@ -52,15 +78,12 @@ namespace GameApp.Levels.LevelGeneration
 
 			SingleBeats.Reverse();
 
-			HeldNotes.Sort(delegate(HeldNote h1, HeldNote h2)
+			HeldNotes.Sort(delegate (HeldNote h1, HeldNote h2)
 			{
 				return h1.Applicability.CompareTo(h2.Applicability);
 			});
 
 			HeldNotes.Reverse();
 		}
-
-
-
 	}
 }

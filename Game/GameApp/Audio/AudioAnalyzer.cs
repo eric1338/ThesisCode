@@ -1,19 +1,14 @@
 ﻿using NAudio.Wave;
-using SongVisualizationApp.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-// code heavily inspired by Anthony Lee
-// https://github.com/Teh-Lemon/Onset-Detection
-
-namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
+namespace GameApp.Audio
 {
 	class AudioAnalyzer
 	{
-
 		public SongElements SongElements { get; set; }
 
 		private const int sampleSize = 1024;
@@ -34,16 +29,26 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 			SongElements = new SongElements();
 
 			fft = new FFT();
-			
+
 			fft.A = 0;
 			fft.B = 1;
 		}
 
-		public void LoadAudioFromFile(string filePath)
+		public static SongElements GetSongElements(string fileDirectory)
 		{
-			if (filePath.EndsWith(".mp3") || filePath.EndsWith(".wav"))
+			AudioAnalyzer audioAnalyzer = new AudioAnalyzer();
+
+			audioAnalyzer.LoadAudioFromFile(fileDirectory);
+			audioAnalyzer.Analyze();
+
+			return audioAnalyzer.SongElements;
+		}
+
+		public void LoadAudioFromFile(string fileDirectory)
+		{
+			if (fileDirectory.EndsWith(".mp3") || fileDirectory.EndsWith(".wav"))
 			{
-				pcmStream = new AudioFileReader(filePath);
+				pcmStream = new AudioFileReader(fileDirectory);
 			}
 			else
 			{
@@ -52,7 +57,7 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 			sampleRate = pcmStream.WaveFormat.SampleRate;
 
-			timePerSample = sampleSize / (float) pcmStream.WaveFormat.SampleRate;
+			timePerSample = sampleSize / (float)pcmStream.WaveFormat.SampleRate;
 		}
 
 		public void DisposeAudioAnalysis()
@@ -66,9 +71,7 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 
 		private void AddOnsets(SongElements songElements)
 		{
-			SongPropertyValues onsetValues = new SongPropertyValues("Onsets");
-
-			List<MyPoint> amplitudePoints = amplitudeDetection.Points;
+			List<AmplitudeDetection.MyPoint> amplitudePoints = amplitudeDetection.Points;
 
 			float[] onsets = onsetDetection.Onsets;
 
@@ -85,7 +88,7 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 				if (onsets[i] > 0.01f)
 				{
 					songElements.AddSingleBeat(timePerSample * i, amplitudePoints[i].Y);
-					
+
 					samplesNotUsed = 4;
 				}
 			}
@@ -129,21 +132,21 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 			AddOnsets(SongElements);
 			heldNoteDetection.AddHeldNotes(SongElements);
 		}
-		
+
 		private float[] ReadMonoPCM()
 		{
 			int size = sampleSize;
-			
+
 			if (pcmStream.WaveFormat.Channels == 2) size *= 2;
 
 			float[] output = new float[size];
-			
+
 			if (pcmStream.Read(output, 0, size) == 0)
 			{
 				// If end of audio file
 				return null;
 			}
-			
+
 			if (pcmStream.WaveFormat.Channels == 2)
 			{
 				return ConvertStereoToMono(output);
@@ -156,17 +159,18 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 		{
 			float[] output = new float[input.Length / 2];
 			int outputIndex = 0;
-			
+
 			for (int i = 0; i < input.Length; i += 2)
 			{
 				float leftChannel = input[i];
 				float rightChannel = input[i + 1];
-				
+
 				output[outputIndex] = (leftChannel + rightChannel) / 2;
 				outputIndex++;
 			}
 
 			return output;
 		}
+
 	}
 }

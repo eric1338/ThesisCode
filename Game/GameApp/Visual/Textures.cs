@@ -20,7 +20,10 @@ namespace GameApp.Visual
 		public Texture PlayerGhostTexture { get; set; }
 
 		public Texture PlayTutorialTexture { get; set; }
-		public Texture PlayTestSongTexture { get; set; }
+		public Texture ImportSongTexture { get; set; }
+		public Texture PlaySong1Texture { get; set; }
+		public Texture PlaySong2Texture { get; set; }
+		public Texture PlaySong3Texture { get; set; }
 		public Texture ExitGameTexture { get; set; }
 
 		public Texture OverlayGameComplete { get; set; }
@@ -52,7 +55,10 @@ namespace GameApp.Visual
 			if (GeneralValues.UseEnglishLanguage)
 			{
 				PlayTutorialTexture = TextureLoader.FromBitmap(Resources.menuEnTutorial);
-				PlayTestSongTexture = TextureLoader.FromBitmap(Resources.menuEnTestSong);
+				ImportSongTexture = TextureLoader.FromBitmap(Resources.menuEnImportSong);
+				PlaySong1Texture = TextureLoader.FromBitmap(Resources.menuEnPlaySong1);
+				PlaySong2Texture = TextureLoader.FromBitmap(Resources.menuEnPlaySong2);
+				PlaySong3Texture = TextureLoader.FromBitmap(Resources.menuEnPlaySong3);
 				ExitGameTexture = TextureLoader.FromBitmap(Resources.menuEnExit);
 
 				OverlayGameComplete = TextureLoader.FromBitmap(Resources.overlayEnGameComplete);
@@ -66,7 +72,10 @@ namespace GameApp.Visual
 			else
 			{
 				PlayTutorialTexture = TextureLoader.FromBitmap(Resources.menuDeTutorial);
-				PlayTestSongTexture = TextureLoader.FromBitmap(Resources.menuDeTestSong);
+				ImportSongTexture = TextureLoader.FromBitmap(Resources.menuDeImportSong);
+				PlaySong1Texture = TextureLoader.FromBitmap(Resources.menuDePlaySong1);
+				PlaySong2Texture = TextureLoader.FromBitmap(Resources.menuDePlaySong2);
+				PlaySong3Texture = TextureLoader.FromBitmap(Resources.menuDePlaySong3);
 				ExitGameTexture = TextureLoader.FromBitmap(Resources.menuDeExit);
 
 				OverlayGameComplete = TextureLoader.FromBitmap(Resources.overlayDeGameComplete);

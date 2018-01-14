@@ -10,28 +10,37 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 	class FrequencyBand
 	{
 
-		public List<MyPoint> Points { get; set; }
+		public class FBPoint
+		{
 
-		public int LeftFrequencyMargin { get; set; }
-		public int RightFrequencyMargin { get; set; }
+			public float Time { get; set; }
+			public float Amplitude { get; set; }
+			public float MinimumSquaredErrorToPrevious { get; set; }
+
+			public FBPoint(float time, float amplitude, float minimumSquaredErrorToPrevious)
+			{
+				Time = time;
+				Amplitude = amplitude;
+				MinimumSquaredErrorToPrevious = minimumSquaredErrorToPrevious;
+			}
+
+		}
+
+		public List<FBPoint> FBPoints { get; set; }
 
 		public List<int> SpectrumBands { get; set; }
 
+		public static float ValueThreshold { get; set; }
+
+		private float[] lastAmplitudes = null;
+
 		public FrequencyBand()
 		{
+			FBPoints = new List<FBPoint>();
+			
 			SpectrumBands = new List<int>();
 
-			Points = new List<MyPoint>();
-		}
-
-		public FrequencyBand(int leftFrequencyMargin, int rightFrequencyMargin)
-		{
-			LeftFrequencyMargin = leftFrequencyMargin;
-			RightFrequencyMargin = rightFrequencyMargin;
-
-			SpectrumBands = new List<int>();
-
-			Points = new List<MyPoint>();
+			ValueThreshold = 0.0001f;
 		}
 
 		public void AddSpectrumBand(int spectrumBand)
@@ -39,9 +48,45 @@ namespace SongVisualizationApp.SongAnalyzing.OnSetDetection
 			SpectrumBands.Add(spectrumBand);
 		}
 
-		public void AddAmplitude(float time, float amplitude)
+		public void AddAmplitudes(float time, float[] amplitudes)
 		{
-			Points.Add(new MyPoint(time, amplitude));
+			float maximumAmplitude = -1;
+
+			foreach (float amplitude in amplitudes)
+			{
+				if (amplitude > maximumAmplitude) maximumAmplitude = amplitude;
+			}
+
+			float minimumSquaredErrorToPrevious = 9999;
+			
+			if (lastAmplitudes != null)
+			{
+				minimumSquaredErrorToPrevious = GetMinimumSquaredError(amplitudes);
+			}
+
+			FBPoints.Add(new FBPoint(time, maximumAmplitude, minimumSquaredErrorToPrevious));
+
+			lastAmplitudes = amplitudes;
+		}
+
+		private float GetMinimumSquaredError(float[] newAmplitudes)
+		{
+			float minimumError = 9999;
+
+			foreach (float lastAmplitude in lastAmplitudes)
+			{
+				foreach (float newAmplitude in newAmplitudes)
+				{
+					if (lastAmplitude > ValueThreshold && newAmplitude > ValueThreshold)
+					{
+						float error = (float)Math.Pow(lastAmplitude - newAmplitude, 2);
+
+						if (error < minimumError) minimumError = error;
+					}
+				}
+			}
+
+			return minimumError;
 		}
 
 	}
