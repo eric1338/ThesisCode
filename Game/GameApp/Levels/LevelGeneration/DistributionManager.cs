@@ -76,14 +76,14 @@ namespace GameApp.Levels.LevelGeneration
 		
 
 		private LevelElementDistributions singleBeatDistributions;
-		private LevelElementDistributions multipleBeatsDistributions;
 		private LevelElementDistributions heldNoteDistributions;
+		private LevelElementDistributions multipleBeatsDistributions;
 
 		public DistributionManager()
 		{
 			singleBeatDistributions = new LevelElementDistributions();
-			multipleBeatsDistributions = new LevelElementDistributions();
 			heldNoteDistributions = new LevelElementDistributions();
+			multipleBeatsDistributions = new LevelElementDistributions();
 
 			Init();
 		}
@@ -94,18 +94,18 @@ namespace GameApp.Levels.LevelGeneration
 			singleBeatDistributions.AddLevelElementType(LevelElementType.HighCollectible, 2);
 			singleBeatDistributions.AddLevelElementType(LevelElementType.SingleProjectile, 3);
 
-			multipleBeatsDistributions.AddLevelElementType(LevelElementType.MultipleProjectiles, 1);
-			multipleBeatsDistributions.AddLevelElementType(LevelElementType.ChasmWithCollectibles, 2);
-
 			heldNoteDistributions.AddLevelElementType(LevelElementType.Chasm, 1);
 			heldNoteDistributions.AddLevelElementType(LevelElementType.DuckObstacle, 2);
+
+			multipleBeatsDistributions.AddLevelElementType(LevelElementType.MultipleProjectiles, 1);
+			multipleBeatsDistributions.AddLevelElementType(LevelElementType.ChasmWithCollectibles, 2);
 		}
 
 		public void AddLevelElementUse(LevelElementType type)
 		{
-			singleBeatDistributions.AddLevelElementType(type);
-			multipleBeatsDistributions.AddLevelElementType(type);
-			heldNoteDistributions.AddLevelElementType(type);
+			singleBeatDistributions.AddLevelElementOccurence(type);
+			heldNoteDistributions.AddLevelElementOccurence(type);
+			multipleBeatsDistributions.AddLevelElementOccurence(type);
 		}
 
 		public List<LevelElementType> GetOrderedSingleBeatLevelElementTypes()
@@ -113,14 +113,14 @@ namespace GameApp.Levels.LevelGeneration
 			return singleBeatDistributions.GetOrderedLevelElementTypes();
 		}
 
-		public List<LevelElementType> GetOrderedMultipleBeatsLevelElementTypes()
-		{
-			return multipleBeatsDistributions.GetOrderedLevelElementTypes();
-		}
-
 		public List<LevelElementType> GetOrderedHeldNoteLevelElementTypes()
 		{
 			return heldNoteDistributions.GetOrderedLevelElementTypes();
+		}
+
+		public List<LevelElementType> GetOrderedMultipleBeatsLevelElementTypes()
+		{
+			return multipleBeatsDistributions.GetOrderedLevelElementTypes();
 		}
 
 	}

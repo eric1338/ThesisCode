@@ -26,19 +26,8 @@ namespace GameApp.Screens
 
 		private bool isGamePaused = false;
 
-		public GameScreen(MyGameWindow gameWindow, bool isTutorial = false, Level pLevel = null, string fileDirectory = "") : base(gameWindow)
+		public GameScreen(MyGameWindow gameWindow, Level level, string fileDirectory = "") : base(gameWindow)
 		{
-			//Level level = Level.CreateTestLevel();
-
-			LevelGenerator levelGenerator = new LevelGenerator();
-
-			Level level;
-
-			if (isTutorial) level = levelGenerator.GenerateTutorialLevel();
-			else level = levelGenerator.GenerateTestLevel();
-
-			if (pLevel != null) level = pLevel;
-
 			levelAttempt = new LevelAttempt(level);
 
 			gameLogic = new GameLogic(levelAttempt);
@@ -55,6 +44,7 @@ namespace GameApp.Screens
 			AddKeyToSingleUserActionMapping(Key.P, UserAction.TogglePauseGame);
 			AddKeyToSingleUserActionMapping(Key.Escape, UserAction.TogglePauseGame);
 			AddKeyToSingleUserActionMapping(Key.F10, UserAction.ResetLevel);
+			AddKeyToSingleUserActionMapping(Key.N, UserAction.JumpToNextLevel);
 			AddKeyToSingleUserActionMapping(Key.X, UserAction.ReturnToMainMenu);
 
 			AddSingleUserActionToFunctionMapping(UserAction.Jump, Jump);
@@ -64,11 +54,62 @@ namespace GameApp.Screens
 
 			AddSingleUserActionToFunctionMapping(UserAction.ResetLevel, ResetLevel);
 			AddSingleUserActionToFunctionMapping(UserAction.TogglePauseGame, TogglePauseGame);
+			AddSingleUserActionToFunctionMapping(UserAction.JumpToNextLevel, JumpToNextLevel);
 			AddSingleUserActionToFunctionMapping(UserAction.ReturnToMainMenu, ReturnToMainMenu);
 
 			if (fileDirectory.Length > 0) musicPlayer = new MusicPlayer(fileDirectory);
 
-			Utils.Logger.StartNewLog(levelAttempt.Level.LevelName);
+			Utils.Logger.StartNewLog(levelAttempt.Level.Name);
+		}
+
+		public static GameScreen CreateTutorialGameScreen(MyGameWindow gameWindow, int tutorialNumber)
+		{
+			LevelGenerator levelGenerator = new LevelGenerator();
+
+			Level level;
+
+			if (tutorialNumber == 1) level = levelGenerator.GenerateFirstTutorialLevel();
+			else if (tutorialNumber == 2) level = levelGenerator.GenerateSecondTutorialLevel();
+			else level = levelGenerator.GenerateThirdTutorialLevel();
+
+			GameScreen gameScreen = new GameScreen(gameWindow, level);
+
+			return gameScreen;
+		}
+
+		public static GameScreen CreateTestSongGameScreen(MyGameWindow gameWindow, int songNumber)
+		{
+			LevelGenerator levelGenerator = new LevelGenerator();
+
+			string fileDirectory = @"C:\ForVS\demoSong" + songNumber + ".mp3";
+
+			if (!System.IO.Directory.Exists(@"C:\ForVS"))
+			{
+				fileDirectory = "demoSong" + songNumber + ".mp3";
+			}
+
+			return CreateImportSongGameScreen(gameWindow, fileDirectory, songNumber == 2, songNumber == 1);
+		}
+
+		public static GameScreen CreateImportSongGameScreen(MyGameWindow gameWindow, string fileDirectory,
+			bool removeSingleBeats = false, bool removeHeldNotes = false)
+		{
+			if (!System.IO.File.Exists(fileDirectory))
+			{
+				Console.WriteLine("FILE NOT FOUND");
+				return null;
+			}
+
+			SongElements songElements = AudioAnalyzer.GetSongElements(fileDirectory);
+
+			if (removeSingleBeats) songElements.SingleBeats.Clear();
+			if (removeHeldNotes) songElements.HeldNotes.Clear();
+
+			Level level = LevelGenerator.GenerateLevel(songElements);
+
+			GameScreen gameScreen = new GameScreen(gameWindow, level, fileDirectory);
+
+			return gameScreen;
 		}
 
 		private LevelProgression GetLevelProgression()
@@ -107,6 +148,21 @@ namespace GameApp.Screens
 		private void ResetLevel()
 		{
 			GetLevelProgression().Reset();
+		}
+
+		private void JumpToNextLevel()
+		{
+			string levelName = levelAttempt.Level.Name;
+
+			int tutorialNumber = -1;
+
+			if (levelName == "TutorialLevel1") tutorialNumber = 2;
+			if (levelName == "TutorialLevel2") tutorialNumber = 3;
+
+			if (tutorialNumber > 0)
+			{
+				SwitchToScreen(CreateTutorialGameScreen(gameWindow, tutorialNumber));
+			}
 		}
 
 		private void ReturnToMainMenu()

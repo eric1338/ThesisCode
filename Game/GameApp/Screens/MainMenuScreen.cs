@@ -86,7 +86,7 @@ namespace GameApp.Screens
 
 		private void StartTutorial()
 		{
-			GameScreen gameScreen = new GameScreen(gameWindow, true);
+			GameScreen gameScreen = GameScreen.CreateTutorialGameScreen(gameWindow, 1);
 
 			StartGame(gameScreen);
 		}
@@ -99,18 +99,14 @@ namespace GameApp.Screens
 
 			string fileDirectory = openFileDialog.FileName;
 
-			Audio.SongElements songElements = Audio.AudioAnalyzer.GetSongElements(fileDirectory);
-
-			Levels.Level level = Levels.LevelGeneration.LevelGenerator.GenerateLevel(songElements);
-
-			GameScreen gameScreen = new GameScreen(gameWindow, false, level, fileDirectory);
+			GameScreen gameScreen = GameScreen.CreateImportSongGameScreen(gameWindow, fileDirectory);
 
 			StartGame(gameScreen);
 		}
 
 		private void PlayTestSong(int number)
 		{
-			GameScreen gameScreen = new GameScreen(gameWindow);
+			GameScreen gameScreen = GameScreen.CreateTestSongGameScreen(gameWindow, number);
 
 			StartGame(gameScreen);
 		}
@@ -119,7 +115,7 @@ namespace GameApp.Screens
 		{
 			if (switchFrameCount > 0) switchFrameCount++;
 
-			if (switchFrameCount > 800)
+			if (switchFrameCount > 100)
 			{
 				switchFrameCount = 0;
 				SwitchToScreen(upcomingGameScreen);
@@ -141,6 +137,8 @@ namespace GameApp.Screens
 
 		private void StartGame(GameScreen gameScreen)
 		{
+			if (gameScreen == null) return;
+
 			switchFrameCount = 1;
 
 			upcomingGameScreen = gameScreen;
@@ -152,8 +150,8 @@ namespace GameApp.Screens
 
 			if (switchFrameCount > 0)
 			{
-				BasicGraphics.SetColor(0, 1.0f, 0.8f);
-				BasicGraphics.DrawSquare(new OpenTK.Vector2(-0.4f, 0.4f), new OpenTK.Vector2(0.4f, -0.4f));
+				BasicGraphics.SetColor4(0, 0, 0, switchFrameCount / 105.0f);
+				BasicGraphics.DrawSquare(new OpenTK.Vector2(-2, 2), new OpenTK.Vector2(2, -2));
 			}
 		}
 	}

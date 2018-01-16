@@ -41,7 +41,7 @@ namespace GameApp.Gameplay.Physics
 		public static readonly float GravityAcceleration = 0.1f;
 		public static readonly float JumpAcceleration = 0.03f;
 
-		public static readonly float ProjectileVelocity = 1.8f;
+		public static readonly float ProjectileVelocity = 0.8f;
 		public static readonly float ProjectileMaximumYVelocity = 0.4f;
 
 		public static float GetHorizontalPlayerVelocityPerFrame()

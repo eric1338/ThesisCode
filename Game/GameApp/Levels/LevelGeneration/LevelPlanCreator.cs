@@ -10,15 +10,6 @@ namespace GameApp.Levels.LevelGeneration
 	class LevelPlanCreator
 	{
 
-		enum SynchronisationType
-		{
-			SingleBeat,
-			MultipleBeats,
-			HeldNote
-		}
-
-
-
 		private SongElements songElements;
 		private DistributionManager distributionManager;
 
@@ -44,11 +35,14 @@ namespace GameApp.Levels.LevelGeneration
 			FillMultipleBeatsList();
 			CalculateSingleBeatIsolationValues();
 
-			songElements.SortByApplicability();
+			//songElements.SortByApplicability();
 
-			AddHeldNotes();
-			AddMultipleBeats();
-			AddSingleBeats();
+			//AddHeldNotes();
+			//AddMultipleBeats();
+			//AddSingleBeats();
+
+			CreateLevelElements();
+
 			FillWithLowCollectibles();
 
 			LevelPlan.SortByTime();
@@ -87,13 +81,66 @@ namespace GameApp.Levels.LevelGeneration
 			}
 		}
 
+		private void CreateLevelElements()
+		{
+			songElements.SortByApplicabilityAndIsolationValue();
+
+			multipleBeatsList.Sort(delegate (MultipleBeats m1, MultipleBeats m2)
+			{
+				return m1.Applicability.CompareTo(m2.Applicability);
+			});
+
+			multipleBeatsList.Reverse();
+
+			Queue<SingleBeat> singleBeatQueue = new Queue<SingleBeat>(songElements.SingleBeats);
+			Queue<HeldNote> heldNoteQueue = new Queue<HeldNote>(songElements.HeldNotes);
+			Queue<MultipleBeats> multipleBeatsQueue = new Queue<MultipleBeats>(multipleBeatsList);
+
+			while (singleBeatQueue.Count > 0 || heldNoteQueue.Count > 0 || multipleBeatsQueue.Count > 0)
+			{
+				if (singleBeatQueue.Count > 0) TryToAddSingleBeat(singleBeatQueue.Dequeue());
+				if (heldNoteQueue.Count > 0) TryToAddHeldNote(heldNoteQueue.Dequeue());
+				if (multipleBeatsQueue.Count > 0) TryToAddMultipleBeats(multipleBeatsQueue.Dequeue());
+			}
+		}
+
+
+		private void TryToAddSingleBeat(SingleBeat singleBeat)
+		{
+			List<LevelElementType> types = distributionManager.GetOrderedSingleBeatLevelElementTypes();
+
+			foreach (LevelElementType type in types)
+			{
+				if (TryToAddSingleBeatLevelElement(singleBeat, type)) break;
+			}
+		}
+
+		private void TryToAddHeldNote(HeldNote heldNote)
+		{
+			List<LevelElementType> types = distributionManager.GetOrderedHeldNoteLevelElementTypes();
+
+			foreach (LevelElementType type in types)
+			{
+				if (TryToAddHeldNoteLevelElement(heldNote, type)) break;
+			}
+		}
+
+		private void TryToAddMultipleBeats(MultipleBeats multipleBeats)
+		{
+			//Console.WriteLine("mbApp: " + multipleBeats.Applicability);
+
+			List<LevelElementType> types = distributionManager.GetOrderedMultipleBeatsLevelElementTypes();
+
+			foreach (LevelElementType type in types)
+			{
+				if (TryToAddMultipleBeatsLevelElement(multipleBeats, type)) break;
+			}
+		}
 
 
 
 
 
-
-		
 
 		private void AddHeldNotes()
 		{
@@ -167,6 +214,13 @@ namespace GameApp.Levels.LevelGeneration
 			}
 		}
 
+		private bool TryToAddSingleBeatLevelElement(SingleBeat singleBeat, LevelElementType type)
+		{
+			LevelElementPlacement placement = LevelElementPlacement.CreateSingleSynchro(
+				type, singleBeat.Time);
+
+			return TryToAddLevelElement(placement);
+		}
 
 		private bool TryToAddHeldNoteLevelElement(HeldNote heldNote, LevelElementType type)
 		{
@@ -180,14 +234,6 @@ namespace GameApp.Levels.LevelGeneration
 		{
 			LevelElementPlacement placement = LevelElementPlacement.CreateMultipleSynchro(
 				type, multipleBeats.GetBeatTimes());
-
-			return TryToAddLevelElement(placement);
-		}
-
-		private bool TryToAddSingleBeatLevelElement(SingleBeat singleBeat, LevelElementType type)
-		{
-			LevelElementPlacement placement = LevelElementPlacement.CreateSingleSynchro(
-				type, singleBeat.Time);
 
 			return TryToAddLevelElement(placement);
 		}

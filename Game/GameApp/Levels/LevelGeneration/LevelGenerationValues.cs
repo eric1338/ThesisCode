@@ -31,21 +31,21 @@ namespace GameApp.Levels.LevelGeneration
 		public static readonly float MaximumMultipleBeatsTimeDelta = 0.5f;
 
 		public static readonly Vector2 PlayerStartPosition =
-			new Vector2(GeneralValues.MusicStartPositionX - 5, 0);
+			new Vector2(GeneralValues.MusicStartPositionX - 0, 0);
 
 		public static readonly float FirstGroundLeftX = -10;
 
 		// LevelElements
 
-		public static readonly float SuggestedChasmJumpTimingOffset = 0.2f;
+		public static readonly float SuggestedChasmJumpTimingOffset = 0.15f;
 
-		public static readonly float MaximumChasmJumpTimingOffset = 0.4f;
+		public static readonly float MaximumChasmJumpTimingOffset = 0.2f;
 
-		public static readonly float MaximumJumpObstacleJumpTimingOffset = 0.1f;
+		public static readonly float MaximumJumpObstacleJumpTimingOffset = 0.15f;
 
 
-		public static readonly float DuckingObstacleEnteringSafetyTime = 0.3f;
-		public static readonly float DuckingObstacleLeavingSafetyTime = 0.3f;
+		public static readonly float DuckingObstacleEnteringSafetyTime = 0.2f;
+		public static readonly float DuckingObstacleLeavingSafetyTime = 0.2f;
 
 		public static float GetDuckObstacleGapHeight()
 		{

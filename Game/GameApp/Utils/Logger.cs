@@ -35,9 +35,14 @@ namespace GameApp.Utils
 
 		private static void WriteCurrentPlaySessionLogToFile()
 		{
+			string fileDirectory = @"C:\ForVS\" + currentPlaySessionLog.FileName + ".txt";
 
-			using (StreamWriter file =
-				new StreamWriter(@"C:\ForVS\" + currentPlaySessionLog.FileName + ".txt"))
+			if (!Directory.Exists(@"C:\ForVS"))
+			{
+				fileDirectory = currentPlaySessionLog.FileName + ".txt";
+			}
+
+			using (StreamWriter file = new StreamWriter(fileDirectory))
 			{
 				file.WriteLine("LevelName=" + currentPlaySessionLog.LevelName);
 				file.WriteLine("StartTime=" + GetDateString(currentPlaySessionLog.StartTime, true));

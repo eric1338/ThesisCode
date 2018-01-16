@@ -139,22 +139,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\Textures\playerTest.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Textures\menuDeExit.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Textures\menuDeTestSong.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Textures\menuDeTutorial.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Textures\menuEnExit.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Textures\menuEnTestSong.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Textures\menuEnTutorial.png" />
@@ -164,9 +157,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Textures\tutorialDeDeflect.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Textures\tutorialDeDucken.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Textures\tutorialDeJump.png" />
@@ -211,9 +201,6 @@
     <None Include="Resources\Textures\overlayEnGameComplete.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Textures\lowObstacle.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\Textures\playerDefending.png" />
   </ItemGroup>
   <ItemGroup>
@@ -245,6 +232,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Textures\menuEnPlaySong3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\tutorialEnNextTutorial.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Textures\tutorialDeNextTutorial.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -37,6 +37,7 @@ namespace GameApp.Visual
 		public Texture TutorialJumpTexture { get; set; }
 		public Texture TutorialDuckTexture { get; set; }
 		public Texture TutorialDeflectTexture { get; set; }
+		public Texture TutorialNextTutorial { get; set; }
 
 		public void LoadTextures()
 		{
@@ -68,6 +69,7 @@ namespace GameApp.Visual
 				TutorialJumpTexture = TextureLoader.FromBitmap(Resources.tutorialEnJump);
 				TutorialDuckTexture = TextureLoader.FromBitmap(Resources.tutorialEnDuck);
 				TutorialDeflectTexture = TextureLoader.FromBitmap(Resources.tutorialEnDeflect);
+				TutorialNextTutorial = TextureLoader.FromBitmap(Resources.tutorialEnNextTutorial);
 			}
 			else
 			{
@@ -85,6 +87,7 @@ namespace GameApp.Visual
 				TutorialJumpTexture = TextureLoader.FromBitmap(Resources.tutorialDeJump);
 				TutorialDuckTexture = TextureLoader.FromBitmap(Resources.tutorialDeDuck);
 				TutorialDeflectTexture = TextureLoader.FromBitmap(Resources.tutorialDeDeflect);
+				TutorialNextTutorial = TextureLoader.FromBitmap(Resources.tutorialDeNextTutorial);
 			}
 
 			_texturesLoaded = true;

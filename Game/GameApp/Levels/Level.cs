@@ -10,7 +10,7 @@ namespace GameApp.Levels
 	class Level
 	{
 
-		public string LevelName { get; set; }
+		public string Name { get; set; }
 
 		public List<Ground> Grounds { get; set; }
 		public List<Obstacle> SolidObstacles { get; set; }
@@ -27,9 +27,9 @@ namespace GameApp.Levels
 		private int currentCollectibleID = 0;
 		private int currentProjectileID = 0;
 
-		public Level(string levelName = "", bool isTutorial = false)
+		public Level(string name = "", bool isTutorial = false)
 		{
-			LevelName = levelName;
+			Name = name;
 
 			Grounds = new List<Ground>();
 			SolidObstacles = new List<Obstacle>();
@@ -38,51 +38,6 @@ namespace GameApp.Levels
 			Projectiles = new List<Projectile>();
 
 			IsTutorial = isTutorial;
-		}
-
-		public static Level CreateTutorialLevel()
-		{
-			Level level = new Level("Tutorial", true);
-
-			level.PlayerStartingPosition = new Vector2(0, 1);
-			
-			level.AddGround(new Ground(-2, 40, 1));
-
-			return level;
-		}
-
-		public static Level CreateTestLevel()
-		{
-			Level level = new Level();
-
-			Ground g1 = new Ground(-0.15f, 6, 1);
-			Ground g2 = new Ground(7, 13, 0.5f);
-			Ground g3 = new Ground(13.5f, 20, 0.6f);
-
-			level.AddGround(g1);
-			level.AddGround(g2);
-			level.AddGround(g3);
-
-			Obstacle destructibleObstacle1 = new Obstacle(new Vector2(3.05f, 1.45f), new Vector2(3.15f, 0.95f));
-			level.AddDestructibleObstacle(destructibleObstacle1);
-
-			Obstacle solidObstacle1 = new Obstacle(new Vector2(3.05f, 1.05f), new Vector2(3.25f, 0.95f));
-			Obstacle solidObstacle2 = new Obstacle(new Vector2(8.4f, 0.8f), new Vector2(8.6f, 0.7f));
-
-			//level.AddSolidObstacle(solidObstacle1);
-			level.AddSolidObstacle(solidObstacle2);
-
-			Collectible c1 = new Collectible(0, new Vector2(4f, 1.5f));
-			Collectible c2 = new Collectible(1, new Vector2(6.5f, 1f));
-			Collectible c3 = new Collectible(2, new Vector2(10f, 1f));
-
-			//level.AddCollectible(c1);
-			//level.AddCollectible(c2);
-			//level.AddCollectible(c3);
-
-			level.PlayerStartingPosition = new Vector2(0, 1);
-
-			return level;
 		}
 
 		public void AddGround(Ground ground)

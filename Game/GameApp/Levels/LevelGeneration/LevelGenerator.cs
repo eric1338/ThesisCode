@@ -26,83 +26,6 @@ namespace GameApp.Levels.LevelGeneration
 			return level;
 		}
 
-		public Level GenerateTutorialLevel()
-		{
-			LevelPlan levelPlan = new LevelPlan();
-
-			LevelElementPlacement highCollectible = LevelElementPlacement.CreateSingleSynchro(LevelElementType.HighCollectible, 5);
-			LevelElementPlacement jumpObstacle = LevelElementPlacement.CreateSingleSynchro(LevelElementType.JumpObstacle, 5);
-
-			levelPlan.AddLevelElementPlacement(highCollectible);
-			levelPlan.AddLevelElementPlacement(jumpObstacle);
-
-			Level level = GenerateLevel(levelPlan);
-
-			level.GoalLineX = 24;
-
-			return level;
-		}
-
-		public Level GenerateTestLevel()
-		{
-			SongElements songElements = new SongElements();
-
-			/*
-			songElements.AddSingleBeat(2.1f, 0.4f);
-			songElements.AddSingleBeat(2.9f, 0.5f);
-			songElements.AddSingleBeat(3.6f, 0.6f);
-			songElements.AddSingleBeat(4.64f, 0.3f);
-
-			songElements.AddSingleBeat(7.0f, 0.8f);
-			songElements.AddSingleBeat(7.1f, 0.9f);
-			songElements.AddSingleBeat(7.2f, 0.9f);
-			songElements.AddSingleBeat(7.3f, 0.9f);
-			songElements.AddSingleBeat(7.4f, 0.9f);
-			songElements.AddSingleBeat(7.5f, 0.9f);
-			songElements.AddSingleBeat(7.6f, 0.9f);
-			songElements.AddSingleBeat(7.7f, 0.9f);
-			songElements.AddSingleBeat(7.5f, 0.9f);
-			songElements.AddSingleBeat(9.0f, 1.0f);
-			songElements.AddSingleBeat(19.0f, 1.0f);
-
-			songElements.AddSingleBeat(12.0f, 0.5f);
-
-			songElements.AddHeldNote(11f, 14f, 0.4f);
-			songElements.AddHeldNote(18f, 20f, 0.3f);
-			songElements.AddHeldNote(23f, 25f, 0.6f);
-			songElements.AddHeldNote(32f, 32.4f, 0.12f);
-			songElements.AddHeldNote(42f, 46f, 0.8f);
-
-
-
-			
-
-			songElements.AddSingleBeat(5, 1);
-			songElements.AddSingleBeat(10, 1);
-			songElements.AddSingleBeat(15, 1);
-			songElements.AddSingleBeat(20, 1);
-			songElements.AddSingleBeat(25, 1);
-			songElements.AddSingleBeat(30, 1);
-			*/
-
-			songElements.AddSingleBeat(4, 1);
-			songElements.AddSingleBeat(8, 1);
-			songElements.AddSingleBeat(12, 1);
-			songElements.AddSingleBeat(16, 1);
-			songElements.AddSingleBeat(20, 1);
-			songElements.AddSingleBeat(24, 1);
-
-			LevelPlanCreator levelPlanCreator = new LevelPlanCreator(songElements);
-
-			levelPlanCreator.CreateLevelPlan();
-
-			LevelPlan test = levelPlanCreator.LevelPlan;
-
-			return GenerateLevel(levelPlanCreator.LevelPlan);
-
-			//return GenerateLevel(LevelPlan.GetTestLevelPlan());
-		}
-
 		public Level GenerateLevel(LevelPlan levelPlan)
 		{
 			Level level = new Level();
@@ -211,6 +134,90 @@ namespace GameApp.Levels.LevelGeneration
 			if (ground == null) ground = LevelAnalysis.GetGroundLeftFromVector(level, new Vector2(x, 999));
 
 			return ground.TopY;
+		}
+
+		public Level GenerateFirstTutorialLevel()
+		{
+			LevelPlan levelPlan = new LevelPlan();
+
+			float segmentLength = 7;
+
+			for (int i = 0; i < 30; i++)
+			{
+				float offset = 3 + i * segmentLength;
+
+				LevelElementPlacement highCollectible = LevelElementPlacement.CreateSingleSynchro(
+					LevelElementType.HighCollectible, offset);
+				LevelElementPlacement jumpObstacle = LevelElementPlacement.CreateSingleSynchro(
+					LevelElementType.JumpObstacle, offset + 2);
+				LevelElementPlacement chasm = LevelElementPlacement.CreateProlongedSynchro(
+					LevelElementType.Chasm, offset + 4, offset + 5);
+
+				levelPlan.AddLevelElementPlacement(highCollectible);
+				levelPlan.AddLevelElementPlacement(jumpObstacle);
+				levelPlan.AddLevelElementPlacement(chasm);
+			}
+
+			Level level = GenerateLevel(levelPlan);
+
+			level.Name = "TutorialLevel1";
+			level.IsTutorial = true;
+
+			return level;
+		}
+
+		public Level GenerateSecondTutorialLevel()
+		{
+			LevelPlan levelPlan = new LevelPlan();
+
+			float segmentLength = 4;
+
+			for (int i = 0; i < 30; i++)
+			{
+				float offset = 3 + i * segmentLength;
+
+				LevelElementPlacement duckObstacle = LevelElementPlacement.CreateProlongedSynchro(
+					LevelElementType.DuckObstacle, offset, offset + 2);
+
+				levelPlan.AddLevelElementPlacement(duckObstacle);
+			}
+
+			Level level = GenerateLevel(levelPlan);
+
+			level.Name = "TutorialLevel2";
+			level.IsTutorial = true;
+
+			return level;
+		}
+
+		public Level GenerateThirdTutorialLevel()
+		{
+			LevelPlan levelPlan = new LevelPlan();
+
+			float segmentLength = 5;
+
+			for (int i = 0; i < 30; i++)
+			{
+				float offset = 3 + i * segmentLength;
+
+				LevelElementPlacement singleProjectile = LevelElementPlacement.CreateSingleSynchro(
+					LevelElementType.SingleProjectile, offset);
+
+				List<float> synchros = new List<float>() { offset + 2, offset + 2.5f, offset + 3 };
+
+				LevelElementPlacement multipleProjectiles = LevelElementPlacement.CreateMultipleSynchro(
+					LevelElementType.MultipleProjectiles, synchros);
+
+				levelPlan.AddLevelElementPlacement(singleProjectile);
+				levelPlan.AddLevelElementPlacement(multipleProjectiles);
+			}
+
+			Level level = GenerateLevel(levelPlan);
+
+			level.Name = "TutorialLevel3";
+			level.IsTutorial = true;
+
+			return level;
 		}
 
 

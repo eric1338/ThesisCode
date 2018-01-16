@@ -21,14 +21,6 @@ namespace GameApp.Visual
 		private Texture playerDefendingTexture;
 		private Texture playerGhostTexture;
 
-		private Texture cloudTexture1;
-		private Texture cloudTexture2;
-		private Texture groundTopTexture;
-		private Texture groundBottomTexture;
-		private Texture lowObstacleTexture;
-		private Texture duckObstacleTexture;
-		private Texture collectibleTexture;
-
 		public Texture overlayGameComplete;
 		public Texture overlayGamePaused;
 		public Texture overlayPressX;
@@ -40,6 +32,7 @@ namespace GameApp.Visual
 		private Texture tutorialJumpTexture;
 		private Texture tutorialDuckTexture;
 		private Texture tutorialDeflectTexture;
+		private Texture tutorialNextTutorial;
 
 		public LevelDrawer(Level level)
 		{
@@ -48,14 +41,6 @@ namespace GameApp.Visual
 			playerStandardTexture = Textures.Instance.PlayerStandardTexture;
 			playerDefendingTexture = Textures.Instance.PlayerDefendingTexture;
 			playerGhostTexture = Textures.Instance.PlayerGhostTexture;
-
-			cloudTexture1 = Textures.Instance.TitleTexture;
-			cloudTexture2 = Textures.Instance.TutorialDuckTexture;
-			groundTopTexture = Textures.Instance.PlayerStandardTexture;
-			groundBottomTexture = Textures.Instance.RatingHalf;
-			lowObstacleTexture = Textures.Instance.TitleTexture;
-			duckObstacleTexture = Textures.Instance.TutorialDeflectTexture;
-			collectibleTexture = Textures.Instance.RatingNone;
 
 			overlayGameComplete = Textures.Instance.OverlayGameComplete;
 			overlayGamePaused = Textures.Instance.OverlayGamePaused;
@@ -68,6 +53,7 @@ namespace GameApp.Visual
 			tutorialJumpTexture = Textures.Instance.TutorialJumpTexture;
 			tutorialDuckTexture = Textures.Instance.TutorialDuckTexture;
 			tutorialDeflectTexture = Textures.Instance.TutorialDeflectTexture;
+			tutorialNextTutorial = Textures.Instance.TutorialNextTutorial;
 
 			this.level = level;
 		}
@@ -89,28 +75,9 @@ namespace GameApp.Visual
 
 			//DrawDebugLines();
 
-			/*
-			float percentage = (levelProgression.CurrentPlayerPosition.X - 4) * 0.25f;
-
-			percentage = Math.Max(Math.Min(percentage, 1), 0);
-
-			Texture tutorialTexture = tutorialJumpTexture;
-
-			Vector2 topLeftCorner = new Vector2(-0.6f, 0.85f);
-			Vector2 bottomRightCorner = new Vector2(0.6f, 0.45f);
-
-			BasicGraphics.DrawTextureWithFadeIn(tutorialTexture, topLeftCorner, bottomRightCorner, percentage);
-			*/
-
-			float percentage = (levelProgression.CurrentPlayerPosition.X - 4) * 0.1f;
-
-			percentage = Math.Max(Math.Min(percentage, 1), 0);
-
-			//DrawRatings(percentage);
-
 			if (levelProgression.IsLevelComplete) DrawLevelCompleteScreen(0.92f);
 
-			if (level.IsTutorial) DrawTutorialInfoTexture();
+			if (level.IsTutorial) DrawTutorialInfoTexture(levelProgression);
 
 			if (levelProgression.IsGamePaused) DrawPauseScreen();
 		}
@@ -194,7 +161,7 @@ namespace GameApp.Visual
 
 			DrawSquare(new Vector2(-2.1f, 1.1f), new Vector2(2.1f, -1.1f), false);
 
-			DrawClouds(levelProgression);
+			//DrawClouds(levelProgression);
 		}
 
 		private void DrawClouds(LevelProgression levelProgression)
@@ -486,16 +453,35 @@ namespace GameApp.Visual
 			}
 		}
 
-
-
-		private void DrawTutorialInfoTexture()
+		private void DrawTutorialInfoTexture(LevelProgression levelProgression)
 		{
-			Texture tutorialTexture = tutorialJumpTexture;
+			Texture tutorialTexture;
 
-			Vector2 topLeftCorner = new Vector2(-0.6f, 0.85f);
-			Vector2 bottomRightCorner = new Vector2(0.6f, 0.45f);
+			if (level.Name == "TutorialLevel1") tutorialTexture = tutorialJumpTexture;
+			else if (level.Name == "TutorialLevel2") tutorialTexture = tutorialDuckTexture;
+			else tutorialTexture = tutorialDeflectTexture;
+
+			bool showNextTutorial = levelProgression.CurrentPlayerPosition.X > 15
+				&& level.Name != "TutorialLevel3";
+
+			Vector2 topLeftCorner = new Vector2(-0.6f, 0.8f);
+			Vector2 bottomRightCorner = new Vector2(0.6f, 0.4f);
+
+			if (showNextTutorial)
+			{
+				topLeftCorner = new Vector2(-1.3f, 0.8f);
+				bottomRightCorner = new Vector2(-0.1f, 0.4f);
+			}
 
 			DrawTexture(tutorialTexture, topLeftCorner, bottomRightCorner);
+
+			if (showNextTutorial)
+			{
+				Vector2 topLeftCorner2 = new Vector2(0.1f, 0.8f);
+				Vector2 bottomRightCorner2 = new Vector2(1.3f, 0.4f);
+
+				DrawTexture(tutorialNextTutorial, topLeftCorner2, bottomRightCorner2);
+			}
 		}
 
 

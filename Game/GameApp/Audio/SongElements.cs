@@ -60,5 +60,22 @@ namespace GameApp.Audio
 			HeldNotes.Reverse();
 		}
 
+		public void SortByApplicabilityAndIsolationValue()
+		{
+			SingleBeats.Sort(delegate (SingleBeat s1, SingleBeat s2)
+			{
+				return s1.IsolationValue.CompareTo(s2.IsolationValue);
+			});
+
+			SingleBeats.Reverse();
+
+			HeldNotes.Sort(delegate (HeldNote h1, HeldNote h2)
+			{
+				return h1.Applicability.CompareTo(h2.Applicability);
+			});
+
+			HeldNotes.Reverse();
+		}
+
 	}
 }
