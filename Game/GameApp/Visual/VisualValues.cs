@@ -10,8 +10,10 @@ namespace GameApp.Visual
 	class VisualValues
 	{
 
-		public static readonly int ScreenWidth = 1280;
-		public static readonly int ScreenHeight = 720;
+		//public static readonly int ScreenWidth = 1280;
+		//public static readonly int ScreenHeight = 720;
+		public static readonly int ScreenWidth = 1152;
+		public static readonly int ScreenHeight = 648;
 
 		public static float GetAspectRatio()
 		{

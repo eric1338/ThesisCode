@@ -79,8 +79,6 @@ namespace GameApp.Screens
 
 		public static GameScreen CreateTestSongGameScreen(MyGameWindow gameWindow, int songNumber)
 		{
-			LevelGenerator levelGenerator = new LevelGenerator();
-
 			string fileDirectory = @"C:\ForVS\demoSong" + songNumber + ".mp3";
 
 			if (!System.IO.Directory.Exists(@"C:\ForVS"))
@@ -88,11 +86,12 @@ namespace GameApp.Screens
 				fileDirectory = "demoSong" + songNumber + ".mp3";
 			}
 
-			return CreateImportSongGameScreen(gameWindow, fileDirectory, songNumber == 2, songNumber == 1);
+			return CreateImportSongGameScreen(gameWindow, fileDirectory, songNumber == 2, songNumber == 1,
+				"TestLevel" + songNumber);
 		}
 
 		public static GameScreen CreateImportSongGameScreen(MyGameWindow gameWindow, string fileDirectory,
-			bool removeSingleBeats = false, bool removeHeldNotes = false)
+			bool removeSingleBeats = false, bool removeHeldNotes = false, string levelName = "")
 		{
 			if (!System.IO.File.Exists(fileDirectory))
 			{
@@ -106,6 +105,8 @@ namespace GameApp.Screens
 			if (removeHeldNotes) songElements.HeldNotes.Clear();
 
 			Level level = LevelGenerator.GenerateLevel(songElements);
+
+			level.Name = levelName;
 
 			GameScreen gameScreen = new GameScreen(gameWindow, level, fileDirectory);
 
