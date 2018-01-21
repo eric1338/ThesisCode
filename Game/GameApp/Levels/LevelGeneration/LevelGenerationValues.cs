@@ -39,7 +39,7 @@ namespace GameApp.Levels.LevelGeneration
 
 		public static readonly float SuggestedChasmJumpTimingOffset = 0.15f;
 
-		public static readonly float MaximumChasmJumpTimingOffset = 0.2f;
+		public static readonly float MaximumChasmJumpTimingOffset = 0.3f;
 
 		public static readonly float MaximumJumpObstacleJumpTimingOffset = 0.15f;
 

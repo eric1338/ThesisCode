@@ -26,6 +26,8 @@ namespace GameApp.Screens
 
 		private bool isGamePaused = false;
 
+		private bool isPlayerAlwaysDefending = false;
+
 		public GameScreen(MyGameWindow gameWindow, Level level, string fileDirectory = "") : base(gameWindow)
 		{
 			levelAttempt = new LevelAttempt(level);
@@ -35,11 +37,12 @@ namespace GameApp.Screens
 
 			AddKeyToSingleUserActionMapping(Key.W, UserAction.Jump);
 			AddKeyToSingleUserActionMapping(Key.Space, UserAction.Jump);
-
-			AddKeyToSingleUserActionMapping(Key.A, UserAction.Hit);
+			
 			AddKeyToProlongedUserActionMapping(Key.D, UserAction.Defend);
 			AddKeyToProlongedUserActionMapping(Key.S, UserAction.Duck);
 			AddKeyToProlongedUserActionMapping(Key.ControlLeft, UserAction.Duck);
+
+			AddKeyToSingleUserActionMapping(Key.H, UserAction.ToggleAlwaysDefending);
 
 			AddKeyToSingleUserActionMapping(Key.P, UserAction.TogglePauseGame);
 			AddKeyToSingleUserActionMapping(Key.Escape, UserAction.TogglePauseGame);
@@ -52,12 +55,18 @@ namespace GameApp.Screens
 			AddProlongedUserActionToFunctionMapping(UserAction.Duck, Duck);
 			AddProlongedUserActionToFunctionMapping(UserAction.Defend, Defend);
 
+			AddSingleUserActionToFunctionMapping(UserAction.ToggleAlwaysDefending, ToggleAlwaysDefending);
+
 			AddSingleUserActionToFunctionMapping(UserAction.ResetLevel, ResetLevel);
 			AddSingleUserActionToFunctionMapping(UserAction.TogglePauseGame, TogglePauseGame);
 			AddSingleUserActionToFunctionMapping(UserAction.JumpToNextLevel, JumpToNextLevel);
 			AddSingleUserActionToFunctionMapping(UserAction.ReturnToMainMenu, ReturnToMainMenu);
 
-			if (fileDirectory.Length > 0) musicPlayer = new MusicPlayer(fileDirectory);
+			if (fileDirectory.Length > 0)
+			{
+				musicPlayer = new MusicPlayer(fileDirectory);
+				musicPlayer.InitAudio();
+			}
 
 			Utils.Logger.StartNewLog(levelAttempt.Level.Name);
 		}
@@ -143,7 +152,14 @@ namespace GameApp.Screens
 		{
 			if (isGamePaused) return;
 
-			gameLogic.SetPlayerIsDefending(value);
+			gameLogic.SetPlayerIsDefending(value || isPlayerAlwaysDefending);
+		}
+
+		private void ToggleAlwaysDefending()
+		{
+			isPlayerAlwaysDefending = !isPlayerAlwaysDefending;
+
+			gameLogic.SetPlayerIsDefending(isPlayerAlwaysDefending);
 		}
 
 		private void ResetLevel()
@@ -162,7 +178,7 @@ namespace GameApp.Screens
 
 			if (tutorialNumber > 0)
 			{
-				SwitchToScreen(CreateTutorialGameScreen(gameWindow, tutorialNumber));
+				SwitchToScreenAndDispose(CreateTutorialGameScreen(gameWindow, tutorialNumber));
 			}
 		}
 
@@ -172,8 +188,14 @@ namespace GameApp.Screens
 			{
 				Utils.Logger.FinishLog();
 
-				SwitchToScreen(new MainMenuScreen(gameWindow));
+				SwitchToScreenAndDispose(new MainMenuScreen(gameWindow));
 			}
+		}
+
+		private void SwitchToScreenAndDispose(Screen screen)
+		{
+			musicPlayer.Dispose();
+			SwitchToScreen(screen);
 		}
 
 		private void TogglePauseGame()

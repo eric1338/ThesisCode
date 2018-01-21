@@ -1,36 +1,48 @@
-﻿using System;
+﻿using NAudio.Wave;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WMPLib;
 
 namespace GameApp.Audio
 {
 	class MusicPlayer
 	{
+		
+		private WaveOutEvent waveOutEvent;
+		private WaveStream waveStream;
 
-		private string musicFileURL;
+		private string fileDirectory;
 
-		private WindowsMediaPlayer windowsMediaPlayer = new WindowsMediaPlayer();
-
-		public MusicPlayer(string musicFileURL)
+		public MusicPlayer(string fileDirectory)
 		{
-			this.musicFileURL = musicFileURL;
+			waveOutEvent = new WaveOutEvent();
 
-			windowsMediaPlayer.URL = musicFileURL;
+			this.fileDirectory = fileDirectory;
+		}
 
-			windowsMediaPlayer.controls.stop();
+		public void InitAudio()
+		{
+			waveStream = new Mp3FileReader(fileDirectory);
+
+			waveOutEvent.Init(waveStream);
 		}
 
 		public void PlayTrack()
 		{
-			windowsMediaPlayer.controls.play();
+			waveOutEvent.Play();
 		}
 
 		public void PauseTrack()
 		{
-			windowsMediaPlayer.controls.pause();
+			waveOutEvent.Stop();
+		}
+
+		public void Dispose()
+		{
+			if (waveOutEvent != null) waveOutEvent.Dispose();
+			if (waveStream != null) waveStream.Dispose();
 		}
 
 	}

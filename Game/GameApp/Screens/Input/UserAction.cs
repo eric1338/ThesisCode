@@ -12,6 +12,7 @@ namespace GameApp.Screens.Input
 		Hit,
 		Duck,
 		Defend,
+		ToggleAlwaysDefending,
 
 		JumpToNextLevel,
 		RestartLevel,
