@@ -313,6 +313,16 @@ namespace GameApp {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap tutorialDeComplete {
+            get {
+                object obj = ResourceManager.GetObject("tutorialDeComplete", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap tutorialDeDeflect {
             get {
                 object obj = ResourceManager.GetObject("tutorialDeDeflect", resourceCulture);
@@ -346,6 +356,16 @@ namespace GameApp {
         internal static System.Drawing.Bitmap tutorialDeNextTutorial {
             get {
                 object obj = ResourceManager.GetObject("tutorialDeNextTutorial", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tutorialEnComplete {
+            get {
+                object obj = ResourceManager.GetObject("tutorialEnComplete", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

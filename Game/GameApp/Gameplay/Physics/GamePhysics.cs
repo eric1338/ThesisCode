@@ -33,7 +33,7 @@ namespace GameApp.Gameplay.Physics
 		{
 			if (IsPlayerOnGround(playerPosition))
 			{
-				verticalVelocity = PhysicsValues.JumpAcceleration;
+				verticalVelocity = PhysicsValues.GetJumpAcceleration();
 			}
 		}
 

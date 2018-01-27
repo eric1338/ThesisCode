@@ -23,6 +23,9 @@ namespace GameApp.Screens.Input
 		ImportSong,
 		SelectCurrentMenuItem,
 		GoUpInMenu,
-		GoDownInMenu
+		GoDownInMenu,
+
+		DecreaseDifficulty,
+		IncreaseDifficulty
 	}
 }

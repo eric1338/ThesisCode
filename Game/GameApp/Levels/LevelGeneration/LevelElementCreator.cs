@@ -75,7 +75,7 @@ namespace GameApp.Levels.LevelGeneration
 			float hitXPosition = GetPlayerRightEdgeXByTime(time);
 
 			float startingXPosition = GeneralValues.MusicStartPositionX + hitXPosition + time *
-				PhysicsValues.ProjectileVelocity + (PhysicsValues.ProjectileHitboxWidth / 2.0f);
+				PhysicsValues.GetProjectileVelocity() + (PhysicsValues.ProjectileHitboxWidth / 2.0f);
 
 			float startingYPosition = groundY + LevelGenerationValues.GetProjectileYOffset();
 

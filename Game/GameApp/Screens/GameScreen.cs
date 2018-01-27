@@ -194,7 +194,7 @@ namespace GameApp.Screens
 
 		private void SwitchToScreenAndDispose(Screen screen)
 		{
-			musicPlayer.Dispose();
+			if (musicPlayer != null) musicPlayer.Dispose();
 			SwitchToScreen(screen);
 		}
 

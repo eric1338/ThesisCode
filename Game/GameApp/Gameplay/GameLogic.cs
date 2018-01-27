@@ -194,7 +194,8 @@ namespace GameApp.Gameplay
 
 			if (MyMath.GetRandomNumber() > 0.5f) yVelocity *= -1;
 
-			float xVelocity = (float)Math.Sqrt(Math.Pow(PhysicsValues.ProjectileVelocity * 3, 2) - Math.Pow(yVelocity, 2));
+			float xVelocity = (float)Math.Sqrt(Math.Pow(PhysicsValues.GetProjectileVelocity()
+				* 3, 2) - Math.Pow(yVelocity, 2));
 
 			Vector2 deflectionDirection = new Vector2(xVelocity, yVelocity);
 

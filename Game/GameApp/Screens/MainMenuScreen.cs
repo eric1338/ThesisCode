@@ -34,12 +34,18 @@ namespace GameApp.Screens
 			AddKeyToSingleUserActionMapping(Key.Down, UserAction.GoDownInMenu);
 			AddKeyToSingleUserActionMapping(Key.S, UserAction.GoDownInMenu);
 			AddKeyToSingleUserActionMapping(Key.Enter, UserAction.SelectCurrentMenuItem);
-			AddKeyToSingleUserActionMapping(Key.N, UserAction.ImportSong);
+			AddKeyToSingleUserActionMapping(Key.Space, UserAction.SelectCurrentMenuItem);
+
+			AddKeyToSingleUserActionMapping(Key.O, UserAction.DecreaseDifficulty);
+			AddKeyToSingleUserActionMapping(Key.P, UserAction.IncreaseDifficulty);
 
 			AddSingleUserActionToFunctionMapping(UserAction.GoUpInMenu, GoUpInMenu);
 			AddSingleUserActionToFunctionMapping(UserAction.GoDownInMenu, GoDownInMenu);
 			AddSingleUserActionToFunctionMapping(UserAction.SelectCurrentMenuItem, SelectCurrentMenuItem);
 			AddSingleUserActionToFunctionMapping(UserAction.ImportSong, ImportSong);
+
+			AddSingleUserActionToFunctionMapping(UserAction.DecreaseDifficulty, DecreaseDifficulty);
+			AddSingleUserActionToFunctionMapping(UserAction.IncreaseDifficulty, IncreaseDifficulty);
 
 			menuItemXPaddings = new int[numberOfMenuItems];
 
@@ -109,6 +115,20 @@ namespace GameApp.Screens
 			GameScreen gameScreen = GameScreen.CreateTestSongGameScreen(gameWindow, number);
 
 			StartGame(gameScreen);
+		}
+
+		private void DecreaseDifficulty()
+		{
+			GeneralValues.DifficultyFactor = Math.Max(GeneralValues.DifficultyFactor - 0.25f, 0.5f);
+
+			Console.WriteLine("DifficultyFactor: " + GeneralValues.DifficultyFactor);
+		}
+
+		private void IncreaseDifficulty()
+		{
+			GeneralValues.DifficultyFactor = Math.Min(GeneralValues.DifficultyFactor + 0.25f, 1.5f);
+
+			Console.WriteLine("DifficultyFactor: " + GeneralValues.DifficultyFactor);
 		}
 
 		public override void DoLogic()

@@ -75,23 +75,23 @@ namespace GameApp.Levels.LevelGeneration
 			{
 				if (GetYDifferenceAfterJump(time) > GetJumpObstacleHeight())
 				{
-					minimumHorizontalDistanceRequired = time * PhysicsValues.HorizontalPlayerVelocity;
+					minimumHorizontalDistanceRequired = time * PhysicsValues.GetHorizontalPlayerVelocity();
 					break;
 				}
 			}
 
 			float halfJumpObstacleWidth = PhysicsValues.GetPlainJumpLength() / 2.0f;
 
-			halfJumpObstacleWidth -= MaximumJumpObstacleJumpTimingOffset * PhysicsValues.HorizontalPlayerVelocity;
+			halfJumpObstacleWidth -= MaximumJumpObstacleJumpTimingOffset * PhysicsValues.GetHorizontalPlayerVelocity();
 			halfJumpObstacleWidth -= minimumHorizontalDistanceRequired;
 			halfJumpObstacleWidth -= PhysicsValues.GetHalfPlayerHitboxWidth();
 
-			return halfJumpObstacleWidth * 2;
+			return halfJumpObstacleWidth * 2 * GeneralValues.DifficultyFactor;
 		}
 
 		public static float GetJumpObstacleHeight()
 		{
-			return PhysicsValues.PlayerHitboxHeight * 0.3f;
+			return PhysicsValues.PlayerHitboxHeight * 0.3f * GeneralValues.DifficultyFactor;
 		}
 
 
@@ -119,7 +119,7 @@ namespace GameApp.Levels.LevelGeneration
 
 		public static float GetPlayerVelocity()
 		{
-			return PhysicsValues.HorizontalPlayerVelocity;
+			return PhysicsValues.GetHorizontalPlayerVelocity();
 		}
 
 		public static float GetXPositionByTime(float time)
@@ -131,7 +131,7 @@ namespace GameApp.Levels.LevelGeneration
 		{
 			int iterations = (int)Math.Round(timeAfterJump * GeneralValues.FPS);
 
-			float jumpDistance = iterations * PhysicsValues.JumpAcceleration;
+			float jumpDistance = iterations * PhysicsValues.GetJumpAcceleration();
 
 			float gravityDistance = (iterations * (iterations + 1)) / 2 * PhysicsValues.GetGravityAccelerationPerFrame();
 
@@ -147,7 +147,7 @@ namespace GameApp.Levels.LevelGeneration
 		{
 			int iterations = (int)Math.Round(hangTime * GeneralValues.FPS);
 
-			float jumpDistance = iterations * PhysicsValues.JumpAcceleration;
+			float jumpDistance = iterations * PhysicsValues.GetJumpAcceleration();
 
 			float gravityDistance = (iterations * (iterations + 1)) / 2 * PhysicsValues.GetGravityAccelerationPerFrame();
 

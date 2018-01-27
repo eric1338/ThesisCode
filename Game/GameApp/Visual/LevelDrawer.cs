@@ -33,6 +33,7 @@ namespace GameApp.Visual
 		private Texture tutorialDuckTexture;
 		private Texture tutorialDeflectTexture;
 		private Texture tutorialNextTutorial;
+		private Texture tutorialComplete;
 
 		public LevelDrawer(Level level)
 		{
@@ -54,6 +55,7 @@ namespace GameApp.Visual
 			tutorialDuckTexture = Textures.Instance.TutorialDuckTexture;
 			tutorialDeflectTexture = Textures.Instance.TutorialDeflectTexture;
 			tutorialNextTutorial = Textures.Instance.TutorialNextTutorial;
+			tutorialComplete = Textures.Instance.TutorialComplete;
 
 			this.level = level;
 		}
@@ -461,13 +463,12 @@ namespace GameApp.Visual
 			else if (level.Name == "TutorialLevel2") tutorialTexture = tutorialDuckTexture;
 			else tutorialTexture = tutorialDeflectTexture;
 
-			bool showNextTutorial = levelProgression.CurrentPlayerPosition.X > 15
-				&& level.Name != "TutorialLevel3";
+			bool showSecondInfo = levelProgression.CurrentPlayerPosition.X > 10;
 
 			Vector2 topLeftCorner = new Vector2(-0.6f, 0.8f);
 			Vector2 bottomRightCorner = new Vector2(0.6f, 0.4f);
 
-			if (showNextTutorial)
+			if (showSecondInfo)
 			{
 				topLeftCorner = new Vector2(-1.3f, 0.8f);
 				bottomRightCorner = new Vector2(-0.1f, 0.4f);
@@ -475,12 +476,15 @@ namespace GameApp.Visual
 
 			DrawTexture(tutorialTexture, topLeftCorner, bottomRightCorner);
 
-			if (showNextTutorial)
+			if (showSecondInfo)
 			{
 				Vector2 topLeftCorner2 = new Vector2(0.1f, 0.8f);
 				Vector2 bottomRightCorner2 = new Vector2(1.3f, 0.4f);
 
-				DrawTexture(tutorialNextTutorial, topLeftCorner2, bottomRightCorner2);
+				Texture secondInfoTexture = level.Name == "TutorialLevel3" ?
+					tutorialComplete : tutorialNextTutorial;
+
+				DrawTexture(secondInfoTexture, topLeftCorner2, bottomRightCorner2);
 			}
 		}
 

@@ -37,26 +37,41 @@ namespace GameApp.Gameplay.Physics
 			return playerPosition + new Vector2(-LeftFootOffset, 0);
 		}
 
-		public static readonly float HorizontalPlayerVelocity = 1.24f;
-		public static readonly float GravityAcceleration = 0.1f;
-		public static readonly float JumpAcceleration = 0.03f;
+		public static float GetHorizontalPlayerVelocity()
+		{
+			return 1.24f * GeneralValues.DifficultyFactor;
+		}
 
-		public static readonly float ProjectileVelocity = 0.8f;
+		public static float GetGravityAcceleration()
+		{
+			return 0.1f * GeneralValues.DifficultyFactor;
+		}
+
+		public static float GetJumpAcceleration()
+		{
+			return 0.03f * GeneralValues.DifficultyFactor;
+		}
+
+		public static float GetProjectileVelocity()
+		{
+			return 0.8f * GeneralValues.DifficultyFactor;
+		}
+		
 		public static readonly float ProjectileMaximumYVelocity = 0.4f;
 
 		public static float GetHorizontalPlayerVelocityPerFrame()
 		{
-			return HorizontalPlayerVelocity / GeneralValues.FPS;
+			return GetHorizontalPlayerVelocity() / GeneralValues.FPS;
 		}
 
 		public static float GetGravityAccelerationPerFrame()
 		{
-			return GravityAcceleration / GeneralValues.FPS;
+			return GetGravityAcceleration() / GeneralValues.FPS;
 		}
 
 		public static float GetProjectileVelocityPerFrame()
 		{
-			return ProjectileVelocity / GeneralValues.FPS;
+			return GetProjectileVelocity() / GeneralValues.FPS;
 		}
 
 
@@ -66,21 +81,21 @@ namespace GameApp.Gameplay.Physics
 
 		public static float GetPlainJumpHeight()
 		{
-			if (jumpHeight < 0) CalculatePlainJumpValues();
+			CalculatePlainJumpValues();
 
 			return jumpHeight;
 		}
 
 		public static float GetPlainJumpLength()
 		{
-			if (jumpLength < 0) CalculatePlainJumpValues();
+			CalculatePlainJumpValues();
 
 			return jumpLength;
 		}
 
 		public static float GetPlainJumpDuration()
 		{
-			if (jumpDuration < 0) CalculatePlainJumpValues();
+			CalculatePlainJumpValues();
 
 			return jumpDuration;
 		}
@@ -88,7 +103,7 @@ namespace GameApp.Gameplay.Physics
 		private static void CalculatePlainJumpValues()
 		{
 			float y = 0.00001f;
-			float yAcceleration = JumpAcceleration;
+			float yAcceleration = GetJumpAcceleration();
 
 			float maximumJumpHeight = y;
 
