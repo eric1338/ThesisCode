@@ -49,8 +49,7 @@ namespace GameApp.Levels
 
 			Points = 0;
 			FailedAttempts = 0;
-
-			destructedObstaclesIDs = new List<int>();
+			
 			collectedCollectibleIDs = new List<int>();
 
 			projectilePositions = new Dictionary<int, Vector2>();
@@ -119,11 +118,6 @@ namespace GameApp.Levels
 		public bool IsPlayerInGodmode()
 		{
 			return secondsOfGodModeLeft > 0;
-		}
-
-		public void DestructObstacle(Obstacle obstacle)
-		{
-			destructedObstaclesIDs.Add(obstacle.ID);
 		}
 
 		public bool IsObstacleAlreadyDestructed(Obstacle obstacle)

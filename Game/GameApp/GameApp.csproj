@@ -109,7 +109,6 @@
     <Compile Include="Utils\MyMath.cs" />
     <Compile Include="Utils\PlaySessionLog.cs" />
     <Compile Include="Visual\BasicGraphics.cs" />
-    <Compile Include="Visual\IVisual.cs" />
     <Compile Include="Visual\LevelDrawer.cs" />
     <Compile Include="Visual\MainMenuDrawer.cs" />
     <Compile Include="Visual\Texture.cs" />

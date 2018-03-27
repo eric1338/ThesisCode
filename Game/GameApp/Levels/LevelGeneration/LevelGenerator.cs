@@ -85,13 +85,13 @@ namespace GameApp.Levels.LevelGeneration
 				{
 					Obstacle obstacle = levelElementGenerator.CreateDuckObstacle(placement, groundY);
 
-					level.AddSolidObstacle(obstacle);
+					level.AddObstacle(obstacle);
 				}
 				if (placement.Type == LevelElementType.JumpObstacle)
 				{
 					Obstacle obstacle = levelElementGenerator.CreateJumpObstacle(placement, groundY);
 
-					level.AddSolidObstacle(obstacle);
+					level.AddObstacle(obstacle);
 				}
 				if (placement.Type == LevelElementType.LowCollectible)
 				{

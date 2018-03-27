@@ -51,7 +51,6 @@ namespace GameApp.Screens
 			AddKeyToSingleUserActionMapping(Key.X, UserAction.ReturnToMainMenu);
 
 			AddSingleUserActionToFunctionMapping(UserAction.Jump, Jump);
-			AddSingleUserActionToFunctionMapping(UserAction.Hit, Hit);
 			AddProlongedUserActionToFunctionMapping(UserAction.Duck, Duck);
 			AddProlongedUserActionToFunctionMapping(UserAction.Defend, Defend);
 
@@ -132,13 +131,6 @@ namespace GameApp.Screens
 			if (isGamePaused) return;
 
 			gameLogic.PerformPlayerJump();
-		}
-
-		private void Hit()
-		{
-			if (isGamePaused) return;
-
-			gameLogic.PerformPlayerHit();
 		}
 
 		private void Duck(bool value)

@@ -17,8 +17,7 @@ namespace GameApp.Visual
 		private Texture playSong2Texture;
 		private Texture playSong3Texture;
 		private Texture exitGameTexture;
-
-		//private Vector2 menuTopLeftCorner = new Vector2(0.4f, -0.2f);
+		
 		private Vector2 menuTopLeftCorner = new Vector2(0.5f, 0.3f);
 
 		private float menuItemHeight = 0.12f;

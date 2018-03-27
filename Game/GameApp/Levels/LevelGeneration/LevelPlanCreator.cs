@@ -138,63 +138,6 @@ namespace GameApp.Levels.LevelGeneration
 		}
 
 
-
-
-
-
-		private void AddHeldNotes()
-		{
-			foreach (HeldNote heldNote in songElements.HeldNotes)
-			{
-				if (heldNote.Applicability < LevelGenerationValues.HeldNoteApplicabilityThreshold) continue;
-
-				List<LevelElementType> types = distributionManager.GetOrderedHeldNoteLevelElementTypes();
-
-				foreach (LevelElementType type in types)
-				{
-					if (TryToAddHeldNoteLevelElement(heldNote, type)) break;
-				}
-			}
-		}
-		
-
-		private void AddMultipleBeats()
-		{
-			foreach (MultipleBeats multipleBeats in multipleBeatsList)
-			{
-				if (multipleBeats.Applicability < LevelGenerationValues.HeldNoteApplicabilityThreshold)
-				{
-					continue;
-				}
-
-				List<LevelElementType> types = distributionManager.GetOrderedMultipleBeatsLevelElementTypes();
-
-				foreach (LevelElementType type in types)
-				{
-					if (TryToAddMultipleBeatsLevelElement(multipleBeats, type)) break;
-				}
-			}
-		}
-
-		private void AddSingleBeats()
-		{
-			foreach (SingleBeat singleBeat in songElements.SingleBeats)
-			{
-				if (singleBeat.Applicability < LevelGenerationValues.SingleBeatsApplicabilityThreshold)
-				{
-					continue;
-				}
-
-				List<LevelElementType> types = distributionManager.GetOrderedSingleBeatLevelElementTypes();
-
-				foreach (LevelElementType type in types)
-				{
-					if (TryToAddSingleBeatLevelElement(singleBeat, type)) break;
-				}
-
-			}
-		}
-
 		private void FillWithLowCollectibles()
 		{
 			foreach (SingleBeat singleBeat in songElements.SingleBeats)
@@ -213,6 +156,7 @@ namespace GameApp.Levels.LevelGeneration
 				}
 			}
 		}
+
 
 		private bool TryToAddSingleBeatLevelElement(SingleBeat singleBeat, LevelElementType type)
 		{

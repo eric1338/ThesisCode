@@ -53,8 +53,6 @@ namespace GameApp.Gameplay
 
 		public void DoLogic()
 		{
-
-
 			GetLevelProgression().UpdateTime(1.0f / GeneralValues.FPS);
 
 			SetNewPlayerPosition();
@@ -135,23 +133,9 @@ namespace GameApp.Gameplay
 		{
 			LevelProgression levelProgression = GetLevelProgression();
 
-			if (collisions.DoesPlayerCollideWithASolidObstacle(levelProgression))
+			if (collisions.DoesPlayerCollideWithAnObstacle(levelProgression))
 			{
 				AddPlayerFail();
-			}
-
-			Obstacle obstacleCollidedWith = collisions.GetPlayerDestructibleObstacleCollision(levelProgression);
-
-			if (obstacleCollidedWith != null)
-			{
-				if (!levelProgression.IsPlayerInHittingMode())
-				{
-					levelProgression.DestructObstacle(obstacleCollidedWith);
-				}
-				else
-				{
-					AddPlayerFail();
-				}
 			}
 		}
 

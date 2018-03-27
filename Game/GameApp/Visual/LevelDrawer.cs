@@ -63,8 +63,6 @@ namespace GameApp.Visual
 
 		public void DrawLevel(LevelProgression levelProgression)
 		{
-			BasicGraphics.textureDrawAttempts = 0;
-
 			CalculateVisualCenter(levelProgression);
 
 			DrawBackground(levelProgression);
@@ -74,8 +72,6 @@ namespace GameApp.Visual
 			DrawCollectibles(levelProgression);
 			DrawProjectiles(levelProgression);
 			DrawPlayer(levelProgression);
-
-			//DrawDebugLines();
 
 			if (levelProgression.IsLevelComplete) DrawLevelCompleteScreen(0.92f);
 
@@ -127,21 +123,6 @@ namespace GameApp.Visual
 			return 2 * VisualValues.ZoomFactor * VisualValues.GetAspectRatio();
 		}
 
-		private bool IsObjectOnScreen(float leftestX, float rightestX)
-		{
-			return true;
-		}
-
-		private bool IsCoordOnScreen(float coordX)
-		{
-			float halfScreenWidth = GetScreenWidth() / 1.98f;
-
-			float leftestScreenX = visualCenter.X - halfScreenWidth;
-			float rightestScreenX = visualCenter.X + halfScreenWidth;
-
-			return coordX > leftestScreenX && coordX < rightestScreenX;
-		}
-
 		private bool IsCoordLeftOfScreen(float coordX)
 		{
 			return coordX < (visualCenter.X - (GetScreenWidth() / 1.98f));
@@ -162,20 +143,6 @@ namespace GameApp.Visual
 			BasicGraphics.SetColor(0.4f, 0.8f, 1.0f);
 
 			DrawSquare(new Vector2(-2.1f, 1.1f), new Vector2(2.1f, -1.1f), false);
-
-			//DrawClouds(levelProgression);
-		}
-
-		private void DrawClouds(LevelProgression levelProgression)
-		{
-			BasicGraphics.SetColor(0.9f, 0.9f, 1.0f);
-
-			float time = levelProgression.GetSecondsPlayed();
-			
-			Vector2 cloud1TopLeftCorner = new Vector2(1, 0.8f) - new Vector2(time * 0.05f, 0);;
-			Vector2 cloud1BottomRightCorner = cloud1TopLeftCorner + new Vector2(0.3f, -0.1f);
-
-			BasicGraphics.DrawSquare(cloud1TopLeftCorner, cloud1BottomRightCorner);
 		}
 
 		private void DrawPlayer(LevelProgression levelProgression)
@@ -210,7 +177,7 @@ namespace GameApp.Visual
 		{
 			foreach (Ground ground in level.Grounds)
 			{
-				if (IsObjectOnScreen(ground.LeftX, ground.RightX)) DrawGround(ground);
+				DrawGround(ground);
 			}
 		}
 
@@ -221,15 +188,10 @@ namespace GameApp.Visual
 			Vector2 v1 = new Vector2(ground.LeftX, ground.TopY);
 			Vector2 v2 = new Vector2(ground.RightX, ground.TopY - 99999f);
 
-			//Vector2 v2 = new Vector2(ground.RightX, ground.TopY - 0.15f);
-			//DrawMultipleHorizontalTextures(groundTopTexture, v1, v2);
-
 			DrawSquare(v1, v2);
 
 			DrawGround2(ground);
 		}
-
-
 
 		private void DrawGround2(Ground ground)
 		{
@@ -277,8 +239,6 @@ namespace GameApp.Visual
 				{
 					topRightCorner = new Vector2(maxRightX, topY);
 
-					//float totalRightOffset = ((maxRightX - leftX) / groundPartWidth) * (groundMinimumHeight + rightYOffset);
-
 					bottomRightCorner = new Vector2(maxRightX, (topY - groundMinimumHeight - rightYOffset));
 				}
 
@@ -294,11 +254,9 @@ namespace GameApp.Visual
 		}
 
 
-
-
 		private void DrawObstacles(LevelProgression levelProgression)
 		{
-			foreach (Obstacle obstacle in level.SolidObstacles) DrawObstacle(obstacle);
+			foreach (Obstacle obstacle in level.Obstacles) DrawObstacle(obstacle);
 		}
 
 		private void DrawObstacle(Obstacle obstacle)
@@ -307,7 +265,6 @@ namespace GameApp.Visual
 
 			DrawSquare(obstacle.TopLeftCorner, obstacle.BottomRightCorner);
 		}
-
 
 
 		private int collectibleMaximumValue = 60;
@@ -341,12 +298,9 @@ namespace GameApp.Visual
 				float leftX = collectible.Position.X - halfCollectibleWidth;
 				float rightX = collectible.Position.X + halfCollectibleWidth;
 
-				if (IsObjectOnScreen(leftX, rightX)) DrawCollectible(collectible, stateValue);
+				DrawCollectible(collectible, stateValue);
 			}
 		}
-
-
-
 
 		private void DrawCollectible(Collectible collectible, int stateValue)
 		{
@@ -377,7 +331,7 @@ namespace GameApp.Visual
 				float leftX = projectilePosition.X - halfProjectileWidth;
 				float rightX = projectilePosition.X + halfProjectileWidth;
 
-				if (IsObjectOnScreen(leftX, rightX)) DrawProjectile(projectilePosition);
+				DrawProjectile(projectilePosition);
 			}
 		}
 
@@ -490,8 +444,6 @@ namespace GameApp.Visual
 
 
 
-
-
 		//
 		// BASICS
 		//
@@ -503,11 +455,6 @@ namespace GameApp.Visual
 			newVector *= (1.0f / VisualValues.ZoomFactor);
 
 			return newVector;
-		}
-
-		private float GetTransformedXCoord(float xCoord)
-		{
-			return GetTransformedVector(new Vector2(xCoord, 0)).X;
 		}
 
 		private void DrawSquare(Vector2 topLeft, Vector2 bottomRight)

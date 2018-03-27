@@ -43,23 +43,6 @@ namespace GameApp.Audio
 			});
 		}
 
-		public void SortByApplicability()
-		{
-			SingleBeats.Sort(delegate (SingleBeat s1, SingleBeat s2)
-			{
-				return s1.Applicability.CompareTo(s2.Applicability);
-			});
-
-			SingleBeats.Reverse();
-
-			HeldNotes.Sort(delegate (HeldNote h1, HeldNote h2)
-			{
-				return h1.Applicability.CompareTo(h2.Applicability);
-			});
-
-			HeldNotes.Reverse();
-		}
-
 		public void SortByApplicabilityAndIsolationValue()
 		{
 			SingleBeats.Sort(delegate (SingleBeat s1, SingleBeat s2)

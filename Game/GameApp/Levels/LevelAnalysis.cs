@@ -24,8 +24,6 @@ namespace GameApp.Levels
 			return null;
 		}
 
-		// TODO: Rumpf beider Methoden vereinigen
-
 		public static Ground GetGroundLeftFromVector(Level level, Vector2 vector)
 		{
 			Ground bestGround = null;
@@ -36,27 +34,6 @@ namespace GameApp.Levels
 				if (ground.RightX > vector.X) continue;
 
 				float distance = vector.X - ground.RightX;
-
-				if (distance < bestDistance)
-				{
-					bestGround = ground;
-					bestDistance = distance;
-				}
-			}
-
-			return bestGround;
-		}
-
-		public static Ground GetGroundRightFromVector(Level level, Vector2 vector)
-		{
-			Ground bestGround = null;
-			float bestDistance = 99999999.0f;
-
-			foreach (Ground ground in level.Grounds)
-			{
-				if (ground.LeftX < vector.X) continue;
-
-				float distance = ground.LeftX - vector.X;
 
 				if (distance < bestDistance)
 				{

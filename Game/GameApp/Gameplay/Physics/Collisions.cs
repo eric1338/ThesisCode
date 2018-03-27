@@ -44,11 +44,11 @@ namespace GameApp.Gameplay.Physics
 			return null;
 		}
 
-		public bool DoesPlayerCollideWithASolidObstacle(LevelProgression levelProgression)
+		public bool DoesPlayerCollideWithAnObstacle(LevelProgression levelProgression)
 		{
 			Hitbox playerHitbox = GetPlayerHitbox(levelProgression.CurrentPlayerPosition, levelProgression.IsPlayerStanding);
 
-			foreach (Obstacle obstacle in level.SolidObstacles)
+			foreach (Obstacle obstacle in level.Obstacles)
 			{
 				Hitbox obstacleHitbox = Hitboxes.GetObstacleHitbox(obstacle);
 
@@ -57,23 +57,6 @@ namespace GameApp.Gameplay.Physics
 
 			return false;
 		}
-
-		public Obstacle GetPlayerDestructibleObstacleCollision(LevelProgression levelProgression)
-		{
-			Hitbox playerHitbox = GetPlayerHitbox(levelProgression.CurrentPlayerPosition, levelProgression.IsPlayerStanding);
-
-			foreach (Obstacle obstacle in level.DestructibleObstacles)
-			{
-				if (levelProgression.IsObstacleAlreadyDestructed(obstacle)) continue;
-
-				Hitbox obstacleHitbox = Hitboxes.GetObstacleHitbox(obstacle);
-
-				if (playerHitbox.CollidesWith(obstacleHitbox)) return obstacle;
-			}
-
-			return null;
-		}
-
 
 		/*
 		public bool DoesPlayerCollideWithASolidObstacle(LevelProgression levelProgression)
